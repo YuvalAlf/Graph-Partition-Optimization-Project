@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Utils
+namespace Graphs
 {
-    public class Class1
+    public enum PartitionType
     {
+        BigPartition,
+        SmallPartition1,
+        SmallPartition2
     }
 }
