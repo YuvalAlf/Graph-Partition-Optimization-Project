@@ -5,19 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         WindowState="Maximized"
-        Title="Graph Partition Optimization" Height="800" Width="1300">
+        Title="Graph Partition Optimization" Height="1200" Width="1800" FontFamily="Agency FB">
     <DockPanel>
-        <Viewbox Name="TitleTextBox" DockPanel.Dock="Top" Height="200" Margin="10.5" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
-        <DockPanel DockPanel.Dock="Top" Height="400" Margin="10,5">
-            <Viewbox Name="MethodChoosingViewBox" Width="300" DockPanel.Dock="Left"/>
-            <Viewbox Name="SettingsViewBox" Width="300" DockPanel.Dock="Left"/>
-            <Viewbox Name="ScaleViewBox" Width="300" DockPanel.Dock="Left"/>
-            <Viewbox Name="WeightsViewBox" Width="300" DockPanel.Dock="Right"/>
-            <Viewbox Name="EmbeddedGraphViewBox"/>
+        <TextBlock DockPanel.Dock="Top" Text="Graph Partition" Style="{StaticResource TitleTextBlockStyle}" FontSize="72" Margin="10"/>
+        <DockPanel DockPanel.Dock="Top" Height="400" Margin="5,0,5,0">
+            <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Background="#EEF9FF" Width="250" Name="MethodChoosingViewer" DockPanel.Dock="Left" />
+            <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Background="#E0F9FF" Width="450" Name="SettingsViewer" DockPanel.Dock="Left"  />
+            <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Background="#DDF9FF" Width="300" Name="ScaleViewViewer" DockPanel.Dock="Left"  />
+            <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Background="#DEFFFF" Width="300" Name="WeightsViewer" DockPanel.Dock="Right" />
+            <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Background="#F0F0FF" Name="EmbeddedGraphViewer" />
         </DockPanel>
-        <DockPanel>
-            <Viewbox Name="StatusViewBox" DockPanel.Dock="Right"/>
-            <Viewbox Name="BestSolutionViewBox"/>
+        <DockPanel VerticalAlignment="Stretch" Margin="5,0,5,5">
+            <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Background="#E0FEFF" Width="300" Name="StatusViewer" DockPanel.Dock="Right"/>
+            <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Background="#DEFBFF" Name="BestSolutionViewer"/>
         </DockPanel>
     </DockPanel>
 </Window>

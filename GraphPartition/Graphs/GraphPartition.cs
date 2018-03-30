@@ -5,12 +5,14 @@ namespace Graphs
 {
     public sealed class GraphPartition
     {
-        public GraphPartition(Dictionary<PartitionType, HashSet<int>> partitions)
+
+        public Dictionary<PartitionType, HashSet<Node>> Partitions { get; }
+
+        public GraphPartition(Dictionary<PartitionType, HashSet<Node>> partitions)
         {
             Partitions = partitions;
         }
 
-        public Dictionary<PartitionType, HashSet<int>> Partitions { get; }
 
         public double Price(Graph graph)
         {
@@ -21,7 +23,7 @@ namespace Graphs
             return sumPrice;
         }
 
-        private PartitionType PartitionTypeOf(int node)
+        private PartitionType PartitionTypeOf(Node node)
         {
             foreach (var partitionType in Partitions.Keys)
                 if (Partitions[partitionType].Contains(node))

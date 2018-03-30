@@ -4,36 +4,50 @@ namespace Graphs
 {
     public sealed class Graph
     {
-        public int[] Nodes { get; }
+        public Node[] Nodes { get; }
         public Edge[] Edges { get; }
+        public double MinWeight { get; }
+        public double MaxWeight { get; }
+        public int MaxNodeValue { get; }
 
-        public Graph(int[] nodes, Edge[] edges)
+        private Graph(Node[] nodes, Edge[] edges, double minWeight, double maxWeight, int maxNodeValue)
         {
             Nodes = nodes;
             Edges = edges;
+            MinWeight = minWeight;
+            MaxWeight = maxWeight;
+            MaxNodeValue = maxNodeValue;
         }
 
-        public Graph WithNode(int node)
+        public static Graph Create(Node[] nodes, Edge[] edges)
         {
-            var newNodes = Nodes.Append(node).ToArray();
-            return new Graph(newNodes, Edges);
+            var minWeight = edges.Min(e => e.Weight);
+            var maxWeight = edges.Max(e => e.Weight);
+            var maxNodeValue = nodes.Max(n => n.Value);
+            return new Graph(nodes, edges, minWeight, maxWeight, maxNodeValue);
         }
 
-        public Graph WithEdge(int node)
+        public Graph WithNode(Node node)
         {
             var newNodes = Nodes.Append(node).ToArray();
-            return new Graph(newNodes, Edges);
+            return Create(newNodes, Edges);
+        }
+
+        public Graph WithEdge(Edge edge)
+        {
+            var newEdges = Edges.Append(edge).ToArray();
+            return Create(Nodes, newEdges);
         }
         public Graph WithEdgeWeight(Edge edge, double newWeight)
         {
             var newEdges = Edges.Select(e => e.Equals(edge) ? e.WithWeight(newWeight) : e).ToArray();
-            return new Graph(Nodes, newEdges);
+            return Create(Nodes, newEdges);
         }
 
         public Graph WithoutEdge(Edge edge)
         {
             var newEdges = Edges.Where(e => !e.Equals(edge)).ToArray();
-            return new Graph(Nodes, newEdges);
+            return Create(Nodes, newEdges);
         }
 
     }

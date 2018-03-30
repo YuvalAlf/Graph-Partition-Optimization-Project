@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F245956B-E7B8-4202-9511-3F48134BA909}</ProjectGuid>
+    <ProjectGuid>{64D834C1-E33C-4D50-B874-7381CE7526F8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Utils</RootNamespace>
-    <AssemblyName>Utils</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <RootNamespace>Optimizations</RootNamespace>
+    <AssemblyName>Optimizations</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,7 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,14 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DrawingUtils\ColorUtils.cs" />
-    <Compile Include="ExtensionMethods\PredicateExtensions.cs" />
-    <Compile Include="ExtensionMethods\RandomExtensions.cs" />
-    <Compile Include="ExtensionMethods\StringExtensions.cs" />
-    <Compile Include="GeneralUtils.cs" />
-    <Compile Include="ExtensionMethods\IntExtensions.cs" />
-    <Compile Include="MathUtils\MathLine.cs" />
-    <Compile Include="MathUtils\Range.cs" />
+    <Compile Include="BranchAndBound\BranchAndBoundSettings.cs" />
+    <Compile Include="GeneticAlgorithm\GeneticSettings.cs" />
+    <Compile Include="LocalSearch\LocalSearchSettings.cs" />
+    <Compile Include="OptimizationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

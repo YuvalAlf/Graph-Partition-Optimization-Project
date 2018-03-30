@@ -59,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Gui\GraphEmbeddingToCanvas.cs" />
     <Compile Include="Gui\MainApplication\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -69,6 +70,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gui\MainApplication\OnOptimizationTypeChanged.cs" />
+    <Compile Include="Gui\Programming\ButtonCreator.cs" />
+    <Compile Include="Gui\Programming\OpenFileDialogCreator.cs" />
+    <Compile Include="Gui\Programming\HorizontalContainerStrecherd.cs" />
+    <Compile Include="Gui\Programming\MethodChoosingViewerCreator.cs" />
+    <Compile Include="Gui\Programming\InteractiveTextBox.cs" />
+    <Compile Include="Gui\Programming\RadioButtonChooser.cs" />
+    <Compile Include="Gui\Programming\TextBlockCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -95,8 +104,21 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Gui\Programming\" />
     <Folder Include="Gui\Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Optimizations\Optimizations.csproj">
+      <Project>{64D834C1-E33C-4D50-B874-7381CE7526F8}</Project>
+      <Name>Optimizations</Name>
+    </ProjectReference>
+    <ProjectReference Include="Graphs\Graphs.csproj">
+      <Project>{0AF773BF-05ED-4F26-ABDE-EAD7ED9A98C8}</Project>
+      <Name>Graphs</Name>
+    </ProjectReference>
+    <ProjectReference Include="Utils\Utils.csproj">
+      <Project>{F245956B-E7B8-4202-9511-3F48134BA909}</Project>
+      <Name>Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
