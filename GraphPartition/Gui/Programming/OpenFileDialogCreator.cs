@@ -1,5 +1,6 @@
 ﻿using System;
-using Microsoft.Win32;
+using System.Windows.Forms;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace GraphPartition.Gui.Programming
 {
@@ -13,6 +14,13 @@ namespace GraphPartition.Gui.Programming
         }
         public static void ChooseFolder(Action<string> onFolderChosen)
         {
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                if (result == DialogResult.OK)
+                    if (dialog.SelectedPath != null)
+                        onFolderChosen(dialog.SelectedPath);
+            }
         }
     }
 }

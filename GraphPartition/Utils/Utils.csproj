@@ -40,9 +40,12 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DrawingUtils\ColorUtils.cs" />
+    <Compile Include="ExtensionMethods\DictionaryExtensions.cs" />
+    <Compile Include="ExtensionMethods\PointExtensions.cs" />
     <Compile Include="ExtensionMethods\PredicateExtensions.cs" />
     <Compile Include="ExtensionMethods\RandomExtensions.cs" />
     <Compile Include="ExtensionMethods\StringExtensions.cs" />

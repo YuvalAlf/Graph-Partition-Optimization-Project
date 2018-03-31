@@ -29,7 +29,7 @@ namespace Graphs
 
         public bool Equals(Edge other)
         {
-            return Node1.Equals(other.Node1) && Node2.Equals(other.Node2) && Weight.Equals(other.Weight);
+            return Node1.Equals(other.Node1) && Node2.Equals(other.Node2);
         }
 
         public override bool Equals(object obj)
@@ -44,14 +44,13 @@ namespace Graphs
             {
                 var hashCode = Node1.GetHashCode();
                 hashCode = (hashCode * 397) ^ Node2.GetHashCode();
-                hashCode = (hashCode * 397) ^ Weight.GetHashCode();
                 return hashCode;
             }
         }
 
         public override string ToString()
         {
-            return $"({Node1}, {Node2}) {Weight}";
+            return $"({Node1}, {Node2})";
         }
     }
 }

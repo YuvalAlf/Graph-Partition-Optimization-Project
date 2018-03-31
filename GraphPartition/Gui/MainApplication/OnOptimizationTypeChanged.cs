@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using GraphPartition.Gui.GraphCreatorWindow;
 using GraphPartition.Gui.Programming;
 using Optimizations;
 using Optimizations.BranchAndBound;
@@ -53,17 +54,18 @@ namespace GraphPartition.Gui.MainApplication
 
         private void UserCreateGraph()
         {
-
+            var window = new GraphCreator(path => InputGraphPath = path);
+            window.ShowDialog();
         }
 
         private UIElement OutputPathBullet()
         {
             Predicate<string> validityCheck = path => Directory.Exists(path);
             Action<string> onPathChanged = path => OutputResultPath = path;
-            var textBox = new InteractiveTextBox(InputGraphPath, validityCheck, onPathChanged, Dispatcher);
+            var textBox = new InteractiveTextBox(OutputResultPath, validityCheck, onPathChanged, Dispatcher);
             return HorizontalContainerStrecherd.Create()
                 .AddLeft(TextBlockCreator.CreateNormal("Result Output Folder").WithBullet())
-                .AddRight(ButtonCreator.Create("...", () => DialogCreator.ChooseFile(path => textBox.Text = path)))
+                .AddRight(ButtonCreator.Create("...", () => DialogCreator.ChooseFolder(path => textBox.Text = path)))
                 .AsDock(textBox);
         }
 
@@ -81,14 +83,20 @@ namespace GraphPartition.Gui.MainApplication
 
         private StackPanel InitLocalSearchSettings()
         {
-            return new StackPanel();
-            throw new NotImplementedException();
+            var stackPanel = new StackPanel();
+
+            stackPanel.Children.Add(TextBlockCreator.CreateTitle("Local Search Settings"));
+
+            return stackPanel;
         }
 
         private StackPanel InitBranchAndBoundSettings()
         {
-            return new StackPanel();
-            throw new NotImplementedException();
+            var stackPanel = new StackPanel();
+
+            stackPanel.Children.Add(TextBlockCreator.CreateTitle("Branch & Bound Settings"));
+
+            return stackPanel;
         }
 
         private StackPanel InitGeneticSettings()

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
+using GraphPartition.Gui.GraphCreatorWindow;
 using GraphPartition.Gui.Programming;
-using Microsoft.Win32;
-using Optimizations;
-using Optimizations.BranchAndBound;
-using Optimizations.GeneticAlgorithm;
-using Optimizations.LocalSearch;
 
 namespace GraphPartition.Gui.MainApplication
 {
@@ -17,6 +11,8 @@ namespace GraphPartition.Gui.MainApplication
         {
             InitializeComponent();
             MethodChoosingViewer.Content = MethodChoosingViewerCreator.Create(Dispatcher, OptimizationTypeChanged);
+            new GraphCreator(s => { }).ShowDialog();
+            this.Close();
         }
     }
 }

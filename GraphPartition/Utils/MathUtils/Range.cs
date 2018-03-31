@@ -10,5 +10,10 @@
             Min = min;
             Max = max;
         }
+
+        public bool Contains(double value)
+        {
+            return Min <= value && Max >= value;
+        }
     }
 }

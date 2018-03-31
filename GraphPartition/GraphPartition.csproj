@@ -37,6 +37,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,10 +56,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Gui\GraphCreatorWindow\GraphCreator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Gui\MainApplication\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Gui\GraphCreatorWindow\EdgesHandler.cs" />
+    <Compile Include="Gui\GraphCreatorWindow\GraphCreator.xaml.cs">
+      <DependentUpon>GraphCreator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\GraphCreatorWindow\GraphCreatorState\CreatorStateProperties.cs" />
+    <Compile Include="Gui\GraphCreatorWindow\GraphCreatorState\CreatorStateFunctionality.cs" />
+    <Compile Include="Gui\GraphCreatorWindow\GraphCreatorState\IdleState.cs" />
+    <Compile Include="Gui\GraphCreatorWindow\GraphCreatorState\StartedLineState.cs" />
+    <Compile Include="Gui\GraphCreatorWindow\GraphCreatorState\StateController.cs" />
     <Compile Include="Gui\GraphEmbeddingToCanvas.cs" />
     <Compile Include="Gui\MainApplication\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
