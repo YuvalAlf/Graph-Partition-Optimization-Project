@@ -16,5 +16,12 @@ namespace Utils.ExtensionMethods
                     return k;
             throw new ArgumentException();
         }
+        public static Dictionary<K,V> Clone<K, V>(this Dictionary<K, V> @this)
+        {
+            var dict = new Dictionary<K, V>(@this.Count);
+            foreach (var keyValuePair in @this)
+                dict.Add(keyValuePair.Key, keyValuePair.Value);
+            return dict;
+        }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -17,7 +12,7 @@ namespace GraphPartition.Gui
 {
     public sealed class GraphEmbeddingToCanvas : Canvas
     {
-        public Dictionary<Node, Border> NodesCircles { get; }
+        /*public Dictionary<Node, Border> NodesCircles { get; }
         public Dictionary<Edge, Line> EdgesLines { get; }
         public MathLine WeightThicknessProportion { get; }
 
@@ -75,6 +70,6 @@ namespace GraphPartition.Gui
             line.StrokeThickness = thickness;
             new Coordinate().SetToValueCanvas(line);
             return line;
-        }
+        }*/
     }
 }

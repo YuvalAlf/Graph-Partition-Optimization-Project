@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using Graphs;
 using Utils.ExtensionMethods;
 using Utils.MathUtils;
@@ -97,14 +100,17 @@ namespace GraphPartition.Gui.GraphCreatorWindow.GraphCreatorState
         {
             var edge = Edge.Create(Nodes[startingEllipse], Nodes[endingEllipse], weight);
             if (Edges.ContainsKey(edge))
+            {
+                GraphCanvas.Children.Remove(line);
                 return;
+            }
 
             line.X1 = EllipsesCenters[startingEllipse].X;
             line.Y1 = EllipsesCenters[startingEllipse].Y;
             line.X2 = EllipsesCenters[endingEllipse].X;
             line.Y2 = EllipsesCenters[endingEllipse].Y;
             var mathLine = MathLine.Create(line.X1, line.X2, line.Y1, line.Y2);
-
+            
             this.Edges[edge] = line;
             this.LinesMath[line] = mathLine;
             this.EdgesHandler.AddEdge(edge);
@@ -138,6 +144,54 @@ namespace GraphPartition.Gui.GraphCreatorWindow.GraphCreatorState
             this.Edges[edge] = line;
             this.MinWeight = Edges.Keys.Min(e => e.Weight);
             this.MaxWeight = Edges.Keys.Max(e => e.Weight);
+        }
+
+        public GraphEmbedding DerivedEmbedding()
+        {
+            var nodes = this.Nodes.Values.ToArray();
+            var edges = this.Edges.Keys.ToArray();
+            var embedding = new Dictionary<Node, Point>();
+            foreach (var ellipse in Nodes.Keys)
+                embedding[Nodes[ellipse]] = EllipsesCenters[ellipse];
+            return new GraphEmbedding(Graph.Create(nodes, edges), embedding);
+        }
+
+        public Task EmbeddFor(TimeSpan runningTime, Action callback, Dispatcher dispatcher)
+        {
+            void Embedd()
+            {
+                var embedding = this.DerivedEmbedding();
+                var bestEmbedding = embedding.EmbeddFor(runningTime);
+                dispatcher.Invoke(() => this.SetNewEmbedding(bestEmbedding));
+                dispatcher.Invoke(callback);
+            }
+
+            return Task.Run(() => Embedd());
+        }
+
+        private void SetNewEmbedding(GraphEmbedding embedding)
+        {
+            foreach (var ellipse in Nodes.Keys)
+            {
+                var node = Nodes[ellipse];
+                var ellipseCenter = embedding.Embedding[node];
+                ellipse.SetValue(Canvas.LeftProperty, ellipseCenter.X - EllipseWidth / 2);
+                ellipse.SetValue(Canvas.TopProperty, ellipseCenter.Y - EllipseWidth / 2);
+                this.EllipsesCenters[ellipse] = ellipseCenter;
+            }
+
+            foreach (var edge in Edges.Keys)
+            {
+                var line = Edges[edge];
+                var point1 = EllipsesCenters[Nodes.GetKeyOf(edge.Node1, Node.Equals)];
+                var point2 = EllipsesCenters[Nodes.GetKeyOf(edge.Node2, Node.Equals)];
+                line.X1 = point1.X;
+                line.X2 = point2.X;
+                line.Y1 = point1.Y;
+                line.Y2 = point2.Y;
+                var mathLine = MathLine.Create(point1.X, point2.X, point1.Y, point2.Y);
+                this.LinesMath[line] = mathLine;
+            }
         }
     }
 }

@@ -8,5 +8,9 @@ namespace Utils
         {
             return (Math.Min(a, b), Math.Max(a, b));
         }
+        public static (double min, double max) MinMax(double a, double b)
+        {
+            return (Math.Min(a, b), Math.Max(a, b));
+        }
     }
 }

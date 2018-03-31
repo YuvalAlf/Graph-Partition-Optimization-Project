@@ -6,25 +6,16 @@ namespace Graphs
     {
         public Node[] Nodes { get; }
         public Edge[] Edges { get; }
-        public double MinWeight { get; }
-        public double MaxWeight { get; }
-        public int MaxNodeValue { get; }
 
-        private Graph(Node[] nodes, Edge[] edges, double minWeight, double maxWeight, int maxNodeValue)
+        public Graph(Node[] nodes, Edge[] edges)
         {
             Nodes = nodes;
             Edges = edges;
-            MinWeight = minWeight;
-            MaxWeight = maxWeight;
-            MaxNodeValue = maxNodeValue;
         }
 
         public static Graph Create(Node[] nodes, Edge[] edges)
         {
-            var minWeight = edges.Min(e => e.Weight);
-            var maxWeight = edges.Max(e => e.Weight);
-            var maxNodeValue = nodes.Max(n => n.Value);
-            return new Graph(nodes, edges, minWeight, maxWeight, maxNodeValue);
+            return new Graph(nodes, edges);
         }
 
         public Graph WithNode(Node node)

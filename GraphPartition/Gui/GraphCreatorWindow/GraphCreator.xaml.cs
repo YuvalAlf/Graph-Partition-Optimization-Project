@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -67,6 +69,25 @@ namespace GraphPartition.Gui.GraphCreatorWindow
         {
             var pos = e.GetPosition(GraphCanvas);
             StateController = StateController.MouseMoveTo(pos);
+        }
+
+
+        private void EmbeddGraphButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            void FlipEnabaling()
+            {
+                GraphCanvas.IsEnabled ^= true;
+                EdgesScrollViewer.IsEnabled ^= true;
+                this.UpdateLayout();
+            }
+
+            FlipEnabaling();
+            this.StateController.CreatorState.EmbeddFor(TimeSpan.FromSeconds(0.5), FlipEnabaling, Dispatcher);
+        }
+
+        private void SaveGraphButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

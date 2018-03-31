@@ -1,5 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows;
+using MathNet.Numerics;
 using Utils;
+using Utils.MathUtils;
 
 namespace Graphs
 {
@@ -52,5 +58,72 @@ namespace Graphs
         {
             return $"({Node1}, {Node2})";
         }
+
+        public bool IsClashingWith(Edge edge, Dictionary<Node, Point> embedding)
+        {
+            var edge1Start = embedding[this.Node1];
+            var edge1End = embedding[this.Node2];
+            var edge2Start = embedding[edge.Node1];
+            var edge2End = embedding[edge.Node2];
+            var edge1XRange = Range.Create(edge1Start.X, edge1End.X);
+            var edge2XRange = Range.Create(edge2Start.X, edge2End.X);
+            if (edge1XRange.Max <= edge2XRange.Min)
+                return false;
+            if (!edge1XRange.IsOverlapping(edge2XRange))
+                return false;
+            var overlapRange = edge1XRange.GetOverlap(edge2XRange);
+            var edge1Line = MathLine.Create(edge1Start.X, edge1End.X, edge1Start.Y, edge1End.Y);
+            var edge2Line = MathLine.Create(edge2Start.X, edge2End.X, edge2Start.Y, edge2End.Y);
+
+            var deltaYMin = (edge1Line.Compute(overlapRange.Min) - edge2Line.Compute(overlapRange.Min)).CoerceZero();
+            var deltaYMax = (edge1Line.Compute(overlapRange.Max) - edge2Line.Compute(overlapRange.Max)).CoerceZero();
+            return deltaYMin * deltaYMax < 0;
+        }
+
+        static Edge()
+        {
+            var dict = new Dictionary<Node, Point>();
+            var node1 = new Node(1);
+            var node2 = new Node(2);
+            var node3 = new Node(3);
+            var node4 = new Node(4);
+            var node5 = new Node(5);
+            var node6 = new Node(6);
+            dict.Add(node1, new Point(0, 0));
+            dict.Add(node2, new Point(3, 4));
+            dict.Add(node3, new Point(0, 5));
+            dict.Add(node4, new Point(2, 2));
+            dict.Add(node5, new Point(2, 3));
+            dict.Add(node6, new Point(2, 4));
+
+            var edge12 = new Edge(node1, node2, 0.0);
+            var edge13 = new Edge(node1, node3, 0.0);
+            var edge14 = new Edge(node1, node4, 0.0);
+            var edge15 = new Edge(node1, node5, 0.0);
+            var edge16 = new Edge(node1, node6, 0.0);
+
+
+            Debug.Assert(!edge12.IsClashingWith(edge13, dict));
+            Debug.Assert(!edge12.IsClashingWith(edge14, dict));
+            Debug.Assert(!edge12.IsClashingWith(edge15, dict));
+            Debug.Assert(!edge12.IsClashingWith(edge16, dict));
+
+            var edge21 = new Edge(node2, node1, 0.0);
+            var edge23 = new Edge(node2, node3, 0.0);
+            var edge24 = new Edge(node2, node4, 0.0);
+            var edge25 = new Edge(node2, node5, 0.0);
+            var edge26 = new Edge(node2, node6, 0.0);
+
+            var edge31 = new Edge(node3, node1, 0.0);
+            var edge32 = new Edge(node3, node2, 0.0);
+            var edge34 = new Edge(node3, node4, 0.0);
+            var edge35 = new Edge(node3, node5, 0.0);
+            var edge36 = new Edge(node3, node6, 0.0);
+
+            Debug.Assert(edge12.IsClashingWith(edge34, dict));
+
+
+        }
+
     }
 }

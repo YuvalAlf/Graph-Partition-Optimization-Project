@@ -6,10 +6,10 @@
         mc:Ignorable="d"
         Title="GraphCreator" Height="850" Width="1000">
     <DockPanel Margin="5">
-        <Button Margin="0,5,0,0" Padding="5" Content="Save Graph" FontSize="26" DockPanel.Dock="Bottom"/>
-        <Button Margin="0,5,0,0" Padding="5" Content="Embedd Graph" FontSize="26" DockPanel.Dock="Bottom"/>
-        <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Name="ProportionsScrollViewer" Background="Azure" Width="120" DockPanel.Dock="Left"/>
-        <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Name="EdgesScrollViewer" Background="Snow" Width="150" DockPanel.Dock="Left"/>
+        <Button Margin="0,5,0,0" Padding="5" Content="Save Graph" FontSize="26" DockPanel.Dock="Bottom" Name="SaveGraphButton" Click="SaveGraphButton_OnClick"/>
+        <Button Margin="0,5,0,0" Padding="5" Content="Embedd Graph" FontSize="26" DockPanel.Dock="Bottom" Name="EmbeddGraphButton" Click="EmbeddGraphButton_OnClick"/>
+        <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Name="ProportionsScrollViewer" Background="Azure" Width="100" DockPanel.Dock="Left"/>
+        <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Name="EdgesScrollViewer" Background="Snow" Width="200" DockPanel.Dock="Left"/>
         <Viewbox Style="{StaticResource BoundingMarginStyle}">
             <Canvas Name="GraphCanvas" Width="1.0" Height="1.0" Background="AliceBlue" MouseLeftButtonDown="GraphCanvas_MouseLeftButtonDown" MouseLeftButtonUp="GraphCanvas_MouseLeftButtonUp" MouseRightButtonDown="GraphCanvas_MouseRightButtonDown" MouseMove="GraphCanvas_MouseMove"/>
         </Viewbox>

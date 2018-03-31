@@ -31,5 +31,10 @@ namespace Graphs
         {
             return $"{Value}";
         }
+
+        public static bool Equals(Node n1, Node n2)
+        {
+            return n1.Equals(n2);
+        }
     }
 }
