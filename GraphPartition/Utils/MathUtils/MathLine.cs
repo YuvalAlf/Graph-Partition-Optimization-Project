@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using MathNet.Numerics;
 
 namespace Utils.MathUtils
 {
@@ -32,6 +29,8 @@ namespace Utils.MathUtils
             var n = -m * x1 + y1;
             return new MathLine(x1, x2, y1, y2, m, n);
         }
+        
+        public double Compute(double x) => X1.AlmostEqual(X2) ? (Y1 + Y2) / 2.0 : x * M + N;
 
         public double DistanceFrom(Point point)
         {
@@ -72,6 +71,5 @@ namespace Utils.MathUtils
             return Math.Sqrt(dx * dx + dy * dy);
         }
 
-        public double Compute(double x) => X1 == X2 ? (Y1 + Y2) / 2.0 : x * M + N;
     }
 }

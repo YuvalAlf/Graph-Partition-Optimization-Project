@@ -20,5 +20,12 @@ namespace Utils.ExtensionMethods
                 return 1;
             return 1 + (num / 10).CountDigits();
         }
+
+        public static string AsPaddedString(this int num)
+        {
+            if (num.CountDigits() <= 1)
+                return num.ToString();
+            return " " + num + " ";
+        }
     }
 }

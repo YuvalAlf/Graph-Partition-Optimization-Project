@@ -56,7 +56,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Gui\GraphCreatorWindow\GraphCreator.xaml">
+    <Page Include="Gui\GraphCreator\GraphCreatorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -64,16 +64,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Gui\GraphCreatorWindow\EdgesHandler.cs" />
-    <Compile Include="Gui\GraphCreatorWindow\GraphCreator.xaml.cs">
-      <DependentUpon>GraphCreator.xaml</DependentUpon>
+    <Compile Include="Gui\GraphCreator\EdgesHandler.cs" />
+    <Compile Include="Gui\GraphCreator\GraphCreatorWindow.xaml.cs">
+      <DependentUpon>GraphCreatorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\GraphCreatorWindow\GraphCreatorState\CreatorStateProperties.cs" />
-    <Compile Include="Gui\GraphCreatorWindow\GraphCreatorState\CreatorStateFunctionality.cs" />
-    <Compile Include="Gui\GraphCreatorWindow\GraphCreatorState\IdleState.cs" />
-    <Compile Include="Gui\GraphCreatorWindow\GraphCreatorState\StartedLineState.cs" />
-    <Compile Include="Gui\GraphCreatorWindow\GraphCreatorState\StateController.cs" />
-    <Compile Include="Gui\GraphEmbeddingToCanvas.cs" />
+    <Compile Include="Gui\GraphCreator\GraphCreatorState\CreatorStateProperties.cs" />
+    <Compile Include="Gui\GraphCreator\GraphCreatorState\CreatorStateFunctionality.cs" />
+    <Compile Include="Gui\GraphCreator\GraphCreatorState\IdleState.cs" />
+    <Compile Include="Gui\GraphCreator\GraphCreatorState\StartedLineState.cs" />
+    <Compile Include="Gui\GraphCreator\GraphCreatorState\StateController.cs" />
     <Compile Include="Gui\MainApplication\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -84,14 +83,18 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Gui\MainApplication\OnOptimizationTypeChanged.cs" />
-    <Compile Include="Gui\Programming\ButtonCreator.cs" />
-    <Compile Include="Gui\Programming\OpenFileDialogCreator.cs" />
-    <Compile Include="Gui\Programming\HorizontalContainerStrecherd.cs" />
-    <Compile Include="Gui\Programming\MethodChoosingViewerCreator.cs" />
-    <Compile Include="Gui\Programming\InteractiveTextBox.cs" />
-    <Compile Include="Gui\Programming\RadioButtonChooser.cs" />
-    <Compile Include="Gui\Programming\TextBlockCreator.cs" />
+    <Compile Include="Gui\MainApplication\OnOptimizationTypeChanged\BranchAndBoundOptimization.cs" />
+    <Compile Include="Gui\MainApplication\OnOptimizationTypeChanged\GeneticOptimization.cs" />
+    <Compile Include="Gui\MainApplication\OnOptimizationTypeChanged\GraphHandling.cs" />
+    <Compile Include="Gui\MainApplication\OnOptimizationTypeChanged\LocalSearchOptimization.cs" />
+    <Compile Include="Gui\MainApplication\OnOptimizationTypeChanged\OptimizationTypeChanged.cs" />
+    <Compile Include="Gui\ProgrammedGui\ButtonCreator.cs" />
+    <Compile Include="Gui\ProgrammedGui\DialogCreator.cs" />
+    <Compile Include="Gui\ProgrammedGui\HorizontalContainerStrecherd.cs" />
+    <Compile Include="Gui\MainApplication\Programming\MethodChoosingViewerCreator.cs" />
+    <Compile Include="Gui\ProgrammedGui\InteractiveTextBox.cs" />
+    <Compile Include="Gui\ProgrammedGui\RadioButtonChooser.cs" />
+    <Compile Include="Gui\ProgrammedGui\TextBlockCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -117,9 +120,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Gui\Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Optimizations\Optimizations.csproj">
       <Project>{64D834C1-E33C-4D50-B874-7381CE7526F8}</Project>
