@@ -24,8 +24,8 @@ namespace Utils.ExtensionMethods
         public static string AsPaddedString(this int num)
         {
             if (num.CountDigits() <= 1)
-                return num.ToString();
-            return " " + num + " ";
+                return " " + num + " ";
+            return num.ToString();
         }
     }
 }

@@ -13,13 +13,13 @@ namespace Utils.UiUtils.DrawingUtils
 {
     public static class EllipseUtils
     {
-        public static Ellipse CreateEllipse(double width, double height, double zIndex, Brush fillBrush, Point canvasTopLeft)
+        public static Ellipse CreateEllipse(double width, double height, int zIndex, Brush fillBrush, Point canvasTopLeft)
         {
             var ellipse = new Ellipse();
             ellipse.Fill = fillBrush;
             ellipse.Width = width;
             ellipse.Height = height;
-            ellipse.SetValue(Panel.ZIndexProperty, zIndex);
+            ellipse.SetValue(Canvas.ZIndexProperty, zIndex);
             ellipse.SetCanvasTopLeft(canvasTopLeft);
             return ellipse;
         }

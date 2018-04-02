@@ -59,6 +59,9 @@
     <Compile Include="GraphProperties\Node.cs" />
     <Compile Include="Algorithms\PartitionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Visualizing\EdgeEventArgs\EdgeAddedArgs.cs" />
+    <Compile Include="Visualizing\EdgeEventArgs\EdgeRemovedArgs.cs" />
+    <Compile Include="Visualizing\EdgeEventArgs\NodesAmountChangedArgs.cs" />
     <Compile Include="Visualizing\GraphVisual.cs" />
   </ItemGroup>
   <ItemGroup>

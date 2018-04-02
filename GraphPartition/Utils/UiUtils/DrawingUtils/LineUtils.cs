@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Utils.MathUtils;
 
 namespace Utils.UiUtils.DrawingUtils
 {
@@ -26,7 +27,13 @@ namespace Utils.UiUtils.DrawingUtils
             line.Stroke = lineBrush;
             line.StrokeThickness = thickness;
             line.StrokeDashCap = strokeDashCap;
+            line.StrokeEndLineCap = strokeDashCap;
             return line;
+        }
+
+        public static MathLine ToMathLine(this Line @this)
+        {
+            return MathLine.Create(@this.X1, @this.X2, @this.Y1, @this.Y2);
         }
     }
 }

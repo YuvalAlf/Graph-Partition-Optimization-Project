@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using GraphPartition.Gui.GraphCreator;
 using GraphPartition.Gui.ProgrammedGui;
 using Graphs.EmbeddingInPlane;
@@ -53,11 +54,14 @@ namespace GraphPartition.Gui.MainApplication
         }
 
 
+        private TextBox InputGraphTextBox { get; set; }
+
         private UIElement InputGraphBullet()
         {
             Predicate<string> validityCheck = path => File.Exists(path) && GraphEmbedding.CanParse(path);
             Action<string> onPathChanged = path => SetGraph(GraphEmbedding.FromText(File.ReadLines(path)));
             var textBox = InteractiveTextBox.Create(InputGraphPath, validityCheck, onPathChanged, Dispatcher);
+            InputGraphTextBox = textBox;
             return HorizontalContainerStrecherd.Create()
                 .AddLeft(TextBlockCreator.CreateNormal("Input Graph").WithBullet())
                 .AddRight(ButtonCreator.Create("...", () => DialogCreator.ChooseFile(path => textBox.Text = path)))
@@ -67,7 +71,7 @@ namespace GraphPartition.Gui.MainApplication
         private UIElement CreateGraphButton() => ButtonCreator.Create("Create Graph", UserCreateGraphWindow);
         private void UserCreateGraphWindow()
         {
-            var window = new GraphCreatorWindow(path => InputGraphPath = path);
+            var window = new GraphCreatorWindow(path => InputGraphTextBox.Text = path, NodeBrush, NumBrush, LineBrush, PenLineCap);
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.ShowDialog();
         }

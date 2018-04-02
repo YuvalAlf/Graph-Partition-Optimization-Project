@@ -6,10 +6,8 @@ using System.Windows.Media;
 using GraphPartition.Gui.GraphCreator.GraphCreatorState;
 using GraphPartition.Gui.ProgrammedGui;
 using Graphs.EmbeddingInPlane;
-using Graphs.GraphProperties;
 using Graphs.Visualizing;
 using Microsoft.Win32;
-using CreatorState = GraphPartition.Gui.GraphCreator.GraphCreatorState.CreatorState;
 
 namespace GraphPartition.Gui.GraphCreator
 {
@@ -20,18 +18,25 @@ namespace GraphPartition.Gui.GraphCreator
         private EdgesHandler EdgeHandler { get; }
         private GraphVisual GraphVisual { get; }
 
-        public GraphCreatorWindow(Action<string> graphPathChosen, Brush nodeBrush, Brush numBrush, Brush lineBrush)
+        public GraphCreatorWindow(Action<string> graphPathChosen, Brush nodeBrush, Brush numBrush, Brush lineBrush, PenLineCap penLineCap)
         {
             InitializeComponent();
             GraphPathChosen = graphPathChosen;
+            this.GraphVisual = GraphVisual.Create(GraphCanvas, nodeBrush, numBrush, lineBrush, penLineCap);
             this.EdgeHandler = EdgesHandler.Create(EdgesScrollViewer, GraphVisual.UpdateWeight);
-            this.StateController = new IdleState(CreatorState.Create(this.GraphCanvas, EdgeHandler, GraphUpdated));
-            GraphVisual = GraphVisual.Create(GraphCanvas, nodeBrush, numBrush, lineBrush);
+            GraphVisual.EdgeAddedEvent += (sender, args) => EdgeHandler.AddEdge(args.AddedEdge);
+            GraphVisual.EdgeRemovedEvent += (sender, args) => EdgeHandler.RemoveEdge(args.RemovedEdge);
+            GraphVisual.EdgeAddedEvent += (sender, args) => this.GraphUpdated();
+            GraphVisual.EdgeRemovedEvent += (sender, args) => this.GraphUpdated();
+            GraphVisual.NodeAmountChangedEvent += (sender, args) => this.GraphUpdated();
+            this.StateController = new IdleState(GraphVisual);
         }
 
-        public void GraphUpdated(int numOfNodes, int numOfEdges)
+        public void GraphUpdated()
         {
-            if (numOfEdges > 0 && numOfNodes > 0)
+            var numOfNodes = GraphVisual.Nodes.Count;
+            var numOfEdges = GraphVisual.Edges.Count;
+            if (numOfEdges > 0 &&  numOfNodes > 0)
                 EmbeddGraphButton.IsEnabled = true;
             else
                 EmbeddGraphButton.IsEnabled = false;
@@ -77,15 +82,20 @@ namespace GraphPartition.Gui.GraphCreator
             }
 
             FlipEnabaling();
-            this.StateController.CreatorState.EmbeddFor(TimeSpan.FromSeconds(0.5), FlipEnabaling, Dispatcher);
+            this.GraphVisual.EmbeddFor(TimeSpan.FromSeconds(0.5), FlipEnabaling, Dispatcher);
         }
 
         private void SaveGraphButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var embedding = this.StateController.CreatorState.DerivedEmbedding();
+            var embedding = this.GraphVisual.DerivedEmbedding();
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             if (saveFileDialog.ShowDialog() == true)
+            {
                 File.WriteAllLines(saveFileDialog.FileName, embedding.ToText());
+                GraphPathChosen.Invoke(saveFileDialog.FileName);
+                this.Close();
+            }
+                
         }
 
         private void OpenGraphButton_OnClick(object __, RoutedEventArgs _)
@@ -95,9 +105,7 @@ namespace GraphPartition.Gui.GraphCreator
                 void fileChosen(string path)
                 {
                     var embedding = GraphEmbedding.FromText(File.ReadLines(path));
-                    this.StateController.CreatorState.SetNewEmbedding(embedding);
-                    this.GraphPathChosen(path);
-                    this.Close();
+                    this.GraphVisual.SetNewEmbedding(embedding);
                 }
                 DialogCreator.ChooseFile(fileChosen);
             }

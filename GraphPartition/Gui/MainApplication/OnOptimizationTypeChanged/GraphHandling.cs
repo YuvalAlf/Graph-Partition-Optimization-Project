@@ -19,10 +19,11 @@ namespace GraphPartition.Gui.MainApplication
         public static Brush NodeBrush => Brushes.Black;
         public static Brush NumBrush => Brushes.White;
         public static Brush LineBrush => Brushes.CornflowerBlue;
+        public static PenLineCap PenLineCap => PenLineCap.Round;
 
         private void SetGraph(GraphEmbedding graphEmbedding)
         {
-            this.GraphVisual = GraphVisual.Create(StaticGraphCanvas, NodeBrush, NumBrush, LineBrush);
+            this.GraphVisual = GraphVisual.Create(StaticGraphCanvas, NodeBrush, NumBrush, LineBrush, PenLineCap);
             foreach (var node in graphEmbedding.Graph.Nodes)
                 GraphVisual.AddNode(node, graphEmbedding.Embedding[node]);
             foreach (var edge in graphEmbedding.Graph.Edges)

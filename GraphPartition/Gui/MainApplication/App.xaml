@@ -17,6 +17,7 @@
             <Setter Property="TextDecorations" Value="Underline"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="FontSize" Value="40"/>
+            <Setter Property="FontFamily" Value="Agency FB"/>
         </Style>
         <Style x:Key="NormalTextBlockStyle" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -24,12 +25,13 @@
             <Setter Property="FontFamily" Value="Calibri Light"/>
         </Style>
         <Style x:Key="TextBoxStyle" TargetType="TextBox">
-            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontFamily" Value="Calibri"/>
             <Setter Property="Padding">
                 <Setter.Value>
-                    <Thickness Bottom="1" Top="1" Left="2" Right="2"/>
+                    <Thickness Bottom="0" Top="0" Left="1" Right="1"/>
                 </Setter.Value>
             </Setter>
         </Style>

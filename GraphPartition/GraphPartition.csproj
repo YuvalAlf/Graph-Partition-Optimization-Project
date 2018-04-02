@@ -35,8 +35,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MoreLinq, Version=2.10.21623.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>packages\morelinq.2.10.0\lib\net40\MoreLinq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.ValueTuple">
+      <HintPath>packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -68,8 +75,6 @@
     <Compile Include="Gui\GraphCreator\GraphCreatorWindow.xaml.cs">
       <DependentUpon>GraphCreatorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\GraphCreator\GraphCreatorState\CreatorStateProperties.cs" />
-    <Compile Include="Gui\GraphCreator\GraphCreatorState\CreatorStateFunctionality.cs" />
     <Compile Include="Gui\GraphCreator\GraphCreatorState\IdleState.cs" />
     <Compile Include="Gui\GraphCreator\GraphCreatorState\StartedLineState.cs" />
     <Compile Include="Gui\GraphCreator\GraphCreatorState\StateController.cs" />
@@ -112,6 +117,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Shapes;
+using Graphs.GraphProperties;
+using Graphs.Visualizing;
+using Utils.ExtensionMethods;
+using Utils.UiUtils.DrawingUtils;
 
 namespace GraphPartition.Gui.GraphCreator.GraphCreatorState
 {
@@ -10,20 +16,24 @@ namespace GraphPartition.Gui.GraphCreator.GraphCreatorState
         private Line WorkingLine { get; }
         private double Weight { get; }
 
-        public StartedLineState(CreatorState creatorState, Ellipse startingEllipse, Line workingLine, double weight) 
-            : base(creatorState)
+        private StartedLineState(GraphVisual graphVisual, Ellipse startingEllipse, Line workingLine, double weight) 
+            : base(graphVisual)
         {
             StartingEllipse = startingEllipse;
             WorkingLine = workingLine;
             Weight = weight;
         }
 
-        public static StartedLineState Create(CreatorState creatorState, Ellipse startingEllipse, Point currentPoint)
+        public static StartedLineState Create(GraphVisual graphVisual, Ellipse startingEllipse, Point currentPoint)
         {
-            var ellipseCenter = creatorState.EllipsesCenters[startingEllipse];
-            var weight = creatorState.AvarageWeight;
-            var line = creatorState.AddLine(ellipseCenter, currentPoint, weight);
-            return new StartedLineState(creatorState, startingEllipse, line, weight);
+            var ellipseCenter = startingEllipse.GetCanvasCenter();
+            var minWeight = graphVisual.Edges.Keys.Min(e => e.Weight, 1);
+            var maxWeight = graphVisual.Edges.Keys.Max(e => e.Weight, 1);
+            var weight = (maxWeight + minWeight) / 2.0;
+            var thickness = (graphVisual.MaxLineThickness + graphVisual.MinLineThickness) / 2.0;
+            var line = LineUtils.CreateLine(ellipseCenter, currentPoint, graphVisual.LineBrush, thickness, graphVisual.PenLineCap);
+            graphVisual.Canvas.Children.Add(line);
+            return new StartedLineState(graphVisual, startingEllipse, line, weight);
         }
 
         public override StateController LeftMouseDownAt(Point point, int times)
@@ -33,12 +43,17 @@ namespace GraphPartition.Gui.GraphCreator.GraphCreatorState
 
         public override StateController LeftMouseUpAt(Point point)
         {
-            var (closestEllipse, distance) = CreatorState.ClosestEllipseFrom(point);
-            if (distance < CreatorState.EllipseWidth && closestEllipse != StartingEllipse)
-                CreatorState.FinalLine(WorkingLine, Weight, StartingEllipse, closestEllipse);
-            else
-                CreatorState.GraphCanvas.Children.Remove(WorkingLine);
-            return new IdleState(CreatorState);
+            GraphVisual.Canvas.Children.Remove(WorkingLine);
+            var (closestEllipse, distance) = GraphVisual.ClosestEllipseFrom(point);
+            if (distance < GraphVisual.NodeWidth && closestEllipse != StartingEllipse)
+            {
+                var startingNode = GraphVisual.Nodes.GetKeyOf(StartingEllipse, ReferenceEquals);
+                var endingNode = GraphVisual.Nodes.GetKeyOf(closestEllipse, ReferenceEquals);
+                var edge = Edge.Create(startingNode, endingNode, Weight);
+                if (!GraphVisual.Edges.ContainsKey(edge))
+                    GraphVisual.AddEdge(edge);
+            }
+            return new IdleState(GraphVisual);
         }
 
         public override StateController MouseMoveTo(Point point)

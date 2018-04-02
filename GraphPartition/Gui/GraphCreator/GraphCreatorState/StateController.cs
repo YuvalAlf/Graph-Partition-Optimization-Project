@@ -1,14 +1,15 @@
 ﻿using System.Windows;
+using Graphs.Visualizing;
 
 namespace GraphPartition.Gui.GraphCreator.GraphCreatorState
 {
     public abstract class StateController
     {
-        public CreatorState CreatorState { get; }
-
-        protected StateController(CreatorState creatorState)
+        public GraphVisual GraphVisual { get; }
+        
+        protected StateController(GraphVisual graphVisual)
         {
-            CreatorState = creatorState;
+            GraphVisual = graphVisual;
         }
 
         public abstract StateController LeftMouseDownAt(Point point, int times);
