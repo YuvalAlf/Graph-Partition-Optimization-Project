@@ -8,6 +8,7 @@ using GraphPartition.Gui.ProgrammedGui;
 using Graphs.EmbeddingInPlane;
 using Graphs.Visualizing;
 using Microsoft.Win32;
+using Utils.ExtensionMethods;
 
 namespace GraphPartition.Gui.GraphCreator
 {
@@ -17,19 +18,22 @@ namespace GraphPartition.Gui.GraphCreator
         private StateController StateController { get; set; }
         private EdgesHandler EdgeHandler { get; }
         private GraphVisual GraphVisual { get; }
+        private WeightsHandler WeightsHandler { get; }
 
         public GraphCreatorWindow(Action<string> graphPathChosen, Brush nodeBrush, Brush numBrush, Brush lineBrush, PenLineCap penLineCap)
         {
             InitializeComponent();
             GraphPathChosen = graphPathChosen;
             this.GraphVisual = GraphVisual.Create(GraphCanvas, nodeBrush, numBrush, lineBrush, penLineCap);
-            this.EdgeHandler = EdgesHandler.Create(EdgesScrollViewer, GraphVisual.UpdateWeight);
+            this.EdgeHandler = EdgesHandler.Create(EdgesScrollViewer, GraphVisual.UpdateWeight, _ => GraphUpdated());
             GraphVisual.EdgeAddedEvent += (sender, args) => EdgeHandler.AddEdge(args.AddedEdge);
             GraphVisual.EdgeRemovedEvent += (sender, args) => EdgeHandler.RemoveEdge(args.RemovedEdge);
             GraphVisual.EdgeAddedEvent += (sender, args) => this.GraphUpdated();
             GraphVisual.EdgeRemovedEvent += (sender, args) => this.GraphUpdated();
             GraphVisual.NodeAmountChangedEvent += (sender, args) => this.GraphUpdated();
             this.StateController = new IdleState(GraphVisual);
+            this.WeightsHandler = WeightsHandler.Create(this.ThicknessDictionaryStackPanel,
+                nodeBrush, lineBrush, GraphVisual.NodeWidth, GraphVisual.MinLineThickness, GraphVisual.MaxLineThickness, 0.0, 2.0);
         }
 
         public void GraphUpdated()
@@ -45,6 +49,8 @@ namespace GraphPartition.Gui.GraphCreator
                 SaveGraphButton.IsEnabled = true;
             else
                 SaveGraphButton.IsEnabled = false;
+
+            WeightsHandler.ChangeWeights(GraphVisual.MinWeight, GraphVisual.MaxWeight);
         }
 
         private void GraphCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

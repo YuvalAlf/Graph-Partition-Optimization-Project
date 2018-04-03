@@ -13,13 +13,14 @@ using Utils.ExtensionMethods;
 using Utils.MathUtils;
 using Utils.UiUtils.DrawingUtils;
 using Graphs.Visualizing.EdgeEventArgs;
+using Utils.UiUtils;
 
 namespace Graphs.Visualizing
 {
     public sealed class GraphVisual
     {
         public double CanvasWidth => Canvas.Width;
-        public double NodeWidth => Canvas.Width / 15.0;
+        public double NodeWidth { get; private set; }
         public double MaxLineThickness => NodeWidth / 3.0;
         public double MinLineThickness => NodeWidth / 15.0;
         public Brush NodeBrush { get; }
@@ -29,6 +30,8 @@ namespace Graphs.Visualizing
         public Canvas Canvas { get; }
         public Dictionary<Node, Ellipse> Nodes { get; }
         public Dictionary<Edge, Line> Edges { get; }
+        public double MinWeight => Edges.Keys.Min(e => e.Weight, 0.0);
+        public double MaxWeight => Edges.Keys.Max(e => e.Weight, 2.0);
         public event EventHandler<EdgeAddedArgs> EdgeAddedEvent;
         public event EventHandler<EdgeRemovedArgs> EdgeRemovedEvent;
         public event EventHandler<NodesAmountChangedArgs> NodeAmountChangedEvent;
@@ -42,6 +45,22 @@ namespace Graphs.Visualizing
             Canvas = canvas;
             Nodes = nodes;
             Edges = edges;
+            UpdateCalcNodeWidth();
+        }
+
+        private void UpdateCalcNodeWidth()
+        {
+            var nodesAmount = this.Nodes.Count;
+            var level = nodesAmount / 10;
+            var width = CanvasWidth / (10 + level * Math.Sqrt(nodesAmount + 10));
+            foreach (var ellipse in Nodes.Values)
+            {
+                var ellipseCenter = ellipse.GetCanvasCenter();
+                ellipse.Width = ellipse.Height = width;
+                ellipse.SetCanvasTopLeft(ellipseCenter.X - width / 2, ellipseCenter.Y - width / 2);
+            }
+            NodeWidth = width;
+            UpdateThicknesses();
         }
 
 
@@ -60,6 +79,7 @@ namespace Graphs.Visualizing
             var ellipse = EllipseUtils.CreateEllipse(NodeWidth, NodeWidth, 1, fillBrush, canvasTopLeft);
             Canvas.Children.Add(ellipse);
             Nodes[node] = ellipse;
+            UpdateCalcNodeWidth();
             NodeAmountChangedEvent?.Invoke(this, new NodesAmountChangedArgs());
         }
 
@@ -103,11 +123,7 @@ namespace Graphs.Visualizing
 
         private void UpdateThicknesses()
         {
-            if (Edges.Count == 0)
-                return;
-            var minWeight = Edges.Keys.Min(e => e.Weight);
-            var maxWeight = Edges.Keys.Max(e => e.Weight);
-            var proportion = MathLine.Create(minWeight, maxWeight, MinLineThickness, MaxLineThickness);
+            var proportion = MathLine.Create(MinWeight, MaxWeight, MinLineThickness, MaxLineThickness);
             foreach (var edge in Edges.Keys)
                 Edges[edge].StrokeThickness = proportion.Compute(edge.Weight);
         }

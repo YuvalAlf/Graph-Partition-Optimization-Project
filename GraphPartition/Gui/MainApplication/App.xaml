@@ -44,5 +44,52 @@
         <Style x:Key="BulletStyle" TargetType="BulletDecorator" BasedOn="{StaticResource BoundingMarginStyle}">
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+        
+        
+        <!-- ############################################################## -->
+
+        <Canvas Width="50" Height="50" x:Key="PauseCanvas">
+            <Rectangle Width="10" Height="30" Canvas.Left="10" Canvas.Top="10" Fill="Black"/>
+            <Rectangle Width="10" Height="30" Canvas.Left="30" Canvas.Top="10" Fill="Black"/>
+        </Canvas>
+        <Canvas Width="50" Height="50" x:Key="PlayCanvas">
+            <Polygon Fill="Black">
+                <Polygon.Points>
+                    <Point X="10" Y="10"/>
+                    <Point X="40" Y="25"/>
+                    <Point X="10" Y="40"/>
+                </Polygon.Points>
+            </Polygon>
+        </Canvas>
+        <Canvas Width="100" Height="50" x:Key="RightArrow">
+            <Polygon Fill="Black">
+                <Polygon.Points>
+                    <Point X="10" Y="20"/>
+                    <Point X="60" Y="20"/>
+                    <Point X="60" Y="10"/>
+                    <Point X="90" Y="25"/>
+                    <Point X="60" Y="40"/>
+                    <Point X="60" Y="30"/>
+                    <Point X="10" Y="30"/>
+                    <Point X="10" Y="20"/>
+                </Polygon.Points>
+            </Polygon>
+        </Canvas>
+        <Canvas Width="100" Height="50" x:Key="LeftArrow">
+            <Polygon Fill="Black">
+                <Polygon.Points>
+                    <Point X="90" Y="20"/>
+                    <Point X="40" Y="20"/>
+                    <Point X="40" Y="10"/>
+                    <Point X="10" Y="25"/>
+                    <Point X="40" Y="40"/>
+                    <Point X="40" Y="30"/>
+                    <Point X="90" Y="30"/>
+                    <Point X="90" Y="20"/>
+                </Polygon.Points>
+            </Polygon>
+        </Canvas>
+
+
     </Application.Resources>
 </Application>

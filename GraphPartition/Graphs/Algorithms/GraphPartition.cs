@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using Graphs.GraphProperties;
+using Optimizations.BranchAndBound;
+using Optimizations.GeneticAlgorithm;
+using Optimizations.LocalSearch;
 
 namespace Graphs.Algorithms
 {
-    public sealed class GraphPartition
+    public sealed class GraphPartitionSolution
     {
         public Dictionary<PartitionType, HashSet<Node>> Partitions { get; }
 
-        public GraphPartition(Dictionary<PartitionType, HashSet<Node>> partitions)
+        public GraphPartitionSolution(Dictionary<PartitionType, HashSet<Node>> partitions)
         {
             Partitions = partitions;
         }
@@ -29,6 +32,21 @@ namespace Graphs.Algorithms
                 if (Partitions[partitionType].Contains(node))
                     return partitionType;
             throw new ArgumentException("Node " + node + " is not in any partition");
+        }
+
+        public static IEnumerable<GraphPartitionSolution> RunGenetic(GeneticSettings geneticSettings, Graph graph)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IEnumerable<GraphPartitionSolution> RunBranchAndBound(BranchAndBoundSettings branchAndBoundSettings, Graph graph)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IEnumerable<GraphPartitionSolution> RunLocalSearch(LocalSearchSettings localSearchSettings, Graph graph)
+        {
+            throw new NotImplementedException();
         }
     }
 }

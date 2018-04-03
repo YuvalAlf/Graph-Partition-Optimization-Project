@@ -65,6 +65,10 @@
     <Compile Include="Visualizing\GraphVisual.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Optimizations\Optimizations.csproj">
+      <Project>{64D834C1-E33C-4D50-B874-7381CE7526F8}</Project>
+      <Name>Optimizations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utils\Utils.csproj">
       <Project>{F245956B-E7B8-4202-9511-3F48134BA909}</Project>
       <Name>Utils</Name>

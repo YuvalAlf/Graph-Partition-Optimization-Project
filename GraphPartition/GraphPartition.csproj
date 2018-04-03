@@ -78,6 +78,7 @@
     <Compile Include="Gui\GraphCreator\GraphCreatorState\IdleState.cs" />
     <Compile Include="Gui\GraphCreator\GraphCreatorState\StartedLineState.cs" />
     <Compile Include="Gui\GraphCreator\GraphCreatorState\StateController.cs" />
+    <Compile Include="Gui\GraphCreator\WeightsHandler.cs" />
     <Compile Include="Gui\MainApplication\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>

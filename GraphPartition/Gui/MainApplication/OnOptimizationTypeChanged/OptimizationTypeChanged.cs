@@ -72,7 +72,7 @@ namespace GraphPartition.Gui.MainApplication
         private void UserCreateGraphWindow()
         {
             var window = new GraphCreatorWindow(path => InputGraphTextBox.Text = path, NodeBrush, NumBrush, LineBrush, PenLineCap);
-            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             window.ShowDialog();
         }
     }

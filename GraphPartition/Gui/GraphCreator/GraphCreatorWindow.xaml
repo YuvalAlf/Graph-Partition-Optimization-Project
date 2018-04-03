@@ -4,13 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Graph Creator" Height="850" Width="1000">
+        Title="Graph Creator" Height="800" Width="1150" MinHeight="800" MaxHeight="800" MinWidth="1150" MaxWidth="1150">
     <DockPanel Margin="5">
         <Button Margin="0,5,0,0" Padding="5" Content="Save Graph" FontSize="24" DockPanel.Dock="Bottom" Name="SaveGraphButton" Click="SaveGraphButton_OnClick" IsEnabled="False"/>
         <Button Margin="0,5,0,0" Padding="5" Content="Embedd Graph" FontSize="24" DockPanel.Dock="Bottom" Name="EmbeddGraphButton" Click="EmbeddGraphButton_OnClick" IsEnabled="False"/>
         <Button Margin="0,5,0,0" Padding="5" Content="Open Graph" FontSize="24" DockPanel.Dock="Bottom" Name="OpenGraphButton" Click="OpenGraphButton_OnClick"/>
-        <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Name="ProportionsScrollViewer" Background="Azure" Width="100" DockPanel.Dock="Left"/>
-        <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Name="EdgesScrollViewer" Background="Snow" Width="200" DockPanel.Dock="Left"/>
+        <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Name="ProportionsScrollViewer" Background="Azure" Width="300" DockPanel.Dock="Left">
+            <StackPanel Name="ThicknessDictionaryStackPanel"/>
+        </ScrollViewer>
+        <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Name="EdgesScrollViewer" Background="LightCyan" Width="200" DockPanel.Dock="Left"/>
         <Viewbox Style="{StaticResource BoundingMarginStyle}">
             <Canvas Name="GraphCanvas" Width="1.0" Height="1.0" Background="AliceBlue" MouseLeftButtonDown="GraphCanvas_MouseLeftButtonDown" MouseLeftButtonUp="GraphCanvas_MouseLeftButtonUp" MouseRightButtonDown="GraphCanvas_MouseRightButtonDown" MouseMove="GraphCanvas_MouseMove"/>
         </Viewbox>
