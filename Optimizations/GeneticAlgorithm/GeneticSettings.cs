@@ -8,6 +8,8 @@
         public double MutationRate { get; }
         public double ElitismRate { get; }
         public double NewGenesRate { get; }
+        public int ElitismAmount => (int)(Population * ElitismRate);
+        public double NewGenesAmount => (int) (Population * NewGenesRate);
 
         public GeneticSettings(int population, double mutationRate, double elitismRate, double newGenesRate)
         {

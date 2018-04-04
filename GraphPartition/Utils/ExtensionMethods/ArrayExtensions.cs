@@ -17,5 +17,9 @@ namespace Utils.ExtensionMethods
                 return @default;
             return @this.Max(selector);
         }
+        public static T[] Copy<T>(this T[] @this)
+        {
+            return @this.Clone() as T[];
+        }
     }
 }

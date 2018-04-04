@@ -187,5 +187,13 @@ namespace Graphs.Visualizing
                 line.MoveOnCanvasTo(point1, point2, TimeSpan.FromSeconds(2.0));
             }
         }
+
+        public void CopyTo(GraphVisual graph)
+        {
+            foreach (var node in Nodes.Keys)
+                graph.AddNode(node, Nodes[node].GetCanvasCenter());
+            foreach (var edge in Edges.Keys)
+                graph.AddEdge(edge);
+        }
     }
 }

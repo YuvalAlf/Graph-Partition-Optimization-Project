@@ -9,5 +9,9 @@ namespace Utils.ExtensionMethods
         {
             return @this.NextDouble() * (range.Max - range.Min) + range.Min;
         }
+        public static T ChooseRandomly<T>(this T[] @this, Random rnd)
+        {
+            return @this[rnd.Next(@this.Length)];
+        }
     }
 }

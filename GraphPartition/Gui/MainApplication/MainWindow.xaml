@@ -28,15 +28,17 @@
         <DockPanel VerticalAlignment="Stretch" Margin="5,0,5,5">
             <DockPanel DockPanel.Dock="Right">
                 <DockPanel DockPanel.Dock="Bottom">
-                    <Button Style="{StaticResource BoundingMarginStyle}" Name="PauseButton" DockPanel.Dock="Right"  Content="{StaticResource PlayCanvas}"/>
-                    <Button Style="{StaticResource BoundingMarginStyle}" Name="PlayButton" DockPanel.Dock="Right" Content="{StaticResource PauseCanvas}"/>
-                    <Button Style="{StaticResource BoundingMarginStyle}" Name="NextSolutionButton" DockPanel.Dock="Right"  Content="{StaticResource RightArrow}"/>
-                    <Button Style="{StaticResource BoundingMarginStyle}" Name="PrevSolutionButton" DockPanel.Dock="Right"  Content="{StaticResource LeftArrow}"/>
+                    <Button Style="{StaticResource BoundingMarginStyle}" Name="PlayButton" DockPanel.Dock="Right" Content="{StaticResource PlayCanvas}" Click="PlayButton_Click"/>
+                    <Button Style="{StaticResource BoundingMarginStyle}" Name="PauseButton" DockPanel.Dock="Right" Content="{StaticResource PauseCanvas}" Click="PauseButton_Click"/>
+                    <Button Style="{StaticResource BoundingMarginStyle}" Name="NextSolutionButton" DockPanel.Dock="Right"  Content="{StaticResource RightArrow}" Click="NextSolutionButton_Click"/>
+                    <Button Style="{StaticResource BoundingMarginStyle}" Name="PrevSolutionButton" DockPanel.Dock="Right"  Content="{StaticResource LeftArrow}" Click="PrevSolutionButton_Click"/>
                 </DockPanel>
                 <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Background="#DFFFFA" Name="StatusViewer" Margin="5,2,5,8"/>
                 
             </DockPanel>
-        <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Background="#DFFDFE" Name="BestSolutionViewer"/>
+        <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Background="#DFFDFE" VerticalScrollBarVisibility="Disabled">
+            <DockPanel Name="BestSolutionDockPanel"/>
+        </ScrollViewer>
         </DockPanel>
     </DockPanel>
 </Window>
