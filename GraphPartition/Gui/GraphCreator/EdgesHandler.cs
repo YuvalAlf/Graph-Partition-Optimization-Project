@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using GraphPartition.Gui.ProgrammedGui;
 using Graphs.GraphProperties;
 using MoreLinq;
 using Utils.ExtensionMethods;
-using Utils.UiUtils.DrawingUtils;
+using Utils.UiUtils;
+using Utils.UiUtils.CustomUi.Creator;
+using Utils.UiUtils.CustomUi.CustomType;
 
 namespace GraphPartition.Gui.GraphCreator
 {
@@ -28,7 +29,7 @@ namespace GraphPartition.Gui.GraphCreator
         {
             var stackPanel = new StackPanel();
             scrollViewer.Content = stackPanel;
-            stackPanel.Children.Add(TextBlockCreator.CreateTitle("Edges"));
+            stackPanel.Children.Add(TextBlockCreator.TitleTextBlock("Edges"));
             return new EdgesHandler(stackPanel, new Dictionary<Edge, DockPanel>(), updateWeight);
         }
 
@@ -45,13 +46,13 @@ namespace GraphPartition.Gui.GraphCreator
 
             UIElement textPart =
                 !active
-                    ? TextBlockCreator.CreateNormal(edge.Weight.ToString()).WithVerticalAlignment(VerticalAlignment.Center)
+                    ? TextBlockCreator.RegularTextBlock(edge.Weight.ToString()).WithVerticalAlignment(VerticalAlignment.Center)
                     : (UIElement) InteractiveTextBox.Create(edge.Weight.ToString(), StringExtensions.IsDouble(), WeightChanged,
                         Dispatcher.CurrentDispatcher);
 
 
             var dockPanel = HorizontalContainerStrecherd.Create()
-                .AddLeft(TextBlockCreator.CreateNormal(edge + ": ").WithBullet())
+                .AddLeft(TextBlockCreator.RegularTextBlock(edge + ": ").WithBullet())
                 .AsDock(textPart);
             this.StackPanel.Children.Add(dockPanel);
             this.Edges[edge] = dockPanel;

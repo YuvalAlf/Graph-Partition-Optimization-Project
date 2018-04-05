@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -28,6 +23,10 @@ namespace Utils.UiUtils.DrawingUtils
         {
             var point = @this.GetCanvasPosition();
             return point.AddX(@this.Width / 2).AddY(@this.Height / 2);
+        }
+        public static void SetCanvasCenter(this Ellipse @this, Point point)
+        {
+            @this.SetCanvasTopLeft(point.X - @this.Width / 2, point.Y - @this.Height / 2);
         }
     }
 }

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Graph Creator" Height="800" Width="1150" MinHeight="800" MaxHeight="800" MinWidth="1150" MaxWidth="1150">
+        Title="Graph Creator" Height="800" Width="1150">
     <DockPanel Margin="5">
         <Button Margin="0,5,0,0" Padding="5" Content="Save Graph" FontSize="24" DockPanel.Dock="Bottom" Name="SaveGraphButton" Click="SaveGraphButton_OnClick" IsEnabled="False"/>
         <Button Margin="0,5,0,0" Padding="5" Content="Embedd Graph" FontSize="24" DockPanel.Dock="Bottom" Name="EmbeddGraphButton" Click="EmbeddGraphButton_OnClick" IsEnabled="False"/>

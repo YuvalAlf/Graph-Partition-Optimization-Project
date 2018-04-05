@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace GraphPartition.Gui.ProgrammedGui
+namespace Utils.UiUtils.CustomUi.Creator
 {
     public static class ButtonCreator
     {
@@ -10,7 +10,7 @@ namespace GraphPartition.Gui.ProgrammedGui
         {
             var button = new Button();
             button.Style = Application.Current.Resources["BoundingMarginStyle"] as Style;
-            button.Content = TextBlockCreator.CreateNormal(text);
+            button.Content = TextBlockCreator.RegularTextBlock(text);
             button.Click += (sender, args) => onClick(); 
             return button;
         }

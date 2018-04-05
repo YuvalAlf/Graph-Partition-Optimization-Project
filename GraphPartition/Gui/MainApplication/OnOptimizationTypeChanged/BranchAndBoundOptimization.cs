@@ -1,7 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using GraphPartition.Gui.ProgrammedGui;
 using Optimizations.BranchAndBound;
+using Utils.UiUtils;
+using Utils.UiUtils.CustomUi.Creator;
 
 // ReSharper disable once CheckNamespace
 namespace GraphPartition.Gui.MainApplication
@@ -12,11 +13,9 @@ namespace GraphPartition.Gui.MainApplication
 
         private StackPanel InitBranchAndBoundSettings()
         {
-            var stackPanel = new StackPanel();
+            var title = TextBlockCreator.TitleTextBlock("Branch & Bound Settings");
 
-            stackPanel.Children.Add(TextBlockCreator.CreateTitle("Branch & Bound Settings"));
-
-            return stackPanel;
+            return GuiExtensions.CreateStackPanel(title);
         }
     }
 }

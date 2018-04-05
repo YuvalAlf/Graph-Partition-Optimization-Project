@@ -31,7 +31,6 @@ namespace Graphs.EmbeddingInPlane
             foreach (var node2 in this.Graph.Nodes)
                 if (node1.Value < node2.Value)
                     yield return this.Replace(node1, node2);
-
         }
 
         private GraphEmbedding Replace(Node node1, Node node2)

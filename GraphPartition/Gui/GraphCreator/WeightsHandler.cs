@@ -2,8 +2,10 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using GraphPartition.Gui.ProgrammedGui;
 using Utils.MathUtils;
+using Utils.UiUtils;
+using Utils.UiUtils.CustomUi.Creator;
+using Utils.UiUtils.CustomUi.CustomType;
 using Utils.UiUtils.DrawingUtils;
 
 namespace GraphPartition.Gui.GraphCreator
@@ -13,21 +15,18 @@ namespace GraphPartition.Gui.GraphCreator
         public const int Steps = 4;
         private Dictionary<int, TextBlock> StepTextBoxes { get; }
 
-        public WeightsHandler(Dictionary<int, TextBlock> stepTextBoxes)
-        {
-            this.StepTextBoxes = stepTextBoxes;
-        }
+        public WeightsHandler(Dictionary<int, TextBlock> stepTextBoxes) => StepTextBoxes = stepTextBoxes;
 
         public static WeightsHandler Create(StackPanel stackPanel, Brush nodeBrush, Brush lineBrush, double nodeWidth, double minThickness, double maxThickness, double minWeight, double maxWeight)
         {
             var thicknessLine = MathLine.Create(minWeight, maxWeight, minThickness, maxThickness);
             var stepTextBoxes = new Dictionary<int, TextBlock>();
-            stackPanel.Children.Add(TextBlockCreator.CreateTitle("Proportions"));
+            stackPanel.Children.Add(TextBlockCreator.TitleTextBlock("Proportions"));
             for (int step = 0; step <= Steps; step++)
             {
                 var weight = WeightOfStep(step, minWeight, maxWeight);
                 var thickness = thicknessLine.Compute(weight);
-                var textBlock = TextBlockCreator.CreateNormal(AsString(weight));
+                var textBlock = TextBlockCreator.RegularTextBlock(AsString(weight));
                 stepTextBoxes[step] = textBlock;
                 var canvas = CreateCanvas(nodeBrush, lineBrush, nodeWidth, thickness);
                 stackPanel.Children.Add(HorizontalContainerStrecherd.Create()
@@ -44,15 +43,11 @@ namespace GraphPartition.Gui.GraphCreator
                 StepTextBoxes[step].Text = AsString(WeightOfStep(step, newMinWeight, newMaxWeight));
         }
 
-        private static string AsString(double weight)
-        {
-            return weight.ToString("e2") + ": ";
-        }
+        private static string AsString(double weight) 
+            => weight.ToString("e2") + ": ";
 
-        private static double WeightOfStep(int step, double minWeight, double maxWeight)
-        {
-            return maxWeight * ((double) step / Steps) + minWeight * (Steps - step) / Steps;
-        }
+        private static double WeightOfStep(int step, double minWeight, double maxWeight) 
+            => maxWeight * ((double) step / Steps) + minWeight * (Steps - step) / Steps;
 
         private static UIElement CreateCanvas(Brush nodeBrush, Brush lineBrush, double nodeWidth, double thickness)
         {

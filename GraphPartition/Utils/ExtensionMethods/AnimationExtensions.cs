@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -12,7 +8,7 @@ namespace Utils.ExtensionMethods
 {
     public static class AnimationExtensions
     {
-        public static void MoveOnCanvasTo(this Ellipse @this, Point point, TimeSpan time)
+        public static void MoveOnCanvasTo(this FrameworkElement @this, Point point, TimeSpan time)
         {
             var storyBoard = new Storyboard();
             var doubleAnimationX = new DoubleAnimation(toValue: point.X, duration: time);

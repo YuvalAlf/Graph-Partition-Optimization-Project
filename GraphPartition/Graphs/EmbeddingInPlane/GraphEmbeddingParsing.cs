@@ -53,8 +53,8 @@ namespace Graphs.EmbeddingInPlane
         private static void ParseEdgeAndAdd(string line, List<Edge> edges)
         {
             var entries = line.Split(new[] { '\t', ' ', ',', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
-            var node1 = new Node(int.Parse(entries[1]));
-            var node2 = new Node(int.Parse(entries[2]));
+            var node1 = int.Parse(entries[1]);
+            var node2 = int.Parse(entries[2]);
             var weight = double.Parse(entries[4]);
             edges.Add(Edge.Create(node1, node2, weight));
         }
@@ -65,7 +65,7 @@ namespace Graphs.EmbeddingInPlane
             var nodeValue = int.Parse(entries[1]);
             var left = double.Parse(entries[3]);
             var top = double.Parse(entries[5]);
-            nodes[new Node(nodeValue)] = new Point(left, top);
+            nodes[nodeValue] = new Point(left, top);
         }
     }
 }

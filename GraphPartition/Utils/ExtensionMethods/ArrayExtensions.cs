@@ -17,9 +17,13 @@ namespace Utils.ExtensionMethods
                 return @default;
             return @this.Max(selector);
         }
-        public static T[] Copy<T>(this T[] @this)
-        {
-            return @this.Clone() as T[];
-        }
+        public static T[] Copy<T>(this T[] @this) 
+            => @this.Clone() as T[];
+
+        public static S[] Map<T,S>(this T[] @this, Func<T, S> mapFunc) 
+            => @this.Select(mapFunc).ToArray();
+
+        public static T ChooseRandomly<T>(this T[] @this, Random rnd) 
+            => @this[rnd.Next(@this.Length)];
     }
 }

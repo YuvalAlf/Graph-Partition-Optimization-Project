@@ -6,10 +6,8 @@ namespace Utils.ExtensionMethods
 {
     public static class StringExtensions
     {
-        public static string AsString(this IEnumerable<char> @this)
-        {
-            return new string(@this.ToArray());
-        }
+        public static string AsString(this IEnumerable<char> @this) 
+            => new string(@this.ToArray());
 
         public static Predicate<string> IsDouble()
         {
@@ -19,6 +17,7 @@ namespace Utils.ExtensionMethods
                 return double.TryParse(str, out res);
             };
         }
+
         public static Predicate<string> IsInt()
         {
             return str =>

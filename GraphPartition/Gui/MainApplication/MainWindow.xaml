@@ -4,10 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:uiUtils="clr-namespace:Utils.UiUtils;assembly=Utils"
+        xmlns:customUi="clr-namespace:Utils.UiUtils.CustomUi;assembly=Utils"
+        xmlns:customType="clr-namespace:Utils.UiUtils.CustomUi.CustomType;assembly=Utils"
         mc:Ignorable="d"
         WindowState="Maximized"
         Title="Graph Partition Optimization" Height="1200" Width="1800">
-    <uiUtils:AnimatableScrollViewer Style="{StaticResource ScrollViewerStyle}" Name="WindowScrollViewer">
+    <customType:AnimatableScrollViewer Style="{StaticResource ScrollViewerStyle}" Name="WindowScrollViewer">
         <DockPanel>
             <TextBlock DockPanel.Dock="Top" Text="Graph Partition" Style="{StaticResource TitleTextBlockStyle}" FontSize="72" Margin="10"/>
             <DockPanel DockPanel.Dock="Top" Height="450" Margin="5,0,5,0">
@@ -45,5 +47,6 @@
                 </Grid>
             </DockPanel>
         </DockPanel>
-    </uiUtils:AnimatableScrollViewer>
+    </customType:AnimatableScrollViewer>
 </Window>
+

@@ -4,14 +4,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using GraphPartition.Gui.GraphCreator;
-using GraphPartition.Gui.ProgrammedGui;
 using Graphs.Algorithms;
 using Graphs.EmbeddingInPlane;
 using Graphs.GraphProperties;
 using Graphs.Visualizing;
 using Optimizations;
+using Utils.UiUtils.CustomUi.Creator;
 
 // ReSharper disable once CheckNamespace
 namespace GraphPartition.Gui.MainApplication
@@ -52,7 +51,7 @@ namespace GraphPartition.Gui.MainApplication
         private void PrepareResultWindow()
         {
             var stackPanel = new StackPanel();
-            ResultTextBlock = TextBlockCreator.CreateTitle("");
+            ResultTextBlock = TextBlockCreator.TitleTextBlock("");
             this.StatusViewer.Content = ResultTextBlock;
         }
 
@@ -87,23 +86,17 @@ namespace GraphPartition.Gui.MainApplication
         {
             var canvas = new Canvas{Width = 1000, Height = 1000};
             canvas.Background = canvasBackground;
-            //canvas.Arrange(new Rect(new Size(1.0, 1.0)));
-            //canvas.Measure(new Size(1.0, 1.0));
-            var graph = GraphVisual.Create(canvas, NodeBrush, NumBrush, LineBrush, PenLineCap);
-            originalGraphVisual.CopyTo(graph);
-            foreach (var node in graph.Nodes.Keys)
+            var partitionGraphVisual = originalGraphVisual.Clone(canvas);
+            foreach (var node in partitionGraphVisual.Nodes.Keys)
             {
-                var ellipse = graph.Nodes[node];
+                var ellipse = partitionGraphVisual.Nodes[node];
                 var partitionType = solution.PartitionTypeOf(node);
-                var visualBrush = ellipse.Fill as VisualBrush;
-                var grid = (visualBrush.Visual as Grid);
-                var rect = (grid.Children[0] as Viewbox).Child as Rectangle;
-                rect.Fill = lineEdgeBrush[partitionType].Item1;
+                ellipse.Background.Fill = lineEdgeBrush[partitionType].Item1;
             }
 
-            foreach (var edge in graph.Edges.Keys)
+            foreach (var edge in partitionGraphVisual.Edges.Keys)
             {
-                var line = graph.Edges[edge];
+                var line = partitionGraphVisual.Edges[edge];
                 var partitionType = solution.PartitionTypeOf(edge.Node1);
                 if (partitionType == solution.PartitionTypeOf(edge.Node2))
                 {

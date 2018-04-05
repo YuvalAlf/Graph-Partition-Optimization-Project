@@ -23,13 +23,10 @@ namespace Utils.ExtensionMethods
 
             return (bestT, bestVal);
         }
-        public static S Min<T, S>(this IEnumerable<T> @this, Func<T, S> selector, S @default)
-        {
-            return @this.Select(selector).Append(@default).Min();
-        }
-        public static S Max<T, S>(this IEnumerable<T> @this, Func<T, S> selector, S @default)
-        {
-            return @this.Select(selector).Append(@default).Max();
-        }
+        public static S Min<T, S>(this IEnumerable<T> @this, Func<T, S> selector, S @default) 
+            => @this.Select(selector).Append(@default).Min();
+
+        public static S Max<T, S>(this IEnumerable<T> @this, Func<T, S> selector, S @default) 
+            => @this.Select(selector).Append(@default).Max();
     }
 }

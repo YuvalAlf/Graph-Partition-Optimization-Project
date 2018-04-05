@@ -23,7 +23,7 @@ namespace Graphs.GraphProperties
         public static Edge Create(Node node1, Node node2, double weight)
         {
             var (minNode, maxNode) = GeneralUtils.MinMax(node1.Value, node2.Value);
-            return new Edge(new Node(minNode), new Node(maxNode), weight);
+            return new Edge(minNode, maxNode, weight);
         }
 
         public bool HasNode(Node node) => Node1.Equals(node) || Node2.Equals(node);
@@ -46,7 +46,7 @@ namespace Graphs.GraphProperties
             }
         }
 
-        public override string ToString() => $"({Node1}, {Node2})";
+        public override string ToString() => $"({Node1},{Node2})";
 
         public bool IsClashingWith(Edge edge, Dictionary<Node, Point> embedding)
         {

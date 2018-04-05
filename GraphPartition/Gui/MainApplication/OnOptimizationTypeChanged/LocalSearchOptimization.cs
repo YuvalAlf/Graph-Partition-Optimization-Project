@@ -1,7 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using GraphPartition.Gui.ProgrammedGui;
 using Optimizations.LocalSearch;
+using Utils.UiUtils;
+using Utils.UiUtils.CustomUi.Creator;
 
 // ReSharper disable once CheckNamespace
 namespace GraphPartition.Gui.MainApplication
@@ -12,11 +13,9 @@ namespace GraphPartition.Gui.MainApplication
 
         private StackPanel InitLocalSearchSettings()
         {
-            var stackPanel = new StackPanel();
+            var title = TextBlockCreator.TitleTextBlock("Local Search Settings");
 
-            stackPanel.Children.Add(TextBlockCreator.CreateTitle("Local Search Settings"));
-
-            return stackPanel;
+            return GuiExtensions.CreateStackPanel(title);
         }
     }
 }

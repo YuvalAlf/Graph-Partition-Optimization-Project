@@ -2,7 +2,7 @@
 
 namespace Utils.UiUtils.DrawingUtils
 {
-    public static class ColorUtils
+    public static class BrushesUtils
     {
         public static SolidColorBrush ToBrush(this Color @this)
             => new SolidColorBrush(@this);

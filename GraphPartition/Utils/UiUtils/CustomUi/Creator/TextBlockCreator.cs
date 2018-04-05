@@ -4,11 +4,11 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace GraphPartition.Gui.ProgrammedGui
+namespace Utils.UiUtils.CustomUi.Creator
 {
     public static class TextBlockCreator
     {
-        public static TextBlock CreateNormal(string text)
+        public static TextBlock RegularTextBlock(string text)
         {
             var textBlock = new TextBlock();
             textBlock.Text = text;
@@ -16,7 +16,7 @@ namespace GraphPartition.Gui.ProgrammedGui
             return textBlock;
         }
 
-        public static TextBlock CreateTitle(string text)
+        public static TextBlock TitleTextBlock(string text)
         {
             var textBlock = new TextBlock();
             textBlock.Text = text;

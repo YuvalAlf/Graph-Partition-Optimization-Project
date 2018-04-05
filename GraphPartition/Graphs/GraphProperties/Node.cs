@@ -5,11 +5,8 @@ namespace Graphs.GraphProperties
     public struct Node : IEquatable<Node>
     {
         public int Value { get; }
-
-        public Node(int value)
-        {
-            Value = value;
-        }
+        public Node(int value) => Value = value;
+        public static implicit operator Node(int num) => new Node(num);
 
 
         public override bool Equals(object obj)

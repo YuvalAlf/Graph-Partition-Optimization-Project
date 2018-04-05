@@ -1,18 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 
 namespace Utils.ExtensionMethods
 {
     public static class IntExtensions
     {
-        public static string AsString(this int @this, int digits)
-        {
-            var digitsToPad = digits - @this.CountDigits();
-            digitsToPad = Math.Max(0, digitsToPad);
-            return Enumerable.Repeat('0', digitsToPad).Concat(@this.ToString()).AsString();
-        }
-
         public static int CountDigits(this int num)
         {
             Debug.Assert(num >= 0);

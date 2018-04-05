@@ -74,8 +74,6 @@ namespace Graphs.Algorithms
         public static IEnumerable<GraphPartitionSolution> RunGenetic(GeneticSettings geneticSettings, Random rnd, Graph graph, Func<bool> kill, object run)
         {
             var genetic = new Genetic<GraphPartitionSolution>(r => GraphPartitionSolution.GenerateRandom(graph, r));
-
-
             return genetic.Run(geneticSettings, run, kill, rnd);
 
         }

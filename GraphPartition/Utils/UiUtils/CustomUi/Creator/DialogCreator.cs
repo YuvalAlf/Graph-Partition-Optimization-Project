@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
-namespace GraphPartition.Gui.ProgrammedGui
+namespace Utils.UiUtils.CustomUi.Creator
 {
     public static class DialogCreator
     {

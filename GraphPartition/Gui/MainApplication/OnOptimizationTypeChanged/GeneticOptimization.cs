@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using GraphPartition.Gui.ProgrammedGui;
 using Optimizations.GeneticAlgorithm;
 using Utils.ExtensionMethods;
+using Utils.UiUtils;
+using Utils.UiUtils.CustomUi.Creator;
+using Utils.UiUtils.CustomUi.CustomType;
 
 // ReSharper disable once CheckNamespace
 namespace GraphPartition.Gui.MainApplication
@@ -15,28 +17,25 @@ namespace GraphPartition.Gui.MainApplication
 
         private StackPanel InitGeneticSettings()
         {
-            var stackPanel = new StackPanel();
-
-
             // Population
             var populationValidity = StringExtensions.IsInt().And(StringExtensions.InRange(2, 10000));
             var updatePopulation = new Action<string>(str => GeneticSettings = GeneticSettings.WithPopulation(int.Parse(str)));
             var populationContainer = HorizontalContainerStrecherd.Create()
-                .AddLeft(TextBlockCreator.CreateNormal("Population").WithBullet())
+                .AddLeft(TextBlockCreator.RegularTextBlock("Population").WithBullet())
                 .AsDock(InteractiveTextBox.Create(GeneticSettings.Population.ToString(), populationValidity, updatePopulation, Dispatcher));
 
             // Mutation Rate
             var mutationRateValidity = StringExtensions.IsDouble().And(StringExtensions.InRange(0, 1));
             var updateMutationRate = new Action<string>(str => GeneticSettings = GeneticSettings.WithMutationRate(double.Parse(str)));
             var mutationRateContainer = HorizontalContainerStrecherd.Create()
-                .AddLeft(TextBlockCreator.CreateNormal("Mutation Rate").WithBullet())
+                .AddLeft(TextBlockCreator.RegularTextBlock("Mutation Rate").WithBullet())
                 .AsDock(InteractiveTextBox.Create(this.GeneticSettings.MutationRate.ToString(), mutationRateValidity, updateMutationRate, Dispatcher));
 
             // Elitism Rate
             var elitismRateValidity = StringExtensions.IsDouble().And(StringExtensions.InRange(0, 1));
             var updateElitismRate = new Action<string>(str => GeneticSettings = GeneticSettings.WithMutationRate(double.Parse(str)));
             var elitismRateContainer = HorizontalContainerStrecherd.Create()
-                .AddLeft(TextBlockCreator.CreateNormal("Elitism Rate").WithBullet())
+                .AddLeft(TextBlockCreator.RegularTextBlock("Elitism Rate").WithBullet())
                 .AsDock(InteractiveTextBox.Create(this.GeneticSettings.ElitismRate.ToString(), elitismRateValidity, updateElitismRate, Dispatcher));
 
 
@@ -44,16 +43,12 @@ namespace GraphPartition.Gui.MainApplication
             var newGenesRateValidity = StringExtensions.IsDouble().And(StringExtensions.InRange(0, 1));
             var updateNewGenesRate = new Action<string>(str => GeneticSettings = GeneticSettings.WithMutationRate(double.Parse(str)));
             var newGenesRateContainer = HorizontalContainerStrecherd.Create()
-                .AddLeft(TextBlockCreator.CreateNormal("New Genes Rate").WithBullet())
+                .AddLeft(TextBlockCreator.RegularTextBlock("New Genes Rate").WithBullet())
                 .AsDock(InteractiveTextBox.Create(this.GeneticSettings.NewGenesRate.ToString(), newGenesRateValidity, updateNewGenesRate, Dispatcher));
 
+            var title = TextBlockCreator.TitleTextBlock("Genetic Settings");
 
-            stackPanel.Children.Add(TextBlockCreator.CreateTitle("Genetic Settings"));
-            stackPanel.Children.Add(populationContainer);
-            stackPanel.Children.Add(mutationRateContainer);
-            stackPanel.Children.Add(elitismRateContainer);
-            stackPanel.Children.Add(newGenesRateContainer);
-            return stackPanel;
+            return GuiExtensions.CreateStackPanel(title, populationContainer, mutationRateContainer, elitismRateContainer, newGenesRateContainer);
         }
     }
 }

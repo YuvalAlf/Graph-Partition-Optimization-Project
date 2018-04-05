@@ -7,9 +7,6 @@ namespace Graphs.Visualizing.EdgeEventArgs
     {
         public Edge AddedEdge { get; }
 
-        public EdgeAddedArgs(Edge addedEdge)
-        {
-            AddedEdge = addedEdge;
-        }
+        public EdgeAddedArgs(Edge addedEdge) => AddedEdge = addedEdge;
     }
 }

@@ -94,13 +94,7 @@
     <Compile Include="Gui\MainApplication\OnOptimizationTypeChanged\GraphHandling.cs" />
     <Compile Include="Gui\MainApplication\OnOptimizationTypeChanged\LocalSearchOptimization.cs" />
     <Compile Include="Gui\MainApplication\OnOptimizationTypeChanged\OptimizationTypeChanged.cs" />
-    <Compile Include="Gui\ProgrammedGui\ButtonCreator.cs" />
-    <Compile Include="Gui\ProgrammedGui\DialogCreator.cs" />
-    <Compile Include="Gui\ProgrammedGui\HorizontalContainerStrecherd.cs" />
     <Compile Include="Gui\MainApplication\Programming\MethodChoosingViewerCreator.cs" />
-    <Compile Include="Gui\ProgrammedGui\InteractiveTextBox.cs" />
-    <Compile Include="Gui\ProgrammedGui\RadioButtonChooser.cs" />
-    <Compile Include="Gui\ProgrammedGui\TextBlockCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

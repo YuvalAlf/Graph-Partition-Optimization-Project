@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace GraphPartition.Gui.ProgrammedGui
+namespace Utils.UiUtils.CustomUi.CustomType
 {
     public sealed class HorizontalContainerStrecherd
     {

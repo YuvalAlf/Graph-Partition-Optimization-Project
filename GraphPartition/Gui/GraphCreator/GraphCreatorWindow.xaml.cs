@@ -4,11 +4,10 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using GraphPartition.Gui.GraphCreator.GraphCreatorState;
-using GraphPartition.Gui.ProgrammedGui;
 using Graphs.EmbeddingInPlane;
 using Graphs.Visualizing;
 using Microsoft.Win32;
-using Utils.ExtensionMethods;
+using Utils.UiUtils.CustomUi.Creator;
 
 namespace GraphPartition.Gui.GraphCreator
 {
@@ -23,6 +22,8 @@ namespace GraphPartition.Gui.GraphCreator
         public GraphCreatorWindow(Action<string> graphPathChosen, Brush nodeBrush, Brush numBrush, Brush lineBrush, PenLineCap penLineCap)
         {
             InitializeComponent();
+            this.MinWidth = this.MaxWidth = this.Width;
+            this.MinHeight = this.MaxHeight = this.Height;
             GraphPathChosen = graphPathChosen;
             this.GraphVisual = GraphVisual.Create(GraphCanvas, nodeBrush, numBrush, lineBrush, penLineCap);
             this.EdgeHandler = EdgesHandler.Create(EdgesScrollViewer, GraphVisual.UpdateWeight, _ => GraphUpdated());
@@ -88,7 +89,7 @@ namespace GraphPartition.Gui.GraphCreator
             }
 
             FlipEnabaling();
-            this.GraphVisual.EmbeddFor(TimeSpan.FromSeconds(0.5), FlipEnabaling, Dispatcher);
+            this.GraphVisual.EmbeddFor(TimeSpan.FromSeconds(1.8), TimeSpan.FromSeconds(0.5), FlipEnabaling, Dispatcher);
         }
 
         private void SaveGraphButton_OnClick(object sender, RoutedEventArgs e)
@@ -108,12 +109,12 @@ namespace GraphPartition.Gui.GraphCreator
         {
             try
             {
-                void fileChosen(string path)
+                void FileChosen(string path)
                 {
                     var embedding = GraphEmbedding.FromText(File.ReadLines(path));
                     this.GraphVisual.SetNewEmbedding(embedding);
                 }
-                DialogCreator.ChooseFile(fileChosen);
+                DialogCreator.ChooseFile(FileChosen);
             }
             catch(Exception e)
             {

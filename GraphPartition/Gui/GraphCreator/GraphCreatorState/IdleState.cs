@@ -27,8 +27,8 @@ namespace GraphPartition.Gui.GraphCreator.GraphCreatorState
             if (valueRange.Contains(point.X) && valueRange.Contains(point.Y))
                 if (times == 2 && minDistance > GraphVisual.NodeWidth)
                 {
-                    var nodeValue = Enumerable.Range(1, int.MaxValue).First(x => !GraphVisual.Nodes.ContainsKey(new Node(x)));
-                    GraphVisual.AddNode(new Node(nodeValue) , point);
+                    var nodeValue = Enumerable.Range(1, int.MaxValue).First(x => !GraphVisual.Nodes.ContainsKey(x));
+                    GraphVisual.AddNode(nodeValue , point);
                     return this;
                 }
 

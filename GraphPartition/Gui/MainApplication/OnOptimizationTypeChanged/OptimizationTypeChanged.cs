@@ -2,11 +2,11 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using GraphPartition.Gui.GraphCreator;
-using GraphPartition.Gui.ProgrammedGui;
 using Graphs.EmbeddingInPlane;
 using Optimizations;
+using Utils.UiUtils.CustomUi.Creator;
+using Utils.UiUtils.CustomUi.CustomType;
 
 // ReSharper disable once CheckNamespace
 namespace GraphPartition.Gui.MainApplication
@@ -48,7 +48,7 @@ namespace GraphPartition.Gui.MainApplication
             Action<string> onPathChanged = path => OutputResultPath = path;
             var textBox = InteractiveTextBox.Create(OutputResultPath, validityCheck, onPathChanged, Dispatcher);
             return HorizontalContainerStrecherd.Create()
-                .AddLeft(TextBlockCreator.CreateNormal("Result Output Folder").WithBullet())
+                .AddLeft(TextBlockCreator.RegularTextBlock("Result Output Folder").WithBullet())
                 .AddRight(ButtonCreator.Create("...", () => DialogCreator.ChooseFolder(path => textBox.Text = path)))
                 .AsDock(textBox);
         }
@@ -63,7 +63,7 @@ namespace GraphPartition.Gui.MainApplication
             var textBox = InteractiveTextBox.Create(InputGraphPath, validityCheck, onPathChanged, Dispatcher);
             InputGraphTextBox = textBox;
             return HorizontalContainerStrecherd.Create()
-                .AddLeft(TextBlockCreator.CreateNormal("Input Graph").WithBullet())
+                .AddLeft(TextBlockCreator.RegularTextBlock("Input Graph").WithBullet())
                 .AddRight(ButtonCreator.Create("...", () => DialogCreator.ChooseFile(path => textBox.Text = path)))
                 .AsDock(textBox);
         }
