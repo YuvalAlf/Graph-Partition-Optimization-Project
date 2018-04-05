@@ -21,8 +21,8 @@ namespace Graphs.Visualizing
     {
         public double CanvasWidth => Canvas.Width;
         public double NodeWidth { get; private set; }
-        public double MaxLineThickness => NodeWidth / 3.0;
-        public double MinLineThickness => NodeWidth / 15.0;
+        public double MaxLineThickness => NodeWidth / 4.0;
+        public double MinLineThickness => NodeWidth / 20.0;
         public Brush NodeBrush { get; }
         public Brush NodeNumBrush { get; }
         public Brush LineBrush { get; }
@@ -51,8 +51,8 @@ namespace Graphs.Visualizing
         private void UpdateCalcNodeWidth()
         {
             var nodesAmount = this.Nodes.Count;
-            var level = nodesAmount / 10;
-            var width = CanvasWidth / (10 + level * Math.Sqrt(nodesAmount + 10));
+            var level = nodesAmount / 5;
+            var width = CanvasWidth / (10 + level * Math.Sqrt((nodesAmount + 1) / 3.0));
             foreach (var ellipse in Nodes.Values)
             {
                 var ellipseCenter = ellipse.GetCanvasCenter();
@@ -98,7 +98,7 @@ namespace Graphs.Visualizing
         {
             this.Canvas.Children.Remove(Edges[edge]);
             this.Edges.Remove(edge);
-            UpdateThicknesses();
+            this.UpdateThicknesses();
             EdgeRemovedEvent?.Invoke(this, new EdgeRemovedArgs(edge));
         }
 
@@ -109,7 +109,7 @@ namespace Graphs.Visualizing
             foreach (var edge in Edges.Keys.ToArray())
                 if (edge.HasNode(node))
                     RemoveEdge(edge);
-            this.UpdateThicknesses();
+            UpdateCalcNodeWidth();
             NodeAmountChangedEvent?.Invoke(this, new NodesAmountChangedArgs());
         }
 

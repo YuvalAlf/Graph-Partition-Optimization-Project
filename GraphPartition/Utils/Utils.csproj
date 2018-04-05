@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExtensionMethods\EnumerableExtensions.cs" />
+    <Compile Include="UiUtils\AnimatableScrollViewer.cs" />
     <Compile Include="UiUtils\DrawingUtils\ColorUtils.cs" />
     <Compile Include="ExtensionMethods\AnimationExtensions.cs" />
     <Compile Include="ExtensionMethods\ArrayExtensions.cs" />

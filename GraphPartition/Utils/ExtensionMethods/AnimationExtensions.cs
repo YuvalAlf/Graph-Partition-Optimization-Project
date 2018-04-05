@@ -54,5 +54,6 @@ namespace Utils.ExtensionMethods
             };
             @this.BeginStoryboard(storyBoard);
         }
+
     }
 }

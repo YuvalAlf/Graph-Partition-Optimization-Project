@@ -12,12 +12,6 @@ using Graphs.EmbeddingInPlane;
 using Graphs.GraphProperties;
 using Graphs.Visualizing;
 using Optimizations;
-using Optimizations.BranchAndBound;
-using Optimizations.GeneticAlgorithm;
-using Optimizations.LocalSearch;
-using Utils.ExtensionMethods;
-using Utils.MathUtils;
-using Utils.UiUtils.DrawingUtils;
 
 // ReSharper disable once CheckNamespace
 namespace GraphPartition.Gui.MainApplication
@@ -65,6 +59,7 @@ namespace GraphPartition.Gui.MainApplication
         private void RunAlgorithmButton_OnClick(object sender, RoutedEventArgs e)
         {
             this.PrepareResultWindow();
+            this.WindowScrollViewer.ScrollToEnd(TimeSpan.FromSeconds(3.0));
             var solutions = Run(OptimizationType, GraphVisual.DerivedEmbedding().Graph);
             Task.Run(() =>
             {
@@ -78,48 +73,53 @@ namespace GraphPartition.Gui.MainApplication
 
         private void SetSolution(GraphPartitionSolution solution)
         {
-            BestSolutionDockPanel.Children.Clear();
             ResultTextBlock.Text = solution.NegativePrice.ToString();
-            
-            var partitionCanvas1 = PartitionCanvas(PartitionType.SmallPartition1, solution, GraphVisual, Brushes.Blue, Brushes.DarkBlue, 0.7);
-            partitionCanvas1.SetValue(DockPanel.DockProperty, Dock.Left);
-            var partitionCanvas2 = PartitionCanvas(PartitionType.SmallPartition2, solution, GraphVisual, Brushes.Blue, Brushes.Navy, 0.7);
-            partitionCanvas2.SetValue(DockPanel.DockProperty, Dock.Right);
-            var partitionCanvas3 = PartitionCanvas(PartitionType.BigPartition, solution, GraphVisual, Brushes.Blue, Brushes.DarkSlateBlue, 0.7);
-            this.BestSolutionDockPanel.Children.Add(partitionCanvas1);
-            this.BestSolutionDockPanel.Children.Add(partitionCanvas2);
-            this.BestSolutionDockPanel.Children.Add(partitionCanvas3);
+            var canvasBackground = SolutionBackground.Fill;
+            var defaultLine = new SolidColorBrush(Colors.DarkGray) { Opacity = 0.3};
+            var brushesDictionary = new Dictionary<PartitionType, (Brush, Brush)>();
+            brushesDictionary[PartitionType.BigPartition] = (Brushes.DarkBlue, Brushes.Blue);
+            brushesDictionary[PartitionType.SmallPartition1] = (Brushes.DarkViolet, Brushes.Plum);
+            brushesDictionary[PartitionType.SmallPartition2] = (Brushes.Turquoise, Brushes.MediumTurquoise);
+            BestSolutionViewBox.Child = PartitionCanvas(solution, GraphVisual, canvasBackground, brushesDictionary, defaultLine);
         }
 
-        private UIElement PartitionCanvas(PartitionType partitionType, GraphPartitionSolution solution, GraphVisual originalGraphVisual, Brush nodeBrush, Brush lineBrush, double opacity)
+        private UIElement PartitionCanvas(GraphPartitionSolution solution, GraphVisual originalGraphVisual, Brush canvasBackground, Dictionary<PartitionType, (Brush, Brush)> lineEdgeBrush, Brush defaultLineBrush)
         {
-            var canvas = new Canvas{Width = 1, Height = 1};
-            canvas.Background = Brushes.AliceBlue;
+            var canvas = new Canvas{Width = 1000, Height = 1000};
+            canvas.Background = canvasBackground;
+            //canvas.Arrange(new Rect(new Size(1.0, 1.0)));
+            //canvas.Measure(new Size(1.0, 1.0));
             var graph = GraphVisual.Create(canvas, NodeBrush, NumBrush, LineBrush, PenLineCap);
             originalGraphVisual.CopyTo(graph);
             foreach (var node in graph.Nodes.Keys)
             {
                 var ellipse = graph.Nodes[node];
-                if (solution.Partitions[partitionType].Contains(node))
-                {
-                    var visualBrush = ellipse.Fill as VisualBrush;
-                    var grid = (visualBrush.Visual as Grid);
-                    var rect = (grid.Children[0] as Viewbox).Child as Rectangle;
-                    rect.Fill = nodeBrush;
-                }
-                    
+                var partitionType = solution.PartitionTypeOf(node);
+                var visualBrush = ellipse.Fill as VisualBrush;
+                var grid = (visualBrush.Visual as Grid);
+                var rect = (grid.Children[0] as Viewbox).Child as Rectangle;
+                rect.Fill = lineEdgeBrush[partitionType].Item1;
             }
 
             foreach (var edge in graph.Edges.Keys)
             {
                 var line = graph.Edges[edge];
-                if (solution.PartitionTypeOf(edge.Node1) == solution.PartitionTypeOf(edge.Node2) &&
-                    solution.PartitionTypeOf(edge.Node1) == partitionType)
-                    line.Stroke = lineBrush;
+                var partitionType = solution.PartitionTypeOf(edge.Node1);
+                if (partitionType == solution.PartitionTypeOf(edge.Node2))
+                {
+                    line.Stroke = lineEdgeBrush[partitionType].Item2;
+                    line.StrokeDashArray?.Clear();
+                }
                 else
-                    line.Stroke = new SolidColorBrush((LineBrush as SolidColorBrush).Color){Opacity = opacity};
+                {
+                    line.Stroke = defaultLineBrush;
+                    line.StrokeDashArray = new DoubleCollection(new [] {1.0, 0.8});
+                    line.SetValue(Canvas.ZIndexProperty, -10);
+                    
+                }
+                    
             }
-            return canvas.SurroundViewBox(Stretch.Uniform);
+            return canvas;
         }
 
 

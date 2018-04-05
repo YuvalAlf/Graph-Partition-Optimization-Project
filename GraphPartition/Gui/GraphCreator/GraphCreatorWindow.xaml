@@ -14,7 +14,7 @@
         </ScrollViewer>
         <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Name="EdgesScrollViewer" Background="LightCyan" Width="200" DockPanel.Dock="Left"/>
         <Viewbox Style="{StaticResource BoundingMarginStyle}">
-            <Canvas Name="GraphCanvas" Width="1.0" Height="1.0" Background="AliceBlue" MouseLeftButtonDown="GraphCanvas_MouseLeftButtonDown" MouseLeftButtonUp="GraphCanvas_MouseLeftButtonUp" MouseRightButtonDown="GraphCanvas_MouseRightButtonDown" MouseMove="GraphCanvas_MouseMove"/>
+            <Canvas Name="GraphCanvas" Width="1000.0" Height="1000.0" Background="AliceBlue" MouseLeftButtonDown="GraphCanvas_MouseLeftButtonDown" MouseLeftButtonUp="GraphCanvas_MouseLeftButtonUp" MouseRightButtonDown="GraphCanvas_MouseRightButtonDown" MouseMove="GraphCanvas_MouseMove"/>
         </Viewbox>
     </DockPanel>
 </Window>

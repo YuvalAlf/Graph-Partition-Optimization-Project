@@ -26,7 +26,6 @@ namespace Utils.UiUtils.DrawingUtils
             line.SetLinePosition(point1, point2);
             line.Stroke = lineBrush;
             line.StrokeThickness = thickness;
-            line.StrokeDashCap = strokeDashCap;
             line.StrokeEndLineCap = strokeDashCap;
             return line;
         }
