@@ -1,4 +1,4 @@
-﻿namespace Optimizations.LocalSearch
+﻿namespace Optimizations.LocalSearchAlgorithm
 {
     public sealed class LocalSearchSettings
     {

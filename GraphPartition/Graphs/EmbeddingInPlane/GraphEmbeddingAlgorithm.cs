@@ -1,31 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Graphs.GraphProperties;
+using Optimizations.LocalSearchAlgorithm;
 
 namespace Graphs.EmbeddingInPlane
 {
-    public sealed partial class GraphEmbedding
+    public sealed partial class GraphEmbedding : ILocalSearch<GraphEmbedding>
     {
+        public double NegativePrice => Clashes();
+
         public GraphEmbedding EmbeddFor(TimeSpan runningTime)
         {
-            var endingTime = DateTime.Now + runningTime;
-            var bestEmbedding = this;
-            var bestClashes = this.Clashes();
-            while (true)
-                foreach (var neighbor in bestEmbedding.Neighbors())
-                {
-                    if (DateTime.Now > endingTime || bestClashes == 0)
-                        return bestEmbedding;
-                    var neighborClashes = neighbor.Clashes();
-                    if (neighborClashes < bestClashes)
-                    {
-                        bestClashes = neighborClashes;
-                        bestEmbedding = neighbor;
-                    }
-                }
+            var localSearch = new LocalSearch<GraphEmbedding>();
+            object killTaskObject = new object();
+            Task.Run(() =>
+            {
+                Thread.Sleep(runningTime);
+                Monitor.Enter(killTaskObject);
+                Thread.Sleep(3000);
+                Monitor.Exit(killTaskObject);
+            });
+            return localSearch.Run(_ => this, LocalSearchSettings.Default, new object(), killTaskObject, new Random()).Last();
         }
 
-        private IEnumerable<GraphEmbedding> Neighbors()
+        public IEnumerable<GraphEmbedding> Neighbors()
         {
             foreach (var node1 in this.Graph.Nodes)
             foreach (var node2 in this.Graph.Nodes)

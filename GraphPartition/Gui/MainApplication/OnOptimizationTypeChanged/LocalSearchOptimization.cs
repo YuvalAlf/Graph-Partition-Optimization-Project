@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Optimizations.LocalSearch;
+using Optimizations.LocalSearchAlgorithm;
 using Utils.UiUtils;
 using Utils.UiUtils.CustomUi.Creator;
 

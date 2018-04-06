@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -11,6 +10,8 @@ using Graphs.EmbeddingInPlane;
 using Graphs.GraphProperties;
 using Graphs.Visualizing;
 using Optimizations;
+using Optimizations.GeneticAlgorithm;
+using Optimizations.LocalSearchAlgorithm;
 using Utils.UiUtils;
 using Utils.UiUtils.CustomUi.Creator;
 
@@ -120,11 +121,13 @@ namespace GraphPartition.Gui.MainApplication
             switch (optimizationType)
             {
                 case OptimizationType.Genetic:
-                    return GraphPartitionSolution.RunGenetic(GeneticSettings, random, graph, runPauseLock, killTaskRunningLock);
+                    return new Genetic<GraphPartitionSolution>()
+                        .Run(GraphPartitionSolution.GenerateRandom(graph), GeneticSettings, runPauseLock, killTaskRunningLock, random);
                 case OptimizationType.BranchAndBound:
                     return GraphPartitionSolution.RunBranchAndBound(BranchAndBoundSettings, graph);
                 case OptimizationType.LocalSearch:
-                    return GraphPartitionSolution.RunLocalSearch(LocalSearchSettings, graph);
+                    return new LocalSearch<GraphPartitionSolution>()
+                        .Run(GraphPartitionSolution.GenerateRandom(graph), LocalSearchSettings, runPauseLock, killTaskRunningLock, random);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(optimizationType), optimizationType, null);
             }

@@ -1,4 +1,4 @@
-﻿namespace Optimizations.BranchAndBound
+﻿namespace Optimizations.BranchAndBoundAlgorithm
 {
     public sealed class BranchAndBoundSettings
     {

@@ -42,12 +42,16 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BranchAndBound\BranchAndBoundSettings.cs" />
+    <Compile Include="BranchAndBoundAlgorithm\BranchAndBoundSettings.cs" />
     <Compile Include="GeneticAlgorithm\Genetic.cs" />
     <Compile Include="GeneticAlgorithm\GeneticSettings.cs" />
     <Compile Include="GeneticAlgorithm\IGeneticSolution.cs" />
-    <Compile Include="LocalSearch\LocalSearchSettings.cs" />
+    <Compile Include="INegativePrice.cs" />
+    <Compile Include="LocalSearchAlgorithm\ILocalSearch.cs" />
+    <Compile Include="LocalSearchAlgorithm\LocalSearch.cs" />
+    <Compile Include="LocalSearchAlgorithm\LocalSearchSettings.cs" />
     <Compile Include="Optimization.cs" />
+    <Compile Include="OptimizationSolver.cs" />
     <Compile Include="OptimizationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

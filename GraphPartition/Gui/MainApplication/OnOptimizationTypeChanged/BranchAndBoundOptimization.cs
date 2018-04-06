@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Optimizations.BranchAndBound;
+using Optimizations.BranchAndBoundAlgorithm;
 using Utils.UiUtils;
 using Utils.UiUtils.CustomUi.Creator;
 

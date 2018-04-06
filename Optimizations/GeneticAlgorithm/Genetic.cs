@@ -6,27 +6,17 @@ using Utils.ExtensionMethods;
 
 namespace Optimizations.GeneticAlgorithm
 {
-    public sealed class Genetic<SolutionInstance> : IComparer<SolutionInstance>
-        where SolutionInstance : IGeneticSolution<SolutionInstance>
+    public sealed class Genetic<SolutionInstance> : OptimizationSolver<SolutionInstance, GeneticSettings>
+        where SolutionInstance : IGeneticSolver<SolutionInstance>
     {
-        public Func<Random, SolutionInstance> SolutionsRandomGenerator { get; }
-
-        public Genetic(Func<Random, SolutionInstance> solutionsRandomGenerator)
-        {
-            SolutionsRandomGenerator = solutionsRandomGenerator;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int Compare(SolutionInstance s1, SolutionInstance s2) => s1.NegativePrice.CompareTo(s2.NegativePrice);
-
-        public IEnumerable<SolutionInstance> Run(GeneticSettings settings,
+        public override IEnumerable<SolutionInstance> Run(Func<Random, SolutionInstance> genRandom, GeneticSettings settings,
             object runPauseLock, object killTaskRunningLock, Random rnd)
         {
             var population = new SolutionInstance[settings.Population];
             var newPopulation = population.Copy();
 
             for (int i = 0; i < population.Length; i++)
-                population[i] = SolutionsRandomGenerator(rnd);
+                population[i] = genRandom(rnd);
             Array.Sort(population, this);
 
             double lastNegativePrice = double.MaxValue;
@@ -45,7 +35,7 @@ namespace Optimizations.GeneticAlgorithm
                     for (int i = 0; i < settings.ElitismAmount; i++)
                         newPopulation[index] = population[index++];
                     for (int i = 0; i < settings.NewGenesAmount; i++)
-                        newPopulation[index++] = SolutionsRandomGenerator(rnd);
+                        newPopulation[index++] = genRandom(rnd);
                     while (index < newPopulation.Length)
                     {
                         var mom = population.ChooseRandomly(rnd);

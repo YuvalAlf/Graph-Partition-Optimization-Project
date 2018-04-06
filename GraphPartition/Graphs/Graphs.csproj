@@ -50,6 +50,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\GraphPartitionBranchAndBound.cs" />
+    <Compile Include="Algorithms\GraphPartitionGenetic.cs" />
+    <Compile Include="Algorithms\GraphPartitionLocalSearch.cs" />
     <Compile Include="EmbeddingInPlane\GraphEmbeddingAlgorithm.cs" />
     <Compile Include="EmbeddingInPlane\GraphEmbeddingParsing.cs" />
     <Compile Include="GraphProperties\Edge.cs" />
