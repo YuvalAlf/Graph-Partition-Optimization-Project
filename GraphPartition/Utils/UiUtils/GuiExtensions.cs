@@ -24,6 +24,11 @@ namespace Utils.UiUtils
             @this.FontWeight = FontWeights.Bold;
             return @this;
         }
+        public static TextBlock PlusFontSize(this TextBlock @this, double plusAmount)
+        {
+            @this.FontSize += plusAmount;
+            return @this;
+        }
         public static T WithVerticalAlignment<T>(this T @this, VerticalAlignment v)
             where T : FrameworkElement
         {

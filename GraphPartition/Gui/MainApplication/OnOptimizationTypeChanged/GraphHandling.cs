@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +11,7 @@ using Graphs.EmbeddingInPlane;
 using Graphs.GraphProperties;
 using Graphs.Visualizing;
 using Optimizations;
+using Utils.UiUtils;
 using Utils.UiUtils.CustomUi.Creator;
 
 // ReSharper disable once CheckNamespace
@@ -29,6 +31,15 @@ namespace GraphPartition.Gui.MainApplication
         private void SetGraph(GraphEmbedding graphEmbedding)
         {
             this.RunAlgorithmButton.IsEnabled = true;
+            if (!Monitor.TryEnter(killTaskRunningLock))
+            {
+                Monitor.Enter(killTaskRunningLock);
+                Thread.Yield();
+                Thread.Sleep(50);
+                this.PauseButton.IsEnabled = this.PlayButton.IsEnabled =
+                    this.NextSolutionButton.IsEnabled = this.PrevSolutionButton.IsEnabled = false;
+            }
+            Monitor.Exit(killTaskRunningLock);
             this.StaticGraphCanvas.Children.Clear();
             this.GraphVisual = GraphVisual.Create(StaticGraphCanvas, NodeBrush, NumBrush, LineBrush, PenLineCap);
             foreach (var node in graphEmbedding.Graph.Nodes)
@@ -50,25 +61,12 @@ namespace GraphPartition.Gui.MainApplication
 
         private void PrepareResultWindow()
         {
-            var stackPanel = new StackPanel();
-            ResultTextBlock = TextBlockCreator.TitleTextBlock("");
-            this.StatusViewer.Content = ResultTextBlock;
+            var title = TextBlockCreator.TitleTextBlock("Result Status");
+            var statusDescreption = TextBlockCreator.RegularTextBlock("Summation of edges:");
+            ResultTextBlock = TextBlockCreator.RegularTextBlock("").WithHorizonalAlignment(HorizontalAlignment.Center).PlusFontSize(10);
+            this.StatusViewer.Content = GuiExtensions.CreateStackPanel(title, statusDescreption, ResultTextBlock);
         }
 
-        private void RunAlgorithmButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            this.PrepareResultWindow();
-            this.WindowScrollViewer.ScrollToEnd(TimeSpan.FromSeconds(3.0));
-            var solutions = Run(OptimizationType, GraphVisual.DerivedEmbedding().Graph);
-            Task.Run(() =>
-            {
-                foreach (var solution in solutions)
-                {
-                    Dispatcher.Invoke(() => SetSolution(solution));
-                }
-
-            });
-        }
 
         private void SetSolution(GraphPartitionSolution solution)
         {
@@ -122,7 +120,7 @@ namespace GraphPartition.Gui.MainApplication
             switch (optimizationType)
             {
                 case OptimizationType.Genetic:
-                    return GraphPartitionSolution.RunGenetic(GeneticSettings, random, graph, () => this.isClosing, runningMonitor);
+                    return GraphPartitionSolution.RunGenetic(GeneticSettings, random, graph, runPauseLock, killTaskRunningLock);
                 case OptimizationType.BranchAndBound:
                     return GraphPartitionSolution.RunBranchAndBound(BranchAndBoundSettings, graph);
                 case OptimizationType.LocalSearch:

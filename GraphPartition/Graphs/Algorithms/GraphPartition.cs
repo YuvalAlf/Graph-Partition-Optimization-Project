@@ -71,10 +71,10 @@ namespace Graphs.Algorithms
             return new GraphPartitionSolution(partitions, Graph);
         }
 
-        public static IEnumerable<GraphPartitionSolution> RunGenetic(GeneticSettings geneticSettings, Random rnd, Graph graph, Func<bool> kill, object run)
+        public static IEnumerable<GraphPartitionSolution> RunGenetic(GeneticSettings geneticSettings, Random rnd, Graph graph, object runPauseLock, object killTaskRunningLock)
         {
             var genetic = new Genetic<GraphPartitionSolution>(r => GraphPartitionSolution.GenerateRandom(graph, r));
-            return genetic.Run(geneticSettings, run, kill, rnd);
+            return genetic.Run(geneticSettings, runPauseLock, killTaskRunningLock, rnd);
 
         }
 

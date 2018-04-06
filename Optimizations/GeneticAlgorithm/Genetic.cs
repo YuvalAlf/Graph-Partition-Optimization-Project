@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using Utils.ExtensionMethods;
 
 namespace Optimizations.GeneticAlgorithm
@@ -19,7 +20,7 @@ namespace Optimizations.GeneticAlgorithm
         public int Compare(SolutionInstance s1, SolutionInstance s2) => s1.NegativePrice.CompareTo(s2.NegativePrice);
 
         public IEnumerable<SolutionInstance> Run(GeneticSettings settings,
-            object shouldRun, Func<bool> kill, Random rnd)
+            object runPauseLock, object killTaskRunningLock, Random rnd)
         {
             var population = new SolutionInstance[settings.Population];
             var newPopulation = population.Copy();
@@ -30,8 +31,8 @@ namespace Optimizations.GeneticAlgorithm
 
             double lastNegativePrice = double.MaxValue;
 
-            while (!kill())
-                lock(shouldRun)
+            while (Monitor.TryEnter(killTaskRunningLock))
+                lock(runPauseLock)
                 {
                     double newNegativePrice = population[0].NegativePrice;
                     if (newNegativePrice < lastNegativePrice)
@@ -57,6 +58,7 @@ namespace Optimizations.GeneticAlgorithm
                     newPopulation = temp;
 
                     Array.Sort(population, this);
+                    Monitor.Exit(killTaskRunningLock);
                 }
         }
     }

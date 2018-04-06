@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:uiUtils="clr-namespace:Utils.UiUtils;assembly=Utils"
         xmlns:customUi="clr-namespace:Utils.UiUtils.CustomUi;assembly=Utils"
         xmlns:customType="clr-namespace:Utils.UiUtils.CustomUi.CustomType;assembly=Utils"
         mc:Ignorable="d"
@@ -32,17 +31,17 @@
             <DockPanel VerticalAlignment="Stretch" Margin="5,0,5,5">
                 <DockPanel DockPanel.Dock="Right">
                     <DockPanel DockPanel.Dock="Bottom">
-                        <Button Style="{StaticResource BoundingMarginStyle}" Name="NextSolutionButton" DockPanel.Dock="Right"  Content="{StaticResource RightArrow}" Click="NextSolutionButton_Click"/>
-                        <Button Style="{StaticResource BoundingMarginStyle}" Name="PrevSolutionButton" DockPanel.Dock="Left"  Content="{StaticResource LeftArrow}" Click="PrevSolutionButton_Click"/>
+                        <Button Style="{StaticResource BoundingMarginStyle}" Name="NextSolutionButton" DockPanel.Dock="Right"  Content="{StaticResource RightArrow}" Click="NextSolutionButton_Click" IsEnabled="False"/>
+                        <Button Style="{StaticResource BoundingMarginStyle}" Name="PrevSolutionButton" DockPanel.Dock="Left"  Content="{StaticResource LeftArrow}" Click="PrevSolutionButton_Click" IsEnabled="False"/>
                     </DockPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" DockPanel.Dock="Bottom">
-                        <Button Style="{StaticResource BoundingMarginStyle}" Name="PlayButton" HorizontalAlignment="Center" Content="{StaticResource PlayCanvas}" Click="PlayButton_Click"/>
-                        <Button Style="{StaticResource BoundingMarginStyle}" Name="PauseButton"  HorizontalAlignment="Center" Content="{StaticResource PauseCanvas}" Click="PauseButton_Click"/>
+                        <Button Style="{StaticResource BoundingMarginStyle}" Name="PlayButton" HorizontalAlignment="Center" Content="{StaticResource PlayCanvas}" Click="PlayButton_Click" IsEnabled="False"/>
+                        <Button Style="{StaticResource BoundingMarginStyle}" Name="PauseButton"  HorizontalAlignment="Center" Content="{StaticResource PauseCanvas}" Click="PauseButton_Click" IsEnabled="False"/>
                     </StackPanel>
                     <ScrollViewer Style="{StaticResource ScrollViewerStyle}" Background="#DFFFFA" Name="StatusViewer" Margin="5,2,5,8"/>
                 </DockPanel>
                 <Grid Style="{StaticResource BoundingMarginStyle}" Name="aaa">
-                    <Rectangle Name="SolutionBackground" Fill="#EFEFF9" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <Rectangle Name="SolutionBackground" Fill="#EFFFFF" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                     <Viewbox Height="900" Name="BestSolutionViewBox" Stretch="Uniform"/>
                 </Grid>
             </DockPanel>

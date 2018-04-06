@@ -15,5 +15,7 @@ namespace Utils
             t1 = t2;
             t2 = temp;
         }
+
+        public static S TypeCast<S>(this object @this) => (S) @this;
     }
 }
