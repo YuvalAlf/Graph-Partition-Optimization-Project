@@ -11,6 +11,11 @@
         <Style x:Key="ScrollViewerStyle" TargetType="ScrollViewer" BasedOn="{StaticResource BoundingMarginStyle}">
             <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
             <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="Padding">
+                <Setter.Value>
+                    <Thickness Top="5" Bottom="5" Left="5" Right="5"/>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style x:Key="TitleTextBlockStyle" TargetType="TextBlock">

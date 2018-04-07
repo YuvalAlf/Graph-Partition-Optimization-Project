@@ -73,7 +73,7 @@ namespace GraphPartition.Gui.MainApplication
                 {
                     SolutionsNavigator.AddNext(solution);
                     Thread.Sleep(150);
-                    Dispatcher.InvokeAsync(() => BestSolutionViewBox.Child.TypeCast<Canvas>().SaveAsPng(Path.Combine(resultDir, solution.NegativePrice + ".png"), 1));
+                    Dispatcher.InvokeAsync(() => BestSolutionViewBox.Child.TypeCast<Canvas>().SaveAsJpg(Path.Combine(resultDir, solution.NegativePrice + ".jpg"), 1));
                 }
             });
             PauseButton.IsEnabled = true;

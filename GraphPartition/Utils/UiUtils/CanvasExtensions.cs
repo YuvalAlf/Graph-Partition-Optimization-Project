@@ -21,14 +21,14 @@ namespace Utils.UiUtils
             => new Point((double)@this.GetValue(Canvas.LeftProperty), (double)@this.GetValue(Canvas.TopProperty));
 
 
-        public static void SaveAsPng(this Canvas @this, string filePath, int scale)
+        public static void SaveAsJpg(this Canvas @this, string filePath, int scale)
         {
             @this.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
             var rect = new Rect(@this.DesiredSize);
             @this.Arrange(rect);
             var bmp = new RenderTargetBitmap((int)(scale * rect.Width),(int)(scale * rect.Height), scale * 96, scale * 96, PixelFormats.Default);
             bmp.Render(@this);
-            var enc = new PngBitmapEncoder();
+            var enc = new JpegBitmapEncoder{QualityLevel = 85};
             enc.Frames.Add(BitmapFrame.Create(bmp));
 
             using (var stream = File.Create(filePath))
