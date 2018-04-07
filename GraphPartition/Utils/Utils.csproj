@@ -39,7 +39,13 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="ReadOnlyCollectionsInterfaces, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ReadOnlyCollectionInterfaces.1.0.0\lib\NET45\ReadOnlyCollectionsInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable.Net40, Version=1.0.27.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.Net40.1.0.30.17\lib\net40\System.Collections.Immutable.Net40.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
@@ -59,6 +65,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataStructures\ConcurrentSignal.cs" />
+    <Compile Include="DataStructures\EphemeralExtensions.cs" />
+    <Compile Include="DataStructures\ImmutableExtensions.cs" />
     <Compile Include="DataStructures\PagesNavigator.cs" />
     <Compile Include="DataStructures\PagesNavigatorStatusEventArgs.cs" />
     <Compile Include="ExtensionMethods\DispatcherExtensions.cs" />

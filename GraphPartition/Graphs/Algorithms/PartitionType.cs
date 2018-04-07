@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Graphs.GraphProperties;
 
 namespace Graphs.Algorithms

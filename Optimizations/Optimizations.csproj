@@ -31,23 +31,44 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DIBRIS.Hippie, Version=2.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\GraphPartition\packages\Hippie.2.10.1\lib\net40-client\DIBRIS.Hippie.dll</HintPath>
+    </Reference>
+    <Reference Include="Finsa.CodeServices.Common, Version=4.1.0.0, Culture=neutral, PublicKeyToken=db894830fb4e4dbb, processorArchitecture=MSIL">
+      <HintPath>..\GraphPartition\packages\Finsa.CodeServices.Common.4.1.1\lib\net46\Finsa.CodeServices.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="MoreLinq, Version=2.10.21623.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\GraphPartition\packages\morelinq.2.10.0\lib\net40\MoreLinq.dll</HintPath>
+    </Reference>
+    <Reference Include="PommaLabs.Thrower, Version=2.2.0.0, Culture=neutral, PublicKeyToken=2f204b7110a52060, processorArchitecture=MSIL">
+      <HintPath>..\GraphPartition\packages\Thrower.2.2.1\lib\net46\PommaLabs.Thrower.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\GraphPartition\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Troschuetz.Random, Version=4.0.3.0, Culture=neutral, PublicKeyToken=2f204b7110a52060, processorArchitecture=MSIL">
+      <HintPath>..\GraphPartition\packages\Troschuetz.Random.4.0.3\lib\net46\Troschuetz.Random.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BranchAndBoundAlgorithm\BranchAndBound.cs" />
     <Compile Include="BranchAndBoundAlgorithm\BranchAndBoundSettings.cs" />
+    <Compile Include="BranchAndBoundAlgorithm\IPartialSolution.cs" />
     <Compile Include="GeneticAlgorithm\Genetic.cs" />
     <Compile Include="GeneticAlgorithm\GeneticSettings.cs" />
-    <Compile Include="GeneticAlgorithm\IGeneticSolution.cs" />
+    <Compile Include="GeneticAlgorithm\IGeneticSolver.cs" />
     <Compile Include="INegativePrice.cs" />
-    <Compile Include="LocalSearchAlgorithm\ILocalSearch.cs" />
+    <Compile Include="LocalSearchAlgorithm\ILocalSearchSolver.cs" />
     <Compile Include="LocalSearchAlgorithm\LocalSearch.cs" />
     <Compile Include="LocalSearchAlgorithm\LocalSearchSettings.cs" />
     <Compile Include="Optimization.cs" />
@@ -60,6 +81,10 @@
       <Project>{f245956b-e7b8-4202-9511-3f48134ba909}</Project>
       <Name>Utils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

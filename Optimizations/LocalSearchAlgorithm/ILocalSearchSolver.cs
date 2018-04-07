@@ -2,7 +2,7 @@
 
 namespace Optimizations.LocalSearchAlgorithm
 {
-    public interface ILocalSearch<Solution> : INegativePrice
+    public interface ILocalSearchSolver<Solution> : INegativePrice
     {
         IEnumerable<Solution> Neighbors();
     }

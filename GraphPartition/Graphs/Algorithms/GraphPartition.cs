@@ -1,49 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using Graphs.GraphProperties;
+using Utils.DataStructures;
+using Utils.ExtensionMethods;
 
 namespace Graphs.Algorithms
 {
     public sealed partial class GraphPartitionSolution
     {
         public double NegativePrice { get; }
-        public Dictionary<PartitionType, HashSet<Node>> Partitions { get; }
+        public ImmutableDictionary<PartitionType, ImmutableHashSet<Node>> Partitions { get; }
         public Graph Graph { get; }
 
-        public GraphPartitionSolution(Dictionary<PartitionType, HashSet<Node>> partitions, Graph graph)
+        public GraphPartitionSolution(ImmutableDictionary<PartitionType, ImmutableHashSet<Node>> partitions, Graph graph)
         {
             Partitions = partitions;
             Graph = graph;
-            NegativePrice = Price(graph);
+            NegativePrice = CalcSumOfWeights();
         }
 
-
-        public double Price(Graph graph)
+        public double CalcSumOfWeights()
         {
-            var sumPrice = 0.0;
-            foreach (var edge in graph.Edges)
-                if (PartitionTypeOf(edge.Node1) == PartitionTypeOf(edge.Node2))
-                    sumPrice += edge.Weight;
-            return sumPrice;
+            var sumOfWeights = 0.0;
+            foreach (var edge in Graph.Edges)
+                if (PartitionTypeOf(edge.Node1, Partitions) == PartitionTypeOf(edge.Node2, Partitions))
+                    sumOfWeights += edge.Weight;
+            return sumOfWeights;
         }
 
-        public PartitionType PartitionTypeOf(Node node)
+        public static Func<Random, GraphPartitionSolution> GenerateRandom(Graph graph) => rnd =>
         {
-            foreach (var partitionType in Partitions.Keys)
-                if (Partitions[partitionType].Contains(node))
+            var nodes = new Stack<Node>(graph.Nodes.Shuffle(rnd));
+            var partitions = ImmutableDictionary<PartitionType, ImmutableHashSet<Node>>.Empty;
+
+            foreach (var partitionType in PartitionTypeUtils.All)
+                partitions = partitions.Add(partitionType, ImmutableHashSet<Node>.Empty.AddRange(nodes.MultiPop(partitionType.Size(graph))));
+
+
+            return new GraphPartitionSolution(partitions, graph);
+        };
+        
+        public PartitionType PartitionTypeOf(Node node) => PartitionTypeOf(node, Partitions);
+
+        public static PartitionType PartitionTypeOf(Node node, ImmutableDictionary<PartitionType, ImmutableHashSet<Node>> partitions)
+        {
+            foreach (var partitionType in partitions.Keys)
+                if (partitions[partitionType].Contains(node))
                     return partitionType;
             throw new ArgumentException("Node " + node + " is not in any partition");
-        }
-
-
-        private GraphPartitionSolution Clone()
-        {
-            var newDict = new Dictionary<PartitionType, HashSet<Node>>(this.Partitions.Count);
-            foreach (var partition in Partitions.Keys)
-                newDict[partition] = new HashSet<Node>(this.Partitions[partition]);
-
-            return new GraphPartitionSolution(newDict, Graph);
-
         }
     }
 }

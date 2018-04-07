@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Utils.DataStructures;
 
 namespace Optimizations.LocalSearchAlgorithm
 {
     public sealed class LocalSearch<Solution> : OptimizationSolver<Solution, LocalSearchSettings>
-        where Solution : ILocalSearch<Solution>
+        where Solution : ILocalSearchSolver<Solution>
     {
         public override IEnumerable<Solution> Run(Func<Random, Solution> genRandom, LocalSearchSettings settings, object runPauseLock,
             ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, Random rnd)

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Graphs.GraphProperties;
 using Optimizations.LocalSearchAlgorithm;
 
 namespace Graphs.Algorithms
 {
-    public sealed partial class GraphPartitionSolution : ILocalSearch<GraphPartitionSolution>
+    public sealed partial class GraphPartitionSolution : ILocalSearchSolver<GraphPartitionSolution>
     {
         public IEnumerable<GraphPartitionSolution> Neighbors()
         {
@@ -33,16 +29,12 @@ namespace Graphs.Algorithms
         {
             var partitionType1 = PartitionTypeOf(node1);
             var partitionType2 = PartitionTypeOf(node2);
-
-            var newDict = new Dictionary<PartitionType, HashSet<Node>>(this.Partitions.Count);
-            foreach (var partition in Partitions.Keys)
-                newDict[partition] = new HashSet<Node>(this.Partitions[partition]);
-            
-            newDict[partitionType1].Remove(node1);
-            newDict[partitionType2].Remove(node2);
-            newDict[partitionType2].Add(node1);
-            newDict[partitionType1].Add(node2);
-            return new GraphPartitionSolution(newDict, Graph);
+            if (partitionType1 == partitionType2)
+                return this;
+            var newPartitions = this.Partitions;
+            newPartitions = newPartitions.SetItem(partitionType1, newPartitions[partitionType1].Remove(node1).Add(node2));
+            newPartitions = newPartitions.SetItem(partitionType2, newPartitions[partitionType2].Remove(node2).Add(node1));
+            return new GraphPartitionSolution(newPartitions, Graph);
         }
     }
 }

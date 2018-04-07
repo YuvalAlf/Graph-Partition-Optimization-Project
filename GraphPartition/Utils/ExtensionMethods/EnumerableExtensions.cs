@@ -28,5 +28,8 @@ namespace Utils.ExtensionMethods
 
         public static S Max<T, S>(this IEnumerable<T> @this, Func<T, S> selector, S @default) 
             => @this.Select(selector).Append(@default).Max();
+
+        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> @this, Random rnd)
+            => @this.OrderBy(_ => rnd.Next());
     }
 }

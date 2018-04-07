@@ -9,7 +9,7 @@ using Utils.DataStructures;
 
 namespace Graphs.EmbeddingInPlane
 {
-    public sealed partial class GraphEmbedding : ILocalSearch<GraphEmbedding>
+    public sealed partial class GraphEmbedding : ILocalSearchSolver<GraphEmbedding>
     {
         public double NegativePrice => Clashes();
 

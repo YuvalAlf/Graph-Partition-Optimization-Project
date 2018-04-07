@@ -4,6 +4,7 @@ namespace Optimizations.GeneticAlgorithm
 {
     public interface IGeneticSolver<Solution> : INegativePrice
     {
-        Solution MateMutate(Solution otherSolution, double mutationRate, Random rnd);
+        Solution Mate(Solution otherSolution, Random rnd);
+        Solution Mutate(Random rnd);
     }
 }

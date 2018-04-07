@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Graphs.GraphProperties;
+using MoreLinq;
 using Optimizations.GeneticAlgorithm;
 using Utils.ExtensionMethods;
 
@@ -9,48 +11,33 @@ namespace Graphs.Algorithms
 {
     public sealed partial class GraphPartitionSolution : IGeneticSolver<GraphPartitionSolution>
     {
-        public GraphPartitionSolution MateMutate(GraphPartitionSolution otherSolution, double mutationRate, Random rnd)
+        public GraphPartitionSolution Mate(GraphPartitionSolution otherSolution, Random rnd)
         {
-            var partitions = new Dictionary<PartitionType, HashSet<Node>>();
-            foreach (var partitionType in PartitionTypeUtils.All)
-                partitions[partitionType] = new HashSet<Node>();
-            var chosenPartiton = PartitionTypeUtils.All.ChooseRandomly(rnd);
-            partitions[chosenPartiton] = this.Partitions[chosenPartiton];
-            var nodesRemaining = new LinkedList<Node>();
-            foreach (var node in this.Graph.Nodes)
+            var newPartitions = ImmutableDictionary<PartitionType, ImmutableHashSet<Node>>.Empty;
+            var remainingNodes = new HashSet<Node>(Graph.Nodes);
+            foreach (var partition in PartitionTypeUtils.All)
             {
-                var nodePartition = otherSolution.PartitionTypeOf(node);
-                if (!partitions[chosenPartiton].Contains(node))
-                    if (nodePartition != chosenPartiton)
-                        partitions[nodePartition].Add(node);
-                    else
-                        nodesRemaining.AddLast(node);
+                var intersection = this.Partitions[partition].Intersect(otherSolution.Partitions[partition]);
+                intersection.ForEach(node => remainingNodes.Remove(node));
+                newPartitions = newPartitions.Add(partition, intersection);
             }
 
-            foreach (var partitionType in PartitionTypeUtils.All)
-            {
-                var desiredSize = partitionType.Size(Graph);
-                while (partitions[partitionType].Count < desiredSize)
-                {
-                    partitions[partitionType].Add(nodesRemaining.First.Value);
-                    nodesRemaining.RemoveFirst();
-                }
-            }
+            var remainingNodesStack = new Stack<Node>(remainingNodes.Shuffle(rnd));
 
-            return new GraphPartitionSolution(partitions, Graph);
+            while (remainingNodesStack.Count > 0)
+            foreach (var partitionType in PartitionTypeUtils.All)
+                if (newPartitions[partitionType].Count < partitionType.Size(Graph))
+                    newPartitions = newPartitions.SetItem(partitionType, newPartitions[partitionType].Add(remainingNodesStack.Pop()));
+
+            return new GraphPartitionSolution(newPartitions, Graph);
         }
 
-        public static Func<Random, GraphPartitionSolution> GenerateRandom(Graph graph) => rnd =>
+        public GraphPartitionSolution Mutate(Random rnd)
         {
-            var nodes = new List<Node>(graph.Nodes.OrderBy(_ => rnd.Next()));
-            var partitions = new Dictionary<PartitionType, HashSet<Node>>();
-            foreach (var partitionType in PartitionTypeUtils.All)
-            {
-                partitions[partitionType] = new HashSet<Node>(nodes.Take(partitionType.Size(graph)));
-                nodes.RemoveRange(0, partitionType.Size(graph));
-            }
+            var node1 = Graph.Nodes.ChooseRandomly(rnd);
+            var node2 = Graph.Nodes.ChooseRandomly(rnd);
 
-            return new GraphPartitionSolution(partitions, graph);
-        };
+            return this.ReplacePartitionTypeOf(node1, node2);
+        }
     }
 }

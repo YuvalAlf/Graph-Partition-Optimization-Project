@@ -39,7 +39,10 @@ namespace Optimizations.GeneticAlgorithm
                     {
                         var mom = population.ChooseRandomly(rnd);
                         var dad = population.ChooseRandomly(rnd);
-                        newPopulation[index++] = mom.MateMutate(dad, settings.MutationRate, rnd);
+                        var son = mom.Mate(dad, rnd);
+                        if (rnd.NextDouble() <= settings.MutationRate)
+                            son = son.Mutate(rnd);
+                        newPopulation[index++] = son;
                     }
 
                     var temp = population;
