@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Utils.DataStructures;
 using Utils.ExtensionMethods;
 
@@ -9,7 +10,7 @@ namespace Optimizations.GeneticAlgorithm
         where SolutionInstance : IGeneticSolver<SolutionInstance>
     {
         public override IEnumerable<SolutionInstance> Run(Func<Random, SolutionInstance> genRandom, GeneticSettings settings,
-            object runPauseLock, ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, Random rnd)
+            object runPauseLock, ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, StrongBox<bool> finished, Random rnd)
         {
             var population = new SolutionInstance[settings.Population];
             var newPopulation = population.Copy();
@@ -20,6 +21,7 @@ namespace Optimizations.GeneticAlgorithm
 
             double lastNegativePrice = double.MaxValue;
 
+            finished.Value = false;
             while (!killTaskSignal.TryProcessSignal())
                 lock(runPauseLock)
                 {

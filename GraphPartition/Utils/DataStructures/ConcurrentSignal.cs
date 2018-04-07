@@ -11,14 +11,13 @@ namespace Utils.DataStructures
 
         public void Signal()
         {
-            if (signalIsPending)
-                throw new Exception();
             signalIsPending = true;
         }
 
-        public void WaitForSignalBlocking()
+        public void WaitForSignalBlocking(TimeSpan time)
         {
-            while (!signalIsPending)
+            var endingTime = DateTime.Now + time;
+            while (!signalIsPending && DateTime.Now < endingTime)
                 Thread.Sleep(10);
             signalIsPending = false;
         }

@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Graphs.GraphProperties;
 using Optimizations.BranchAndBoundAlgorithm;
+using Utils.ExtensionMethods;
 
 namespace Graphs.Algorithms
 {
@@ -14,37 +13,53 @@ namespace Graphs.Algorithms
         public double MinBound { get; }
         public Graph Graph { get; }
         public ImmutableStack<Node> NodesRemaining { get; }
+        public Dictionary<Node, HashSet<(Node, double)>> Neighbors { get; }
         public ImmutableDictionary<PartitionType, ImmutableHashSet<Node>> Partitions { get; }
 
-        public PartialGraphPartition(Graph graph, ImmutableStack<Node> nodesRemaining, ImmutableDictionary<PartitionType, ImmutableHashSet<Node>> partitions)
+        public PartialGraphPartition(Graph graph, ImmutableStack<Node> nodesRemaining, ImmutableDictionary<PartitionType, ImmutableHashSet<Node>> partitions, Dictionary<Node, HashSet<(Node, double)>> neighbors, double minBound)
         {
             Graph = graph;
             NodesRemaining = nodesRemaining;
             Partitions = partitions;
-            MinBound = CalcMinBound();
+            Neighbors = neighbors;
+            MinBound = minBound;
         }
-
 
         public int CompareTo(PartialGraphPartition other) => this.MinBound.CompareTo(other.MinBound);
 
-        public static PartialGraphPartition CreateEmpty(Graph graph, IEnumerable<Node> nodes)
+        public static PartialGraphPartition CreateEmpty(Graph graph)
         {
-            var nodesStack = nodes.Aggregate(ImmutableStack<Node>.Empty, (stack, node) => stack.Push(node));
+            var nodesStack = graph.Nodes.Aggregate(ImmutableStack<Node>.Empty, (stack, node) => stack.Push(node));
             var partitions = ImmutableDictionary<PartitionType, ImmutableHashSet<Node>>.Empty;
             foreach (var partitionType in PartitionTypeUtils.All)
                 partitions = partitions.Add(partitionType, ImmutableHashSet<Node>.Empty);
-            return new PartialGraphPartition(graph, nodesStack, partitions);
-        }
+            
+            var neighbors = new Dictionary<Node, HashSet<(Node, double)>>(graph.Nodes.Length);
+            foreach (var node in graph.Nodes)
+            {
+                neighbors[node] = new HashSet<(Node, double)>();
+                foreach (var edge in graph.Edges)
+                {
+                    if (edge.Node1.Equals(node))
+                        neighbors[node].Add((edge.Node2, edge.Weight));
+                    if (edge.Node2.Equals(node))
+                        neighbors[node].Add((edge.Node1, edge.Weight));
+                }
+            }
 
-
-        private double CalcMinBound()
-        {
-            throw new NotImplementedException();
+            return new PartialGraphPartition(graph, nodesStack, partitions, neighbors, 0.0);
         }
 
         public GraphPartitionSolution ConstructSolution(Random rnd)
         {
-            throw new NotImplementedException();
+            var partialSolution = this;
+            while (true)
+            {
+                var children = partialSolution.Children().ToArray();
+                if (children.Length == 0)
+                    return new GraphPartitionSolution(partialSolution.Partitions, Graph);
+                partialSolution = children.ChooseRandomly(rnd);
+            }
         }
 
         public IEnumerable<PartialGraphPartition> Children()
@@ -56,7 +71,11 @@ namespace Graphs.Algorithms
                     if (this.Partitions[partitionType].Count < partitionType.Size(Graph))
                     {
                         var newPartitions = Partitions.SetItem(partitionType, Partitions[partitionType].Add(nextNode));
-                        yield return new PartialGraphPartition(Graph, nodesRemaining, newPartitions);
+                        var newPrice = this.MinBound;
+                        foreach (var (neighbor, weight) in Neighbors[nextNode])
+                            if (Partitions[partitionType].Contains(neighbor))
+                                newPrice += weight;
+                        yield return new PartialGraphPartition(Graph, nodesRemaining, newPartitions, Neighbors, newPrice);
                     }
             }
         }

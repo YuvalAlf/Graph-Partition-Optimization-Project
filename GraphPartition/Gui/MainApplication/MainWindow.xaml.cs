@@ -42,7 +42,7 @@ namespace GraphPartition.Gui.MainApplication
                 if (!taskKilledSignal.TryProcessSignal())
                 {
                     killTaskSignal.Signal();
-                    taskKilledSignal.WaitForSignalBlocking();
+                    taskKilledSignal.WaitForSignalBlocking(TimeSpan.FromMilliseconds(500.0));
                 }
             }
 

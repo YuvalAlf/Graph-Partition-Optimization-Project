@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using System.Xml;
 using Graphs.EmbeddingInPlane;
 using Graphs.GraphProperties;
 using Utils.ExtensionMethods;

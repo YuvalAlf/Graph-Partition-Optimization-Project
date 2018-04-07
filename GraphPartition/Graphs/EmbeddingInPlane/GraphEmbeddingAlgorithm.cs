@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Graphs.GraphProperties;
@@ -22,9 +23,9 @@ namespace Graphs.EmbeddingInPlane
             {
                 Thread.Sleep(runningTime);
                 killProcess.Signal();
-                processKilled.WaitForSignalBlocking();
+                processKilled.WaitForSignalBlocking(TimeSpan.FromMilliseconds(500));
             });
-            return localSearch.Run(_ => this, LocalSearchSettings.Default, new object(), killProcess, processKilled, new Random()).Last();
+            return localSearch.Run(_ => this, LocalSearchSettings.Default, new object(), killProcess, processKilled, new StrongBox<bool>(false), new Random()).Last();
         }
 
         public IEnumerable<GraphEmbedding> Neighbors()

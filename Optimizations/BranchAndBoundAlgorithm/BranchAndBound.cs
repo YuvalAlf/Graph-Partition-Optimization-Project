@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using DIBRIS.Hippie;
 using MoreLinq;
 using Utils.DataStructures;
@@ -17,7 +18,7 @@ namespace Optimizations.BranchAndBoundAlgorithm
 
 
         public override IEnumerable<Solution> Run(Func<Random, Solution> genRandom, BranchAndBoundSettings settings, object runPauseLock
-            , ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, Random rnd)
+            , ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, StrongBox<bool> finished, Random rnd)
         {
             var priorityQueue = HeapFactory.NewArrayHeap<PartialSolution>(2);
             priorityQueue.Add(EmptyPartialSolution);
@@ -41,6 +42,8 @@ namespace Optimizations.BranchAndBoundAlgorithm
                     yield return solution;
                 }
             }
+
+            finished.Value = priorityQueue.Count == 0;
 
             taskKilledSignal.Signal();
         }

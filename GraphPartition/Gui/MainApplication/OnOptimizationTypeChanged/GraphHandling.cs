@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,8 +11,10 @@ using Graphs.EmbeddingInPlane;
 using Graphs.GraphProperties;
 using Graphs.Visualizing;
 using Optimizations;
+using Optimizations.BranchAndBoundAlgorithm;
 using Optimizations.GeneticAlgorithm;
 using Optimizations.LocalSearchAlgorithm;
+using Utils;
 using Utils.UiUtils;
 using Utils.UiUtils.CustomUi.Creator;
 
@@ -111,15 +114,25 @@ namespace GraphPartition.Gui.MainApplication
         {
             var random = new Random();
 
-            IEnumerable<GraphPartitionSolution> RunAlg<Settings>(OptimizationSolver<GraphPartitionSolution, Settings> solver, Settings settings) 
-                => solver.Run(GraphPartitionSolution.GenerateRandom(graph), settings, runPauseLock, killTaskSignal, taskKilledSignal, random);
+            IEnumerable<GraphPartitionSolution> RunAlg<Settings>(OptimizationSolver<GraphPartitionSolution, Settings> solver, Settings settings)
+            {
+                var finished = new StrongBox<bool>(false);
+                var results = solver.Run(GraphPartitionSolution.GenerateRandom(graph), settings, runPauseLock, killTaskSignal, taskKilledSignal, finished, random);
+                foreach (var result in results)
+                    yield return result;
+                if (finished.Value == true)
+                    Dispatcher.InvokeAsync(() =>
+                        StatusViewer.Content.TypeCast<StackPanel>().Children
+                            .Add(TextBlockCreator.RegularTextBlock("Finished Running").PlusFontSize(10.0)));
+            }
 
             switch (optimizationType)
             {
                 case OptimizationType.Genetic:
                     return RunAlg(new Genetic<GraphPartitionSolution>(), GeneticSettings);
                 case OptimizationType.BranchAndBound:
-                    return GraphPartitionSolution.RunBranchAndBound(BranchAndBoundSettings, graph);
+                    var emptyGraphPartition = PartialGraphPartition.CreateEmpty(GraphVisual.Graph);
+                    return RunAlg(new BranchAndBound<PartialGraphPartition, GraphPartitionSolution>(emptyGraphPartition), BranchAndBoundSettings);
                 case OptimizationType.LocalSearch:
                     return RunAlg(new LocalSearch<GraphPartitionSolution>(), LocalSearchSettings);
                 default:

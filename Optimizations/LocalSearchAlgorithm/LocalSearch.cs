@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Utils.DataStructures;
 
 namespace Optimizations.LocalSearchAlgorithm
@@ -8,24 +9,30 @@ namespace Optimizations.LocalSearchAlgorithm
         where Solution : ILocalSearchSolver<Solution>
     {
         public override IEnumerable<Solution> Run(Func<Random, Solution> genRandom, LocalSearchSettings settings, object runPauseLock,
-            ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, Random rnd)
+            ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, StrongBox<bool> finished, Random rnd)
         {
             Solution bestSolution = genRandom(rnd);
             double bestPrice = bestSolution.NegativePrice;
             yield return bestSolution;
-
-            while (!killTaskSignal.TryProcessSignal())
-                foreach (var neighbor in bestSolution.Neighbors())
-                    lock (runPauseLock)
+            
+            foreach (var neighbor in bestSolution.Neighbors())
+            {
+                var proccessedSingnal = killTaskSignal.TryProcessSignal();
+                finished.Value = !proccessedSingnal;
+                if (proccessedSingnal)
+                    break;
+                lock (runPauseLock)
+                {
+                    var neighborPrice = neighbor.NegativePrice;
+                    if (neighborPrice < bestPrice)
                     {
-                        var neighborPrice = neighbor.NegativePrice;
-                        if (neighborPrice < bestPrice)
-                        {
-                            bestSolution = neighbor;
-                            bestPrice = neighborPrice;
-                            yield return bestSolution;
-                        }
+                        bestSolution = neighbor;
+                        bestPrice = neighborPrice;
+                        yield return bestSolution;
                     }
+                }
+            }
+                
             taskKilledSignal.Signal();
         }
     }
