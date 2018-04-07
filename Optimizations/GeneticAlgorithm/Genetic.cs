@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Threading;
+using Utils.DataStructures;
 using Utils.ExtensionMethods;
 
 namespace Optimizations.GeneticAlgorithm
@@ -10,7 +9,7 @@ namespace Optimizations.GeneticAlgorithm
         where SolutionInstance : IGeneticSolver<SolutionInstance>
     {
         public override IEnumerable<SolutionInstance> Run(Func<Random, SolutionInstance> genRandom, GeneticSettings settings,
-            object runPauseLock, object killTaskRunningLock, Random rnd)
+            object runPauseLock, ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, Random rnd)
         {
             var population = new SolutionInstance[settings.Population];
             var newPopulation = population.Copy();
@@ -21,7 +20,7 @@ namespace Optimizations.GeneticAlgorithm
 
             double lastNegativePrice = double.MaxValue;
 
-            while (Monitor.TryEnter(killTaskRunningLock))
+            while (!killTaskSignal.TryProcessSignal())
                 lock(runPauseLock)
                 {
                     double newNegativePrice = population[0].NegativePrice;
@@ -32,9 +31,9 @@ namespace Optimizations.GeneticAlgorithm
                     }
                     
                     int index = 0;
-                    for (int i = 0; i < settings.ElitismAmount; i++)
+                    for (int i = 0; i < settings.ElitismAmount && index < newPopulation.Length; i++)
                         newPopulation[index] = population[index++];
-                    for (int i = 0; i < settings.NewGenesAmount; i++)
+                    for (int i = 0; i < settings.NewGenesAmount && index < newPopulation.Length; i++)
                         newPopulation[index++] = genRandom(rnd);
                     while (index < newPopulation.Length)
                     {
@@ -48,8 +47,8 @@ namespace Optimizations.GeneticAlgorithm
                     newPopulation = temp;
 
                     Array.Sort(population, this);
-                    Monitor.Exit(killTaskRunningLock);
                 }
+            taskKilledSignal.Signal();
         }
     }
 }

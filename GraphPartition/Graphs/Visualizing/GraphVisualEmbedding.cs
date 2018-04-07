@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using System.Xml;
 using Graphs.EmbeddingInPlane;
 using Graphs.GraphProperties;
 using Utils.ExtensionMethods;
@@ -37,26 +38,26 @@ namespace Graphs.Visualizing
             {
                 GraphEmbedding embedding = dispatcher.Get(this.DerivedEmbedding);
                 var bestEmbedding = embedding.EmbeddFor(runningTime);
-                dispatcher.Invoke(() => UpdateEmbedding(bestEmbedding, annimationTime));
-                dispatcher.Invoke(callback);
+                dispatcher.InvokeAsync(() => UpdateEmbedding(bestEmbedding, annimationTime));
+                dispatcher.InvokeAsync(callback);
             });
         }
 
-        public void UpdateEmbedding(GraphEmbedding embedding, TimeSpan annimationTime)
+        public void UpdateEmbedding(GraphEmbedding embedding, TimeSpan animationTime)
         {
             foreach (var node in Nodes.Keys)
             {
                 var ellipse = Nodes[node];
                 var ellipseCenter = embedding.Embedding[node];
                 var pointToMove = ellipseCenter.AddX(-ellipse.Ellipse.Width / 2).AddY(-ellipse.Ellipse.Height / 2);
-                ellipse.Ellipse.MoveOnCanvasTo(pointToMove, annimationTime);
+                ellipse.Ellipse.MoveOnCanvasTo(pointToMove, animationTime);
             }
             foreach (var edge in Edges.Keys)
             {
                 var line = Edges[edge];
                 var point1 = embedding.Embedding[edge.Node1];
                 var point2 = embedding.Embedding[edge.Node2];
-                line.MoveOnCanvasTo(point1, point2, annimationTime);
+                line.MoveOnCanvasTo(point1, point2, animationTime);
             }
         }
     }

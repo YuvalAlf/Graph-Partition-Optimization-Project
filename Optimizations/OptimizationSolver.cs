@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Utils.DataStructures;
 
 namespace Optimizations
 {
@@ -11,6 +12,6 @@ namespace Optimizations
         public int Compare(SolutionType s1, SolutionType s2) => s1.NegativePrice.CompareTo(s2.NegativePrice);
 
         public abstract IEnumerable<SolutionType> Run(Func<Random, SolutionType> genRandom, Settings settings,
-            object runPauseLock, object killTaskRunningLock, Random rnd);
+            object runPauseLock, ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, Random rnd);
     }
 }

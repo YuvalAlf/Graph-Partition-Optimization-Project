@@ -18,7 +18,7 @@ namespace Utils.DataStructures
             set
             {
                 currentPage = value;
-                Dispatcher.Invoke(() => ShowPage(value));
+                Dispatcher.InvokeAsync(() => ShowPage(value));
             }
         }
 

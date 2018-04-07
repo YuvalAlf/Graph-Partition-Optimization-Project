@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Graphs.GraphProperties;
 using Optimizations.LocalSearchAlgorithm;
+using Utils.DataStructures;
 
 namespace Graphs.EmbeddingInPlane
 {
@@ -15,15 +16,15 @@ namespace Graphs.EmbeddingInPlane
         public GraphEmbedding EmbeddFor(TimeSpan runningTime)
         {
             var localSearch = new LocalSearch<GraphEmbedding>();
-            object killTaskObject = new object();
+            var killProcess = new ConcurrentSignal(false);
+            var processKilled = new ConcurrentSignal(false);
             Task.Run(() =>
             {
                 Thread.Sleep(runningTime);
-                Monitor.Enter(killTaskObject);
-                Thread.Sleep(3000);
-                Monitor.Exit(killTaskObject);
+                killProcess.Signal();
+                processKilled.WaitForSignalBlocking();
             });
-            return localSearch.Run(_ => this, LocalSearchSettings.Default, new object(), killTaskObject, new Random()).Last();
+            return localSearch.Run(_ => this, LocalSearchSettings.Default, new object(), killProcess, processKilled, new Random()).Last();
         }
 
         public IEnumerable<GraphEmbedding> Neighbors()

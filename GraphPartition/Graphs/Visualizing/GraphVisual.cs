@@ -7,8 +7,6 @@ using System.Windows.Shapes;
 using Graphs.GraphProperties;
 using Utils.ExtensionMethods;
 using Utils.MathUtils;
-using Utils.UiUtils.DrawingUtils;
-using Utils.UiUtils;
 using Utils.UiUtils.CustomUi.CustomType;
 
 namespace Graphs.Visualizing

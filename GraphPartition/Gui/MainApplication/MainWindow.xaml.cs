@@ -16,7 +16,8 @@ namespace GraphPartition.Gui.MainApplication
 {
     public partial class MainWindow : Window
     {
-        private volatile object killTaskRunningLock = new object();
+        private volatile ConcurrentSignal killTaskSignal = new ConcurrentSignal(false);
+        private volatile ConcurrentSignal taskKilledSignal = new ConcurrentSignal(false);
         private volatile object runPauseLock = new object();
         private PagesNavigator<GraphPartitionSolution> SolutionsNavigator { get; set; }
 
@@ -24,46 +25,58 @@ namespace GraphPartition.Gui.MainApplication
         {
             InitializeComponent();
             MethodChoosingViewer.Content = MethodChoosingViewerCreator.Create(Dispatcher, OptimizationTypeChanged);
+        }
 
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            KillRunning();
+            base.OnClosing(e);
+        }
+
+        private void KillRunning()
+        {
+            if (Monitor.IsEntered(runPauseLock))
+                Monitor.Exit(runPauseLock);
+            if (SolutionsNavigator != null)
+            {
+                if (!taskKilledSignal.TryProcessSignal())
+                {
+                    killTaskSignal.Signal();
+                    taskKilledSignal.WaitForSignalBlocking();
+                }
+            }
+
+            this.PlayButton.IsEnabled = false;
+            this.PauseButton.IsEnabled = false;
+            this.NextSolutionButton.IsEnabled = false;
+            this.PrevSolutionButton.IsEnabled = false;
         }
 
 
         private void RunAlgorithmButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var resultDir = Path.Combine(OutputResultPath,
-                OptimizationType.AsString() + "_" + (int)DateTime.Now.TimeOfDay.TotalSeconds);
+            KillRunning();
+            var resultDir = Path.Combine(OutputResultPath, OptimizationType.AsString() + "_" + (int)DateTime.Now.TimeOfDay.TotalMilliseconds);
             Directory.CreateDirectory(resultDir);
-            if (PlayButton.IsEnabled)
-                PlayButton_Click(null, null);
             var solutions = Run(OptimizationType, GraphVisual.Graph);
             this.PrepareResultWindow();
             this.WindowScrollViewer.ScrollToEnd(TimeSpan.FromSeconds(3.0));
             SolutionsNavigator = PagesNavigator<GraphPartitionSolution>.Create(SetSolution, Dispatcher);
-            SolutionsNavigator.StatusEvent += (o, args) => Dispatcher.Invoke(() =>
+            SolutionsNavigator.StatusEvent += (o, args) => Dispatcher.InvokeAsync(() =>
             {
                 NextSolutionButton.IsEnabled = args.CanGoRight;
                 PrevSolutionButton.IsEnabled = args.CanGoLeft;
             });
             Task.Run(() =>
             {
-                Monitor.Enter(killTaskRunningLock);
-                Thread.Sleep(100);
-                Monitor.Exit(killTaskRunningLock);
                 foreach (var solution in solutions)
                 {
                     SolutionsNavigator.AddNext(solution);
-                    Thread.Sleep(200);
-                    Dispatcher.Invoke(() => BestSolutionViewBox.Child.TypeCast<Canvas>().SaveAsPng(Path.Combine(resultDir, solution.NegativePrice + ".png"), 1));
+                    Thread.Sleep(150);
+                    Dispatcher.InvokeAsync(() => BestSolutionViewBox.Child.TypeCast<Canvas>().SaveAsPng(Path.Combine(resultDir, solution.NegativePrice + ".png"), 1));
                 }
-                    
-
             });
-
-            this.PlayButton.IsEnabled = false;
-            this.PauseButton.IsEnabled = true;
-            this.NextSolutionButton.IsEnabled = false;
-            this.PrevSolutionButton.IsEnabled = false;
-            this.NextSolutionButton.IsEnabled = this.PrevSolutionButton.IsEnabled = false;
+            PauseButton.IsEnabled = true;
         }
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)

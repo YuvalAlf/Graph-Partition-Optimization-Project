@@ -17,11 +17,12 @@ namespace Utils.ExtensionMethods
             Storyboard.SetTargetProperty(doubleAnimationY, new PropertyPath("(Canvas.Top)"));
             storyBoard.Children.Add(doubleAnimationX);
             storyBoard.Children.Add(doubleAnimationY);
+            storyBoard.FillBehavior = FillBehavior.Stop;
             storyBoard.Completed += (sender, args) =>
             {
+                storyBoard.Remove();
                 @this.SetValue(Canvas.LeftProperty, point.X);
                 @this.SetValue(Canvas.TopProperty, point.Y);
-                storyBoard.Remove();
             };
             @this.BeginStoryboard(storyBoard);
         }
@@ -40,13 +41,14 @@ namespace Utils.ExtensionMethods
             storyBoard.Children.Add(doubleAnimationY1);
             storyBoard.Children.Add(doubleAnimationX2);
             storyBoard.Children.Add(doubleAnimationY2);
+            storyBoard.FillBehavior = FillBehavior.Stop;
             storyBoard.Completed += (sender, args) =>
             {
+                storyBoard.Remove();
                 @this.X1 = point1.X;
                 @this.Y1 = point1.Y;
                 @this.X2 = point2.X;
                 @this.Y2 = point2.Y;
-                storyBoard.Remove();
             };
             @this.BeginStoryboard(storyBoard);
         }

@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Shapes;
 using Graphs.GraphProperties;
 using Graphs.Visualizing.EdgeEventArgs;
 using Utils.ExtensionMethods;
-using Utils.UiUtils;
 using Utils.UiUtils.CustomUi.CustomType;
 using Utils.UiUtils.DrawingUtils;
 

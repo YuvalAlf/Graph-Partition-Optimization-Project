@@ -25,7 +25,7 @@ namespace Utils.UiUtils.CustomUi.CustomType
             else
             {
                 textBox.Foreground = Brushes.DarkGreen;
-                dispatcher.Invoke(() => onStringChanged(textBox.Text));
+                dispatcher.InvokeAsync(() => onStringChanged(textBox.Text));
             }
         }
     }

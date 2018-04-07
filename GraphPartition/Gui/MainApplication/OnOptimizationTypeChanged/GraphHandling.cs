@@ -21,7 +21,7 @@ namespace GraphPartition.Gui.MainApplication
     public partial class MainWindow : Window
     {
         public string InputGraphPath { get; set; } = @"C:\Users\Yuval\Desktop\yuval.graph";
-        public string OutputResultPath { get; set; } = @"C:\Users\Yuval\Desktop";
+        public string OutputResultPath { get; set; } = @"C:\Users\Yuval\Desktop\GraphPartitionResults";
         public GraphVisual GraphVisual { get; set; }
 
         public static Brush NodeBrush => Brushes.Black;
@@ -31,16 +31,8 @@ namespace GraphPartition.Gui.MainApplication
 
         private void SetGraph(GraphEmbedding graphEmbedding)
         {
+            PauseButton_Click(null, null);
             this.RunAlgorithmButton.IsEnabled = true;
-            if (!Monitor.TryEnter(killTaskRunningLock))
-            {
-                Monitor.Enter(killTaskRunningLock);
-                Thread.Yield();
-                Thread.Sleep(50);
-                this.PauseButton.IsEnabled = this.PlayButton.IsEnabled =
-                    this.NextSolutionButton.IsEnabled = this.PrevSolutionButton.IsEnabled = false;
-            }
-            Monitor.Exit(killTaskRunningLock);
             this.StaticGraphCanvas.Children.Clear();
             this.GraphVisual = GraphVisual.Create(StaticGraphCanvas, NodeBrush, NumBrush, LineBrush, PenLineCap);
             foreach (var node in graphEmbedding.Graph.Nodes)
@@ -118,16 +110,18 @@ namespace GraphPartition.Gui.MainApplication
         private IEnumerable<GraphPartitionSolution> Run(OptimizationType optimizationType, Graph graph)
         {
             var random = new Random();
+
+            IEnumerable<GraphPartitionSolution> RunAlg<Settings>(OptimizationSolver<GraphPartitionSolution, Settings> solver, Settings settings) 
+                => solver.Run(GraphPartitionSolution.GenerateRandom(graph), settings, runPauseLock, killTaskSignal, taskKilledSignal, random);
+
             switch (optimizationType)
             {
                 case OptimizationType.Genetic:
-                    return new Genetic<GraphPartitionSolution>()
-                        .Run(GraphPartitionSolution.GenerateRandom(graph), GeneticSettings, runPauseLock, killTaskRunningLock, random);
+                    return RunAlg(new Genetic<GraphPartitionSolution>(), GeneticSettings);
                 case OptimizationType.BranchAndBound:
                     return GraphPartitionSolution.RunBranchAndBound(BranchAndBoundSettings, graph);
                 case OptimizationType.LocalSearch:
-                    return new LocalSearch<GraphPartitionSolution>()
-                        .Run(GraphPartitionSolution.GenerateRandom(graph), LocalSearchSettings, runPauseLock, killTaskRunningLock, random);
+                    return RunAlg(new LocalSearch<GraphPartitionSolution>(), LocalSearchSettings);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(optimizationType), optimizationType, null);
             }

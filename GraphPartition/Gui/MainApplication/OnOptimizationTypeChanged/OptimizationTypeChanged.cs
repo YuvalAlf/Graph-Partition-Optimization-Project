@@ -59,7 +59,11 @@ namespace GraphPartition.Gui.MainApplication
         private UIElement InputGraphBullet()
         {
             Predicate<string> validityCheck = path => File.Exists(path) && GraphEmbedding.CanParse(path);
-            Action<string> onPathChanged = path => SetGraph(GraphEmbedding.FromText(File.ReadLines(path)));
+            Action<string> onPathChanged = path =>
+            {
+                InputGraphPath = path;
+                SetGraph(GraphEmbedding.FromText(File.ReadLines(path)));
+            };
             var textBox = InteractiveTextBox.Create(InputGraphPath, validityCheck, onPathChanged, Dispatcher);
             InputGraphTextBox = textBox;
             return HorizontalContainerStrecherd.Create()
