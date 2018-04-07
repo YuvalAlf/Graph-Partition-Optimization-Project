@@ -12,6 +12,6 @@ namespace Optimizations
         public int Compare(SolutionType s1, SolutionType s2) => s1.NegativePrice.CompareTo(s2.NegativePrice);
 
         public abstract IEnumerable<SolutionType> Run(Func<Random, SolutionType> genRandom, Settings settings,
-            object runPauseLock, ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, StrongBox<bool> finished, Random rnd);
+            object runPauseLock, ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, StrongBox<bool> finishedExecution, Random rnd);
     }
 }

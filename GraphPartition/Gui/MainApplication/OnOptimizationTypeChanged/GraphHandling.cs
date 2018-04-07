@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -116,11 +115,11 @@ namespace GraphPartition.Gui.MainApplication
 
             IEnumerable<GraphPartitionSolution> RunAlg<Settings>(OptimizationSolver<GraphPartitionSolution, Settings> solver, Settings settings)
             {
-                var finished = new StrongBox<bool>(false);
-                var results = solver.Run(GraphPartitionSolution.GenerateRandom(graph), settings, runPauseLock, killTaskSignal, taskKilledSignal, finished, random);
+                var finishedExecution = new StrongBox<bool>(false);
+                var results = solver.Run(GraphPartitionSolution.GenerateRandom(graph), settings, runPauseLock, killTaskSignal, taskKilledSignal, finishedExecution, random);
                 foreach (var result in results)
                     yield return result;
-                if (finished.Value == true)
+                if (finishedExecution.Value == true)
                     Dispatcher.InvokeAsync(() =>
                         StatusViewer.Content.TypeCast<StackPanel>().Children
                             .Add(TextBlockCreator.RegularTextBlock("Finished Running").PlusFontSize(10.0)));

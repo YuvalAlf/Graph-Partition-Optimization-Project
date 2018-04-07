@@ -9,30 +9,42 @@ namespace Optimizations.LocalSearchAlgorithm
         where Solution : ILocalSearchSolver<Solution>
     {
         public override IEnumerable<Solution> Run(Func<Random, Solution> genRandom, LocalSearchSettings settings, object runPauseLock,
-            ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, StrongBox<bool> finished, Random rnd)
+            ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, StrongBox<bool> finishedExecution, Random rnd)
         {
-            Solution bestSolution = genRandom(rnd);
-            double bestPrice = bestSolution.NegativePrice;
-            yield return bestSolution;
-            
-            foreach (var neighbor in bestSolution.Neighbors())
+            (Solution newBestSolution, double newBestPrice, bool finishedBySignal, bool finishedByExecution) Loop(Solution bestSolution, double bestPrice)
             {
-                var proccessedSingnal = killTaskSignal.TryProcessSignal();
-                finished.Value = !proccessedSingnal;
-                if (proccessedSingnal)
-                    break;
-                lock (runPauseLock)
+                foreach (var neighbor in bestSolution.Neighbors())
                 {
-                    var neighborPrice = neighbor.NegativePrice;
-                    if (neighborPrice < bestPrice)
+                    if (killTaskSignal.TryProcessSignal())
+                        return (bestSolution, bestPrice, true, false);
+                    lock (runPauseLock)
                     {
-                        bestSolution = neighbor;
-                        bestPrice = neighborPrice;
-                        yield return bestSolution;
+                        var neighborPrice = neighbor.NegativePrice;
+                        if (neighborPrice < bestPrice)
+                            return (neighbor, neighborPrice, false, false);
                     }
                 }
+                return (bestSolution, bestPrice, false, true);
             }
-                
+
+            Solution globalBestSolution = genRandom(rnd);
+            double globalBestPrice = globalBestSolution.NegativePrice;
+            yield return globalBestSolution;
+            while (true)
+            {
+                (Solution newBestSolution, double newBestPrice, bool finishedBySignal, bool finishedByExecution) =
+                    Loop(globalBestSolution, globalBestPrice);
+                if (finishedByExecution)
+                    finishedExecution.Value = true;
+                if (finishedBySignal || finishedByExecution)
+                    break;
+                if (newBestPrice < globalBestPrice)
+                {
+                    globalBestPrice = newBestPrice;
+                    globalBestSolution = newBestSolution;
+                    yield return globalBestSolution;
+                }
+            }
             taskKilledSignal.Signal();
         }
     }

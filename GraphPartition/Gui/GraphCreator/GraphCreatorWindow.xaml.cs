@@ -42,9 +42,9 @@ namespace GraphPartition.Gui.GraphCreator
             var numOfNodes = GraphVisual.Nodes.Count;
             var numOfEdges = GraphVisual.Edges.Count;
             if (numOfEdges > 0 &&  numOfNodes > 0)
-                EmbeddGraphButton.IsEnabled = true;
+                EmbedGraphButton.IsEnabled = true;
             else
-                EmbeddGraphButton.IsEnabled = false;
+                EmbedGraphButton.IsEnabled = false;
 
             if (numOfNodes > 0 && numOfNodes % 4 == 0)
                 SaveGraphButton.IsEnabled = true;
@@ -79,7 +79,7 @@ namespace GraphPartition.Gui.GraphCreator
             StateController = StateController.MouseMoveTo(pos);
         }
 
-        private void EmbeddGraphButton_OnClick(object sender, RoutedEventArgs e)
+        private void EmbedGraphButton_OnClick(object sender, RoutedEventArgs e)
         {
             void FlipEnabaling()
             {

@@ -10,7 +10,7 @@ namespace Optimizations.GeneticAlgorithm
         where SolutionInstance : IGeneticSolver<SolutionInstance>
     {
         public override IEnumerable<SolutionInstance> Run(Func<Random, SolutionInstance> genRandom, GeneticSettings settings,
-            object runPauseLock, ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, StrongBox<bool> finished, Random rnd)
+            object runPauseLock, ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, StrongBox<bool> finishedExecution, Random rnd)
         {
             var population = new SolutionInstance[settings.Population];
             var newPopulation = population.Copy();
@@ -21,7 +21,7 @@ namespace Optimizations.GeneticAlgorithm
 
             double lastNegativePrice = double.MaxValue;
 
-            finished.Value = false;
+            finishedExecution.Value = false;
             while (!killTaskSignal.TryProcessSignal())
                 lock(runPauseLock)
                 {

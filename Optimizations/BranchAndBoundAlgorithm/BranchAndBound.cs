@@ -18,7 +18,7 @@ namespace Optimizations.BranchAndBoundAlgorithm
 
 
         public override IEnumerable<Solution> Run(Func<Random, Solution> genRandom, BranchAndBoundSettings settings, object runPauseLock
-            , ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, StrongBox<bool> finished, Random rnd)
+            , ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, StrongBox<bool> finishedExecution, Random rnd)
         {
             var priorityQueue = HeapFactory.NewArrayHeap<PartialSolution>(2);
             priorityQueue.Add(EmptyPartialSolution);
@@ -43,7 +43,7 @@ namespace Optimizations.BranchAndBoundAlgorithm
                 }
             }
 
-            finished.Value = priorityQueue.Count == 0;
+            finishedExecution.Value = priorityQueue.Count == 0;
 
             taskKilledSignal.Signal();
         }
