@@ -15,8 +15,8 @@ namespace Graphs.Visualizing
     {
         public double CanvasWidth => Canvas.Width;
         public double NodeWidth { get; private set; }
-        public double MaxLineThickness => NodeWidth / 4.0;
-        public double MinLineThickness => NodeWidth / 20.0;
+        public double MaxLineThickness => NodeWidth / 8.0;
+        public double MinLineThickness => NodeWidth / 40.0;
         public Brush NodeBrush { get; }
         public Brush NumBrush { get; }
         public Brush LineBrush { get; }
@@ -24,6 +24,7 @@ namespace Graphs.Visualizing
         public Canvas Canvas { get; }
         public Dictionary<Node, NumEllipse> Nodes { get; }
         public Dictionary<Edge, Line> Edges { get; }
+        public bool BigGraph => Edges.Count > 1000;
         public Graph Graph => Graph.Create(Nodes.Keys.ToArray(), Edges.Keys.ToArray());
         public double MinWeight => Edges.Keys.Min(e => e.Weight, 0.0);
         public double MaxWeight => Edges.Keys.Max(e => e.Weight, 2.0);
@@ -61,7 +62,7 @@ namespace Graphs.Visualizing
             const int updateEach = 5;
             var nodesAmount = this.Nodes.Count;
             var level = nodesAmount / updateEach;
-            var width = CanvasWidth / (7 + Math.Log(level * updateEach + 2) * Math.Sqrt(level * updateEach + 2));
+            var width = CanvasWidth / (8 + Math.Pow(Math.Log(level * updateEach + 2), 1.5) * Math.Sqrt(level * updateEach + 2));
             foreach (var ellipse in Nodes.Values)
             {
                 var ellipseCenter = ellipse.Center;

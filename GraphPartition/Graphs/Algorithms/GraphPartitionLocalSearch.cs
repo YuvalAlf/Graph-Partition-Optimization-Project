@@ -19,10 +19,10 @@ namespace Graphs.Algorithms
                     yield return this.ReplacePartitionTypeOf(node1, node2);
             }
 
-            foreach (var node1 in this.Graph.Nodes)
-            foreach (var node2 in this.Graph.Nodes)
-            foreach (var node3 in this.Graph.Nodes)
-                yield return this.ReplacePartitionTypeOf(node1, node2).ReplacePartitionTypeOf(node2, node3);
+         //   foreach (var node1 in this.Graph.Nodes)
+         //   foreach (var node2 in this.Graph.Nodes)
+         //   foreach (var node3 in this.Graph.Nodes)
+         //       yield return this.ReplacePartitionTypeOf(node1, node2).ReplacePartitionTypeOf(node2, node3);
         }
 
         private GraphPartitionSolution ReplacePartitionTypeOf(Node node1, Node node2)

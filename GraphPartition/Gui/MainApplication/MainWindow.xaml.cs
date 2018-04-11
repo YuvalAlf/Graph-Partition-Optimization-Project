@@ -24,6 +24,7 @@ namespace GraphPartition.Gui.MainApplication
         public MainWindow()
         {
             InitializeComponent();
+            StaticGraphCanvas.Background = EmbeddedGraphViewer.Background;
             MethodChoosingViewer.Content = MethodChoosingViewerCreator.Create(Dispatcher, OptimizationTypeChanged);
         }
 
@@ -58,6 +59,7 @@ namespace GraphPartition.Gui.MainApplication
             KillRunning();
             var resultDir = Path.Combine(OutputResultPath, OptimizationType.AsString() + "_" + (int)DateTime.Now.TimeOfDay.TotalMilliseconds);
             Directory.CreateDirectory(resultDir);
+            GraphVisual.Canvas.SaveAsJpg(Path.Combine(resultDir, "graph.jpg"), 1);
             var solutions = Run(OptimizationType, GraphVisual.Graph);
             this.PrepareResultWindow();
             this.WindowScrollViewer.ScrollToEnd(TimeSpan.FromSeconds(3.0));
@@ -72,8 +74,9 @@ namespace GraphPartition.Gui.MainApplication
                 foreach (var solution in solutions)
                 {
                     SolutionsNavigator.AddNext(solution);
-                    Thread.Sleep(150);
+                    Thread.Sleep(100);
                     Dispatcher.InvokeAsync(() => BestSolutionViewBox.Child.TypeCast<Canvas>().SaveAsJpg(Path.Combine(resultDir, solution.NegativePrice + ".jpg"), 1));
+                    Thread.Sleep(100);
                 }
             });
             PauseButton.IsEnabled = true;

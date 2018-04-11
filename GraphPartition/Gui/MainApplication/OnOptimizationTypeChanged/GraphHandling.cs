@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -101,7 +102,6 @@ namespace GraphPartition.Gui.MainApplication
                     line.Stroke = defaultLineBrush;
                     line.StrokeDashArray = new DoubleCollection(new [] {1.0, 0.8});
                     line.SetValue(Canvas.ZIndexProperty, -10);
-                    
                 }
                     
             }
@@ -130,8 +130,9 @@ namespace GraphPartition.Gui.MainApplication
                 case OptimizationType.Genetic:
                     return RunAlg(new Genetic<GraphPartitionSolution>(), GeneticSettings);
                 case OptimizationType.BranchAndBound:
-                    var emptyGraphPartition = PartialGraphPartition.CreateEmpty(GraphVisual.Graph);
-                    return RunAlg(new BranchAndBound<PartialGraphPartition, GraphPartitionSolution>(emptyGraphPartition), BranchAndBoundSettings);
+                    return Enumerable.Empty<GraphPartitionSolution>();
+                   // var emptyGraphPartition = PartialGraphPartition.CreateEmpty(GraphVisual.Graph);
+                   // return RunAlg(new BranchAndBound<PartialGraphPartition, GraphPartitionSolution>(emptyGraphPartition), BranchAndBoundSettings);
                 case OptimizationType.LocalSearch:
                     return RunAlg(new LocalSearch<GraphPartitionSolution>(), LocalSearchSettings);
                 default:
