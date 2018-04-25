@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Utils.DataStructures;
 
 namespace Optimizations.LocalSearchAlgorithm
@@ -8,44 +6,40 @@ namespace Optimizations.LocalSearchAlgorithm
     public sealed class LocalSearch<Solution> : OptimizationSolver<Solution, LocalSearchSettings>
         where Solution : ILocalSearchSolver<Solution>
     {
-        public override IEnumerable<Solution> Run(Func<Random, Solution> genRandom, LocalSearchSettings settings, object runPauseLock,
-            ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, StrongBox<bool> finishedExecution, Random rnd)
+        public override void Run(Func<Random, Solution> genRandom, LocalSearchSettings settings, DistributedInt killTask, Action<Solution> reportSolution, Random rnd)
         {
-            (Solution newBestSolution, double newBestPrice, bool finishedBySignal, bool finishedByExecution) Loop(Solution bestSolution, double bestPrice)
+            (Solution newBestSolution, double newBestPrice, bool shouldFinish) Loop(Solution bestSolution, double bestPrice)
             {
                 foreach (var neighbor in bestSolution.Neighbors())
                 {
-                    if (killTaskSignal.TryProcessSignal())
-                        return (bestSolution, bestPrice, true, false);
-                    lock (runPauseLock)
-                    {
+                    if (killTask.Num == 1)
+                        return (bestSolution, bestPrice, true);
                         var neighborPrice = neighbor.NegativePrice;
                         if (neighborPrice < bestPrice)
-                            return (neighbor, neighborPrice, false, false);
-                    }
+                            return (neighbor, neighborPrice, false);
                 }
-                return (bestSolution, bestPrice, false, true);
+                return (bestSolution, bestPrice, true);
             }
 
             Solution globalBestSolution = genRandom(rnd);
             double globalBestPrice = globalBestSolution.NegativePrice;
-            yield return globalBestSolution;
+            reportSolution(globalBestSolution);
             while (true)
             {
-                (Solution newBestSolution, double newBestPrice, bool finishedBySignal, bool finishedByExecution) =
-                    Loop(globalBestSolution, globalBestPrice);
-                if (finishedByExecution)
-                    finishedExecution.Value = true;
-                if (finishedBySignal || finishedByExecution)
-                    break;
+                (Solution newBestSolution, double newBestPrice, bool shouldFinish) = Loop(globalBestSolution, globalBestPrice);
+                if (shouldFinish)
+                {
+                    killTask.MinusOne();
+                    return;
+                }
+
                 if (newBestPrice < globalBestPrice)
                 {
                     globalBestPrice = newBestPrice;
                     globalBestSolution = newBestSolution;
-                    yield return globalBestSolution;
+                    reportSolution(globalBestSolution);
                 }
             }
-            taskKilledSignal.Signal();
         }
     }
 }

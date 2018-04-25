@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Utils.ExtensionMethods
 {
     public static class StringExtensions
     {
+        public static string CombinePathWith(this string @this, string toCombine) => Path.Combine(@this, toCombine);
+
         public static string AsString(this IEnumerable<char> @this) 
             => new string(@this.ToArray());
 

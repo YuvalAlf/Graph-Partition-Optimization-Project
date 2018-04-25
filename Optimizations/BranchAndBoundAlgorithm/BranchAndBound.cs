@@ -16,9 +16,7 @@ namespace Optimizations.BranchAndBoundAlgorithm
         public BranchAndBound(PartialSolution emptyPartialSolution) => EmptyPartialSolution = emptyPartialSolution;
 
 
-
-        public override IEnumerable<Solution> Run(Func<Random, Solution> genRandom, BranchAndBoundSettings settings, object runPauseLock
-            , ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, StrongBox<bool> finishedExecution, Random rnd)
+        public override void Run(Func<Random, Solution> genRandom, BranchAndBoundSettings settings, DistributedInt killTask, Action<Solution> reportSolution, Random rnd)
         {
             var priorityQueue = HeapFactory.NewArrayHeap<PartialSolution>(2);
             priorityQueue.Add(EmptyPartialSolution);
@@ -26,7 +24,7 @@ namespace Optimizations.BranchAndBoundAlgorithm
             var globalMinBound = double.PositiveInfinity;
             var bestSolutionNegativePrice = double.PositiveInfinity;
 
-            while (priorityQueue.Count > 0 && !killTaskSignal.TryProcessSignal())
+            while (priorityQueue.Count > 0 && killTask.Num == 0)
             {
                 var nextItem = priorityQueue.RemoveMin();
                 var itemMinBound = nextItem.MinBound;
@@ -39,13 +37,11 @@ namespace Optimizations.BranchAndBoundAlgorithm
                 if (solutionPrice < bestSolutionNegativePrice)
                 {
                     bestSolutionNegativePrice = solutionPrice;
-                    yield return solution;
+                    reportSolution(solution);
                 }
             }
 
-            finishedExecution.Value = priorityQueue.Count == 0;
-
-            taskKilledSignal.Signal();
+            killTask.MinusOne();
         }
     }
 }

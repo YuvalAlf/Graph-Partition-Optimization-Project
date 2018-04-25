@@ -67,21 +67,12 @@
     <Compile Include="Algorithms\GraphPartitionGenetic.cs" />
     <Compile Include="Algorithms\GraphPartitionLocalSearch.cs" />
     <Compile Include="Algorithms\PartialGraphPartition.cs" />
-    <Compile Include="EmbeddingInPlane\GraphEmbeddingAlgorithm.cs" />
-    <Compile Include="EmbeddingInPlane\GraphEmbeddingParsing.cs" />
     <Compile Include="GraphProperties\Edge.cs" />
     <Compile Include="GraphProperties\Graph.cs" />
-    <Compile Include="EmbeddingInPlane\GraphEmbedding.cs" />
     <Compile Include="Algorithms\GraphPartition.cs" />
     <Compile Include="GraphProperties\Node.cs" />
     <Compile Include="Algorithms\PartitionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Visualizing\EdgeEventArgs\EdgeAddedArgs.cs" />
-    <Compile Include="Visualizing\EdgeEventArgs\EdgeRemovedArgs.cs" />
-    <Compile Include="Visualizing\EdgeEventArgs\NodesAmountChangedArgs.cs" />
-    <Compile Include="Visualizing\GraphVisual.cs" />
-    <Compile Include="Visualizing\GraphVisualEmbedding.cs" />
-    <Compile Include="Visualizing\GraphVisualFunctionality.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Optimizations\Optimizations.csproj">

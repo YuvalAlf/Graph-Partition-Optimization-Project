@@ -46,7 +46,7 @@ namespace Graphs.GraphProperties
             }
         }
 
-        public override string ToString() => $"({Node1},{Node2})";
+        public override string ToString() => $"({Node1},{Node2})".PadRight(24) + Weight;
 
         public bool IsClashingWith(Edge edge, Dictionary<Node, Point> embedding)
         {

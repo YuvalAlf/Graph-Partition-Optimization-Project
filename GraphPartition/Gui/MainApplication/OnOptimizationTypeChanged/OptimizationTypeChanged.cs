@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using GraphPartition.Gui.GraphCreator;
 using Graphs.EmbeddingInPlane;
 using Optimizations;
+using Utils.UiUtils;
 using Utils.UiUtils.CustomUi.Creator;
 using Utils.UiUtils.CustomUi.CustomType;
 
@@ -35,11 +36,30 @@ namespace GraphPartition.Gui.MainApplication
                     throw new ArgumentOutOfRangeException(nameof(optimizationType), optimizationType, null);
             }
 
+            settingsStackPanel.Children.Add(ShowVisual());
             settingsStackPanel.Children.Add(InputGraphBullet());
             settingsStackPanel.Children.Add(CreateGraphButton());
             settingsStackPanel.Children.Add(OutputPathBullet());
 
             SettingsViewer.Content = settingsStackPanel;
+        }
+
+        private UIElement ShowVisual()
+        {
+            var chooser = RadioButtonChooser.Create(Dispatcher, new[] {true, false}, b => b.ToString(), OnVisualChanged);
+            chooser.Orientation = Orientation.Horizontal;
+            var text = TextBlockCreator.RegularTextBlock("Show Visual:").WithBullet();
+            var stackPanel = GuiExtensions.CreateStackPanel(text, chooser);
+            stackPanel.Orientation = Orientation.Horizontal;
+            (chooser.Children[0] as RadioButton).IsChecked = true;
+            return stackPanel;
+        }
+
+        public bool Visual = true;
+        
+        private void OnVisualChanged(bool visual)
+        {
+            Visual = visual;
         }
 
         private UIElement OutputPathBullet()

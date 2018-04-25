@@ -67,10 +67,16 @@
     <Compile Include="DataStructures\ConcurrentSignal.cs" />
     <Compile Include="DataStructures\EphemeralExtensions.cs" />
     <Compile Include="DataStructures\ImmutableExtensions.cs" />
+    <Compile Include="DataStructures\Mail.cs" />
     <Compile Include="DataStructures\PagesNavigator.cs" />
     <Compile Include="DataStructures\PagesNavigatorStatusEventArgs.cs" />
     <Compile Include="ExtensionMethods\DispatcherExtensions.cs" />
     <Compile Include="ExtensionMethods\EnumerableExtensions.cs" />
+    <Compile Include="Option\NoneOption.cs" />
+    <Compile Include="Option\NonOptionException.cs" />
+    <Compile Include="Option\Opt.cs" />
+    <Compile Include="Option\Option.cs" />
+    <Compile Include="Option\SomeOption.cs" />
     <Compile Include="UiUtils\CustomUi\CustomType\AnimatableScrollViewer.cs" />
     <Compile Include="UiUtils\CustomUi\CustomType\NumEllipse.cs" />
     <Compile Include="UiUtils\DrawingUtils\ColorUtils.cs" />

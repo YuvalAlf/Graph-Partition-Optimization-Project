@@ -9,8 +9,10 @@ namespace Optimizations.GeneticAlgorithm
     public sealed class Genetic<SolutionInstance> : OptimizationSolver<SolutionInstance, GeneticSettings>
         where SolutionInstance : IGeneticSolver<SolutionInstance>
     {
-        public override IEnumerable<SolutionInstance> Run(Func<Random, SolutionInstance> genRandom, GeneticSettings settings,
-            object runPauseLock, ConcurrentSignal killTaskSignal, ConcurrentSignal taskKilledSignal, StrongBox<bool> finishedExecution, Random rnd)
+        public override void Run(Func<Random, SolutionInstance> genRandom, GeneticSettings settings,
+            DistributedInt killTask,
+            Action<SolutionInstance> reportSolution, Random rnd)
+
         {
             var population = new SolutionInstance[settings.Population];
             var newPopulation = population.Copy();
@@ -20,40 +22,37 @@ namespace Optimizations.GeneticAlgorithm
             Array.Sort(population, this);
 
             double lastNegativePrice = double.MaxValue;
-
-            finishedExecution.Value = false;
-            while (!killTaskSignal.TryProcessSignal())
-                lock(runPauseLock)
+            while (killTask.Num == 0)
+            {
+                double newNegativePrice = population[0].NegativePrice;
+                if (newNegativePrice < lastNegativePrice)
                 {
-                    double newNegativePrice = population[0].NegativePrice;
-                    if (newNegativePrice < lastNegativePrice)
-                    {
-                        yield return population[0];
-                        lastNegativePrice = newNegativePrice;
-                    }
-                    
-                    int index = 0;
-                    for (int i = 0; i < settings.ElitismAmount && index < newPopulation.Length; i++)
-                        newPopulation[index] = population[index++];
-                    for (int i = 0; i < settings.NewGenesAmount && index < newPopulation.Length; i++)
-                        newPopulation[index++] = genRandom(rnd);
-                    while (index < newPopulation.Length)
-                    {
-                        var mom = population.ChooseRandomly(rnd);
-                        var dad = population.ChooseRandomly(rnd);
-                        var son = mom.Mate(dad, rnd);
-                        if (rnd.NextDouble() <= settings.MutationRate)
-                            son = son.Mutate(rnd);
-                        newPopulation[index++] = son;
-                    }
-
-                    var temp = population;
-                    population = newPopulation;
-                    newPopulation = temp;
-
-                    Array.Sort(population, this);
+                    reportSolution(population[0]);
+                    lastNegativePrice = newNegativePrice;
                 }
-            taskKilledSignal.Signal();
+
+                int index = 0;
+                for (int i = 0; i < settings.ElitismAmount && index < newPopulation.Length; i++)
+                    newPopulation[index] = population[index++];
+                for (int i = 0; i < settings.NewGenesAmount && index < newPopulation.Length; i++)
+                    newPopulation[index++] = genRandom(rnd);
+                while (index < newPopulation.Length)
+                {
+                    var mom = population.ChooseRandomly(rnd);
+                    var dad = population.ChooseRandomly(rnd);
+                    var son = mom.Mate(dad, rnd);
+                    if (rnd.NextDouble() <= settings.MutationRate)
+                        son = son.Mutate(rnd);
+                    newPopulation[index++] = son;
+                }
+
+                var temp = population;
+                population = newPopulation;
+                newPopulation = temp;
+
+                Array.Sort(population, this);
+            }
+            killTask.MinusOne();
         }
     }
 }

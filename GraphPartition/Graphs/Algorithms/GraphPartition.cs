@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using Graphs.GraphProperties;
 using Utils.DataStructures;
 using Utils.ExtensionMethods;
@@ -49,6 +50,19 @@ namespace Graphs.Algorithms
                 if (partitions[partitionType].Contains(node))
                     return partitionType;
             throw new ArgumentException("Node " + node + " is not in any partition");
+        }
+
+        public void WriteToFile(string path)
+        {
+            using (var file = File.CreateText(path))
+            {
+                foreach (var partition in Partitions.Keys)
+                {
+                    file.WriteLine(partition.AsString());
+                    foreach (var node in Partitions[partition])
+                        file.WriteLine("    " + node.Value);
+                }
+            }
         }
     }
 }

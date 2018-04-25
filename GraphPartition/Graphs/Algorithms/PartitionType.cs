@@ -34,5 +34,19 @@ namespace Graphs.Algorithms
                     throw new ArgumentOutOfRangeException(nameof(@this), @this, null);
             }
         }
+        public static string AsString(this PartitionType @this)
+        {
+            switch (@this)
+            {
+                case PartitionType.BigPartition:
+                    return "Big Partition N/2";
+                case PartitionType.SmallPartition1:
+                    return "Small Partition 1, N/4";
+                case PartitionType.SmallPartition2:
+                    return "Small Partition 2, N/4";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(@this), @this, null);
+            }
+        }
     }
 }

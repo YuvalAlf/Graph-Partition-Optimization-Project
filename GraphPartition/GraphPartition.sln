@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphPartition", "GraphPartition.csproj", "{19C2AE25-620B-4AB2-92CA-5AD1A47D26FE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils", "Utils\Utils.csproj", "{F245956B-E7B8-4202-9511-3F48134BA909}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graphs", "Graphs\Graphs.csproj", "{0AF773BF-05ED-4F26-ABDE-EAD7ED9A98C8}"
@@ -13,16 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Optimizations", "..\Optimiz
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphCreator", "..\GraphCreator\GraphCreator.csproj", "{79508D47-3F07-4CBA-B38F-C7AC0B199C98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Running", "..\Running\Running.csproj", "{30AA331C-4B8E-45A3-BED4-6F8395C3D7AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{19C2AE25-620B-4AB2-92CA-5AD1A47D26FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{19C2AE25-620B-4AB2-92CA-5AD1A47D26FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{19C2AE25-620B-4AB2-92CA-5AD1A47D26FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{19C2AE25-620B-4AB2-92CA-5AD1A47D26FE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F245956B-E7B8-4202-9511-3F48134BA909}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F245956B-E7B8-4202-9511-3F48134BA909}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F245956B-E7B8-4202-9511-3F48134BA909}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{79508D47-3F07-4CBA-B38F-C7AC0B199C98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79508D47-3F07-4CBA-B38F-C7AC0B199C98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79508D47-3F07-4CBA-B38F-C7AC0B199C98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30AA331C-4B8E-45A3-BED4-6F8395C3D7AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30AA331C-4B8E-45A3-BED4-6F8395C3D7AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30AA331C-4B8E-45A3-BED4-6F8395C3D7AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30AA331C-4B8E-45A3-BED4-6F8395C3D7AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
