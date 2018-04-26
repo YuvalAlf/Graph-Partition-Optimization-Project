@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Utils.DataStructures;
 using Utils.ExtensionMethods;
 
 namespace Optimizations.GeneticAlgorithm
 {
-    public sealed class Genetic<SolutionInstance> : OptimizationSolver<SolutionInstance, GeneticSettings>
-        where SolutionInstance : IGeneticSolver<SolutionInstance>
+    public sealed class Genetic<SolutionInstance, Mating, Mutation> : OptimizationSolver<SolutionInstance, GeneticSettings<Mating, Mutation>>
+        where SolutionInstance : IGeneticSolver<SolutionInstance, Mating, Mutation>
     {
-        public override void Run(Func<Random, SolutionInstance> genRandom, GeneticSettings settings,
+        public override void Run(Func<Random, SolutionInstance> genRandom, GeneticSettings<Mating, Mutation> settings,
             DistributedInt killTask,
             Action<SolutionInstance> reportSolution, Random rnd)
 
@@ -40,9 +38,9 @@ namespace Optimizations.GeneticAlgorithm
                 {
                     var mom = population.ChooseRandomly(rnd);
                     var dad = population.ChooseRandomly(rnd);
-                    var son = mom.Mate(dad, rnd);
+                    var son = mom.Mate(settings.MatingScheme, dad, rnd);
                     if (rnd.NextDouble() <= settings.MutationRate)
-                        son = son.Mutate(rnd);
+                        son = son.Mutate(settings.MutatingScheme, rnd);
                     newPopulation[index++] = son;
                 }
 

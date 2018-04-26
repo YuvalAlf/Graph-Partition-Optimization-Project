@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using Utils;
+using Utils.ExtensionMethods;
 
 namespace Graphs.GraphProperties
 {
@@ -32,7 +34,26 @@ namespace Graphs.GraphProperties
         public void WriteToFile(string filePath)
         {
             File.WriteAllLines(filePath, Edges.Select(e => e.ToString()));
+        }
 
+        public static Graph ParseFromPath(string path)
+        {
+            path = path.EndsWith("Graph.txt") ? path : path.CombinePathWith("Graph.txt");
+            var edges = File.ReadLines(path).Select(Edge.Parse).ToArray();
+            var nodes = edges.SelectMany(e => new[] {e.Node1, e.Node2}).Distinct().ToArray();
+            return Graph.Create(nodes, edges);
+        }
+        public static bool CanParseFromPath(string path)
+        {
+            try
+            {
+                ParseFromPath(path);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

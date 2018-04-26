@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
+using System.Linq;
 using Graphs.GraphProperties;
 using Utils.DataStructures;
 using Utils.ExtensionMethods;
@@ -56,11 +57,20 @@ namespace Graphs.Algorithms
         {
             using (var file = File.CreateText(path))
             {
-                foreach (var partition in Partitions.Keys)
+                var partitions = Partitions.Keys.OrderByDescending(k => Partitions[k].Count).ToArray();
+                foreach (var partitionType in partitions)
+                    file.Write(partitionType.AsString().PadLeft(20).PadRight(30));
+                file.WriteLine();
+
+                var maxSize = Partitions.Values.Max(p => p.Count);
+                for (int i = 0; i < maxSize; i++)
                 {
-                    file.WriteLine(partition.AsString());
-                    foreach (var node in Partitions[partition])
-                        file.WriteLine("    " + node.Value);
+                    foreach (var partition in partitions)
+                    {
+                        if (i < Partitions[partition].Count)
+                          file.Write(Partitions[partition].ElementAt(i).Value.ToString().PadLeft(10).PadRight(30));
+                    }
+                    file.WriteLine();
                 }
             }
         }

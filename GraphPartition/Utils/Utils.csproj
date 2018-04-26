@@ -72,6 +72,8 @@
     <Compile Include="DataStructures\PagesNavigatorStatusEventArgs.cs" />
     <Compile Include="ExtensionMethods\DispatcherExtensions.cs" />
     <Compile Include="ExtensionMethods\EnumerableExtensions.cs" />
+    <Compile Include="IO\ColorWriter.cs" />
+    <Compile Include="IO\Parsing.cs" />
     <Compile Include="Option\NoneOption.cs" />
     <Compile Include="Option\NonOptionException.cs" />
     <Compile Include="Option\Opt.cs" />

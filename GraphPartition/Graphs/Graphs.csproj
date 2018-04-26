@@ -63,9 +63,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithms\GraphPartitionBranchAndBound.cs" />
-    <Compile Include="Algorithms\GraphPartitionGenetic.cs" />
-    <Compile Include="Algorithms\GraphPartitionLocalSearch.cs" />
+    <Compile Include="Algorithms\BranchAndBound\GraphPartitionBranchAndBound.cs" />
+    <Compile Include="Algorithms\BranchAndBound\LowerBound.cs" />
+    <Compile Include="Algorithms\BranchAndBound\UpperBound.cs" />
+    <Compile Include="Algorithms\Genetic\GraphPartitionGenetic.cs" />
+    <Compile Include="Algorithms\Genetic\Mating.cs" />
+    <Compile Include="Algorithms\LocalSearch\GraphPartitionLocalSearch.cs" />
+    <Compile Include="Algorithms\LocalSearch\GraphPartitionNeighborhoodOptions.cs" />
     <Compile Include="Algorithms\PartialGraphPartition.cs" />
     <Compile Include="GraphProperties\Edge.cs" />
     <Compile Include="GraphProperties\Graph.cs" />

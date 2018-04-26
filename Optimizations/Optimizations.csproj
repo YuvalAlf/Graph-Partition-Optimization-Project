@@ -71,7 +71,6 @@
     <Compile Include="LocalSearchAlgorithm\ILocalSearchSolver.cs" />
     <Compile Include="LocalSearchAlgorithm\LocalSearch.cs" />
     <Compile Include="LocalSearchAlgorithm\LocalSearchSettings.cs" />
-    <Compile Include="Optimization.cs" />
     <Compile Include="OptimizationSolver.cs" />
     <Compile Include="OptimizationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

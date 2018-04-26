@@ -1,4 +1,5 @@
-﻿using Running.ReplStates;
+﻿using System.Drawing;
+using System.Linq;
 
 namespace Running
 {
@@ -6,8 +7,8 @@ namespace Running
     {
         static void Main(string[] args)
         {
-            var repl = new Repl(new InitReplState());
-            repl.Run();
+            Colorful.Console.WriteAscii("Graph Partiton", Color.CornflowerBlue);
+            Repl.Create().Run();
         }
     }
 }

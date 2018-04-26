@@ -1,22 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using DIBRIS.Hippie;
 using MoreLinq;
 using Utils.DataStructures;
 
 namespace Optimizations.BranchAndBoundAlgorithm
 {
-    public sealed class BranchAndBound<PartialSolution, Solution> : OptimizationSolver<Solution, BranchAndBoundSettings>
+    public sealed class BranchAndBound<PartialSolution, Solution, UpperBound> : OptimizationSolver<Solution, BranchAndBoundSettings<UpperBound>>
         where Solution : INegativePrice
-        where PartialSolution : IPartialSolution<PartialSolution, Solution>
+        where PartialSolution : IPartialSolution<PartialSolution, UpperBound, Solution>
     {
         public PartialSolution EmptyPartialSolution { get; }
 
         public BranchAndBound(PartialSolution emptyPartialSolution) => EmptyPartialSolution = emptyPartialSolution;
 
 
-        public override void Run(Func<Random, Solution> genRandom, BranchAndBoundSettings settings, DistributedInt killTask, Action<Solution> reportSolution, Random rnd)
+        public override void Run(Func<Random, Solution> genRandom, BranchAndBoundSettings<UpperBound> settings, DistributedInt killTask, Action<Solution> reportSolution, Random rnd)
         {
             var priorityQueue = HeapFactory.NewArrayHeap<PartialSolution>(2);
             priorityQueue.Add(EmptyPartialSolution);
@@ -32,7 +30,7 @@ namespace Optimizations.BranchAndBoundAlgorithm
                 if (itemMinBound >= bestSolutionNegativePrice)
                     continue;
                 nextItem.Children().ForEach(priorityQueue.Add);
-                var solution = nextItem.ConstructSolution(rnd);
+                var solution = nextItem.ConstructSolution(settings.UpperBoundScheme, rnd);
                 var solutionPrice = solution.NegativePrice;
                 if (solutionPrice < bestSolutionNegativePrice)
                 {

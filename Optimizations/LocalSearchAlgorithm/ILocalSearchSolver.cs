@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Optimizations.LocalSearchAlgorithm
 {
-    public interface ILocalSearchSolver<Solution> : INegativePrice
+    public interface ILocalSearchSolver<Solution, NeighborhoodOptions> : INegativePrice
     {
-        IEnumerable<Solution> Neighbors();
+        IEnumerable<Solution> Neighbors(Random rnd, NeighborhoodOptions options);
     }
 }

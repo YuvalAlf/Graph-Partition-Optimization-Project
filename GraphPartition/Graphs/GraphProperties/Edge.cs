@@ -46,7 +46,7 @@ namespace Graphs.GraphProperties
             }
         }
 
-        public override string ToString() => $"({Node1},{Node2})".PadRight(24) + Weight;
+        public override string ToString() => $"({Node1},{Node2})".PadRight(15) + Weight;
 
         public bool IsClashingWith(Edge edge, Dictionary<Node, Point> embedding)
         {
@@ -67,6 +67,15 @@ namespace Graphs.GraphProperties
             var deltaYMin = (edge1Line.Compute(overlapRange.Min) - edge2Line.Compute(overlapRange.Min)).CoerceZero();
             var deltaYMax = (edge1Line.Compute(overlapRange.Max) - edge2Line.Compute(overlapRange.Max)).CoerceZero();
             return deltaYMin * deltaYMax < 0;
+        }
+
+        public static Edge Parse(string str)
+        {
+            var items = str.Split("(,) ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var node1 = (Node) int.Parse(items[0]);
+            var node2 = (Node) int.Parse(items[1]);
+            var weight = double.Parse(items[2]);
+            return Edge.Create(node1, node2, weight);
         }
     }
 }

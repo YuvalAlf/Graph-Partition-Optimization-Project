@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Running
+namespace Utils.IO
 {
     public static class ColorWriter
     {

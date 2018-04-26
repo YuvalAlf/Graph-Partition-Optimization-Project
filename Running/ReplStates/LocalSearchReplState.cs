@@ -1,20 +1,25 @@
 ﻿using System;
 using System.IO;
 using Graphs.Algorithms;
+using Graphs.Algorithms.LocalSearch;
 using Graphs.GraphProperties;
 using Optimizations.LocalSearchAlgorithm;
 using Utils.DataStructures;
 using Utils.ExtensionMethods;
+using Utils.IO;
+using static Graphs.Algorithms.LocalSearch.GraphPartitionNeighborhoodOption;
 
 namespace Running.ReplStates
 {
     public sealed class LocalSearchReplState : ReplState
     {
         public Graph Graph { get; }
+        public bool DefaultSettings { get; }
 
-        public LocalSearchReplState(Graph graph)
+        public LocalSearchReplState(Graph graph, bool defaultSettings)
         {
             Graph = graph;
+            DefaultSettings = defaultSettings;
         }
 
         public override ReplState Oparate()
@@ -22,39 +27,31 @@ namespace Running.ReplStates
             var solutionPath = ResultsDirPath.CombinePathWith("LocalSearch_" + DateTime.Now.Ticks);
             Directory.CreateDirectory(solutionPath);
             Graph.WriteToFile(solutionPath.CombinePathWith("Graph.txt"));
-            Console.WriteLine("Enter amount of runnings of parallel Local Searches:");
-            var amountInParrallel = Parsing.ParseInt(1, 10000, _ => true, "");
-            var localSearchSettings = new LocalSearchSettings(amountInParrallel);
-            var localSearch = new LocalSearch<GraphPartitionSolution>();
+
+            var localSearchSettings = GetSettings(); 
+            var localSearch = new LocalSearch<GraphPartitionSolution, GraphPartitionNeighborhoodOption>();
             var killTask = DistributedInt.Init();
             localSearch.RunAsync(GraphPartitionSolution.GenerateRandom(Graph), localSearchSettings, killTask, ReportSolution(solutionPath), Random);
             return new PendEndingReplState(killTask);
         }
 
-        private Action<GraphPartitionSolution> ReportSolution(string solutionPath) => solution =>
+        private LocalSearchSettings<GraphPartitionNeighborhoodOption> GetSettings()
+        {
+            var amountInParrallel = 1;
+            var neighbosOption = OneSwap;
+
+            if (!DefaultSettings)
             {
-                solution.WriteToFile(solutionPath.CombinePathWith(solution.NegativePrice + ".txt"));
-            };
-    }
+                ColorWriter.PrintCyan("Enter amount of runnings of #parallel Local Searches#:");
+                amountInParrallel = Parsing.ParseInt(1, 10000, _ => true, "");
 
-    public sealed class PendEndingReplState : ReplState
-    {
-        public DistributedInt KillTask { get; }
+                neighbosOption = Choose("Enter neiborhood option",
+                    ("one-swap", '1', () => OneSwap),
+                    ("two-swap", '2', () => TwoSwaps),
+                    ("circular-swap", 'C', () => CircularSwap));
 
-        public PendEndingReplState(DistributedInt killTask)
-        {
-            KillTask = killTask;
-        }
-
-        public override ReplState Oparate()
-        {
-            Console.Write("To End Running, Press Any Key: ");
-            Console.ReadKey(false);
-            KillTask.AddOne();
-            KillTask.WaitForValue(0);
-            Console.WriteLine();
-            Console.WriteLine("-----------------------------------------");
-            return new InitReplState();
+            }
+            return new LocalSearchSettings<GraphPartitionNeighborhoodOption>(amountInParrallel, neighbosOption);
         }
     }
 }

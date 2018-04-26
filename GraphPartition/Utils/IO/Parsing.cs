@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace Running
+namespace Utils.IO
 {
     public static class Parsing
     {
@@ -11,7 +12,7 @@ namespace Running
             return callback();
         }
         
-        public static char ParseChar(string optionalChars)
+        public static char ParseChar(IEnumerable<char> optionalChars)
         {
             Func<char> callback = () => ParseChar(optionalChars);
             var str = Console.ReadLine();
@@ -38,6 +39,30 @@ namespace Running
                 return num;
             }
             return Error("Input isn't an integer", callback);
+        }
+
+        public static double ParseDouble(double min, double max)
+        {
+            Func<double> callback = () => ParseDouble(min, max);
+            var str = Console.ReadLine();
+            if (double.TryParse(str, out double num))
+            {
+                if (num < min)
+                    return Error("Input is bellow " + min, callback);
+                if (num > max)
+                    return Error("Input is above " + max, callback);
+                return num;
+            }
+            return Error("Input isn't a floating-point value", callback);
+        }
+
+        public static string ParseString(Predicate<string> predicate, string errorMsg)
+        {
+            Func<string> callback = () => ParseString(predicate, errorMsg);
+            var str = Console.ReadLine();
+            if (predicate(str))
+                return str;
+            return Error(errorMsg, callback);
         }
     }
 }

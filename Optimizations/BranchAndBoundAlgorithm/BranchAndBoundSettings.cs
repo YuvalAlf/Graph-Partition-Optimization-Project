@@ -1,7 +1,15 @@
 ﻿namespace Optimizations.BranchAndBoundAlgorithm
 {
-    public sealed class BranchAndBoundSettings
+    public sealed class BranchAndBoundSettings<UpperBound>
     {
-        public static BranchAndBoundSettings Default => new BranchAndBoundSettings();
+        public static BranchAndBoundSettings<UpperBound> Default 
+            => new BranchAndBoundSettings<UpperBound>(default(UpperBound));
+
+        public UpperBound UpperBoundScheme { get; }
+
+        public BranchAndBoundSettings(UpperBound upperBoundScheme)
+        {
+            UpperBoundScheme = upperBoundScheme;
+        }
     }
 }

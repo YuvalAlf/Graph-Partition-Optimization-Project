@@ -33,8 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Colorful.Console, Version=1.2.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\GraphPartition\packages\Colorful.Console.1.2.6\lib\net461\Colorful.Console.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,25 +47,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColorWriter.cs" />
-    <Compile Include="Parsing.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repl.cs" />
     <Compile Include="ReplStates\BranchAndBoundReplState.cs" />
     <Compile Include="ReplStates\ChooseSolveMethodReplState.cs" />
-    <Compile Include="ReplStates\ExitReplState.cs" />
     <Compile Include="ReplStates\GeneticReplState.cs" />
     <Compile Include="ReplStates\InitReplState.cs" />
     <Compile Include="ReplStates\LocalSearchReplState.cs" />
+    <Compile Include="ReplStates\PendEndingReplState.cs" />
     <Compile Include="ReplStates\ReplState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GraphCreator\GraphCreator.csproj">
-      <Project>{79508d47-3f07-4cba-b38f-c7ac0b199c98}</Project>
+      <Project>{79508D47-3F07-4CBA-B38F-C7AC0B199C98}</Project>
       <Name>GraphCreator</Name>
     </ProjectReference>
     <ProjectReference Include="..\GraphPartition\Graphs\Graphs.csproj">

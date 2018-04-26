@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Running.ReplStates;
+﻿using Running.ReplStates;
 
 namespace Running
 {
@@ -11,15 +6,9 @@ namespace Running
     {
         private ReplState ReplState { get; set; }
 
-        public Repl(ReplState replState)
-        {
-            ReplState = replState;
-        }
+        public Repl(ReplState replState) => ReplState = replState;
 
-        public static Repl Create()
-        {
-            return new Repl(new InitReplState());
-        }
+        public static Repl Create() => new Repl(new InitReplState());
 
         public void Run()
         {

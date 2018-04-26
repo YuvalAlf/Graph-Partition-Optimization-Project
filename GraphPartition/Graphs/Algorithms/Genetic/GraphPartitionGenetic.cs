@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
+using Graphs.Algorithms.Genetic;
+using Graphs.Algorithms.LocalSearch;
 using Graphs.GraphProperties;
 using MoreLinq;
 using Optimizations.GeneticAlgorithm;
@@ -8,9 +11,9 @@ using Utils.ExtensionMethods;
 
 namespace Graphs.Algorithms
 {
-    public sealed partial class GraphPartitionSolution : IGeneticSolver<GraphPartitionSolution>
+    public sealed partial class GraphPartitionSolution : IGeneticSolver<GraphPartitionSolution, Mating, GraphPartitionNeighborhoodOption>
     {
-        public GraphPartitionSolution Mate(GraphPartitionSolution otherSolution, Random rnd)
+        public GraphPartitionSolution Mate(Mating mating, GraphPartitionSolution otherSolution, Random rnd)
         {
             var newPartitions = ImmutableDictionary<PartitionType, ImmutableHashSet<Node>>.Empty;
             var remainingNodes = new HashSet<Node>(Graph.Nodes);
@@ -31,12 +34,9 @@ namespace Graphs.Algorithms
             return new GraphPartitionSolution(newPartitions, Graph);
         }
 
-        public GraphPartitionSolution Mutate(Random rnd)
+        public GraphPartitionSolution Mutate(GraphPartitionNeighborhoodOption mutation, Random rnd)
         {
-            var node1 = Graph.Nodes.ChooseRandomly(rnd);
-            var node2 = Graph.Nodes.ChooseRandomly(rnd);
-
-            return this.ReplacePartitionTypeOf(node1, node2);
+            return this.Neighbors(rnd, mutation).First();
         }
     }
 }

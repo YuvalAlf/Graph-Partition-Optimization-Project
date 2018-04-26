@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Optimizations.BranchAndBoundAlgorithm
 {
-    public interface IPartialSolution<PartialSolution, Solution> : IComparable<PartialSolution>
+    public interface IPartialSolution<PartialSolution, UpperBoundScheme, Solution> : IComparable<PartialSolution>
     {
-        Solution ConstructSolution(Random rnd);
+        Solution ConstructSolution(UpperBoundScheme upperBoundScheme, Random rnd);
         IEnumerable<PartialSolution> Children();
         double MinBound { get; }
     }

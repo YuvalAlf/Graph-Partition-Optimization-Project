@@ -1,5 +1,5 @@
-﻿using System;
-using Graphs.GraphProperties;
+﻿using Graphs.GraphProperties;
+using Utils;
 
 namespace Running.ReplStates
 {
@@ -14,19 +14,12 @@ namespace Running.ReplStates
 
         public override ReplState Oparate()
         {
-            ColorWriter.PrintCyan("Choose: #G# for Genetic / #L# for Local Search / #B# for Branch & Bound");
-            var ch = Parsing.ParseChar("GLB");
-            switch (ch)
-            {
-                case 'G':
-                    return new GeneticReplState();
-                case 'L':
-                    return new LocalSearchReplState(Graph);
-                case 'B':
-                    return new BranchAndBoundReplState();
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var defaultSettings = Choose("Settings", ("Custom settings", 'C', () => false), ("Default settings", 'D', () => true));
+
+            return Choose("Choose",
+                ("Genetic", 'G', () => new GeneticReplState(Graph, defaultSettings).TypeCast<ReplState>()),
+                ("Local Search", 'L', () => new LocalSearchReplState(Graph, defaultSettings).TypeCast<ReplState>()),
+                ("Branch & Bound", 'B', () => new BranchAndBoundReplState(Graph, defaultSettings).TypeCast<ReplState>()));
         }
     }
 }

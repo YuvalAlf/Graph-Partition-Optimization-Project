@@ -2,9 +2,9 @@
 
 namespace Optimizations.GeneticAlgorithm
 {
-    public interface IGeneticSolver<Solution> : INegativePrice
+    public interface IGeneticSolver<Solution, Mating, Mutation> : INegativePrice
     {
-        Solution Mate(Solution otherSolution, Random rnd);
-        Solution Mutate(Random rnd);
+        Solution Mate(Mating mating, Solution otherSolution, Random rnd);
+        Solution Mutate(Mutation mutation, Random rnd);
     }
 }
