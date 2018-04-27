@@ -8,10 +8,14 @@ namespace Graphs.GraphProperties
 
         public static Graph CreateMaxGraph(int amountOfNodes) => Graph.Create(amountOfNodes, (i, j) => Math.Max(i, j));
 
+        public static Graph Create4CliqueGraph(int amountOfNodes)
+            => Graph.Create(amountOfNodes, (i, j) => Convert.ToInt32((i - 1) / (amountOfNodes / 4) != (j - 1) / (amountOfNodes / 4)));
+
         public static Graph CreateRandomizedGraph(int amountOfNodes)
         {
             var rnd = new Random();
             return Graph.Create(amountOfNodes, (i, j) => rnd.NextDouble());
         }
+
     }
 }

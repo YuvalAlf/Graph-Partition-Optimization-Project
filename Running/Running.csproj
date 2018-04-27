@@ -51,7 +51,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repl.cs" />
     <Compile Include="ReplStates\BranchAndBoundReplState.cs" />
-    <Compile Include="ReplStates\ChooseSolveMethodReplState.cs" />
     <Compile Include="ReplStates\GeneticReplState.cs" />
     <Compile Include="ReplStates\InitReplState.cs" />
     <Compile Include="ReplStates\LocalSearchReplState.cs" />

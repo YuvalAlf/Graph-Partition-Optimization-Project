@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Graphs.Algorithms.BranchAndBound
+﻿namespace Graphs.Algorithms.BranchAndBound
 {
     public enum UpperBoundScheme
     {

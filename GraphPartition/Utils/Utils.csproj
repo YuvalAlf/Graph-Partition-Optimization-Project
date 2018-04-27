@@ -67,16 +67,10 @@
     <Compile Include="DataStructures\EphemeralExtensions.cs" />
     <Compile Include="DataStructures\ImmutableExtensions.cs" />
     <Compile Include="DataStructures\DistributedInt.cs" />
-    <Compile Include="ExtensionMethods\.cs" />
     <Compile Include="ExtensionMethods\EnumerableExtensions.cs" />
     <Compile Include="IO\ColorWriter.cs" />
     <Compile Include="IO\Parsing.cs" />
     <Compile Include="IO\PathExtensions.cs" />
-    <Compile Include="Option\NoneOption.cs" />
-    <Compile Include="Option\NonOptionException.cs" />
-    <Compile Include="Option\Opt.cs" />
-    <Compile Include="Option\Option.cs" />
-    <Compile Include="Option\SomeOption.cs" />
     <Compile Include="ExtensionMethods\ArrayExtensions.cs" />
     <Compile Include="GeneralUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -6,15 +6,12 @@ namespace Utils.DataStructures
     {
         public volatile int Num;
 
-        public DistributedInt(int num)
-        {
-            Num = num;
-        }
+        private DistributedInt(int num) => Num = num;
 
         public static DistributedInt Init() => new DistributedInt(0);
 
-        public void AddOne() => Interlocked.Add(ref Num, 1);
-        public void MinusOne() => Interlocked.Add(ref Num, -1);
+        public void AddOne() => Interlocked.Increment(ref Num);
+        public void MinusOne() => Interlocked.Decrement(ref Num);
 
         public void WaitForValue(int value)
         {

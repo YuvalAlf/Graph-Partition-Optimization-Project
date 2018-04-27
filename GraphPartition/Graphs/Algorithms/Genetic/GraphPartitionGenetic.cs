@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Windows.Media;
 using Graphs.Algorithms.Genetic;
 using Graphs.Algorithms.LocalSearch;
 using Graphs.GraphProperties;

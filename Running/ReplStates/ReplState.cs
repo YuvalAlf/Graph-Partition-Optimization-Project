@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using Graphs.Algorithms;
-using Utils.ExtensionMethods;
 using Utils.IO;
 
 namespace Running.ReplStates
@@ -15,13 +14,12 @@ namespace Running.ReplStates
 
         public string ResultsDirPath => @"C:\Users\Yuval\Desktop\GraphPartitionResults";
 
-
         protected Action<GraphPartitionSolution> ReportSolution(string solutionPath) => solution =>
         {
             solution.WriteToFile(solutionPath.CombinePathWith(solution.NegativePrice + ".txt"));
         };
 
-        protected T Choose<T>(string message, params (string, char, Func<T>)[] optionalInputs)
+        protected static T Choose<T>(string message, params (string, char, Func<T>)[] optionalInputs)
         {
             var str = new StringBuilder(message + " :");
             var chToFunc = new Dictionary<char, Func<T>>();

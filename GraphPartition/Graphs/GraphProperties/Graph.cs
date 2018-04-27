@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Markup;
 using Utils.ExtensionMethods;
 using Utils.IO;
 
@@ -24,11 +23,12 @@ namespace Graphs.GraphProperties
         public static Graph Create(int amountOfNodes, Func<int, int, double> weights)
         {
             var nodes = ArrayExtensions.InitArray(amountOfNodes, i => (Node) (i + 1));
-            var edges = new List<Edge>(nodes.Length * nodes.Length / 2);
+            var edges = new Edge[nodes.Length * (nodes.Length - 1) / 2];
+            int index = 0;
             for(int i = 0; i < nodes.Length - 1; i++)
-            for(int j = i + 1; j < nodes.Length; j++)
-                edges.Add(Edge.Create(nodes[i], nodes[j], weights(nodes[i].Value, nodes[j].Value)));
-            return new Graph(nodes, edges.ToArray());
+                for(int j = i + 1; j < nodes.Length; j++)
+                    edges[index++] = Edge.Create(nodes[i], nodes[j], weights(nodes[i].Value, nodes[j].Value));
+            return new Graph(nodes, edges);
         }
 
 
