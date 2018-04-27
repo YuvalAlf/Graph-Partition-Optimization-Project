@@ -13,14 +13,12 @@ namespace Optimizations.LocalSearchAlgorithm
         {
             var kills = ArrayExtensions.InitArray(settings.AmountInParralel, _ => DistributedInt.Init());
             var bestPrice = double.PositiveInfinity;
-            Solution globalMinimum = default(Solution);
 
-            void reportSolutionGlobally(Solution s)
+            void ReportSolutionGlobally(Solution s)
             {
                 if (s.NegativePrice < bestPrice)
                 {
                     bestPrice = s.NegativePrice;
-                    globalMinimum = s;
                     reportSolution(s);
                 }
             }
@@ -28,45 +26,45 @@ namespace Optimizations.LocalSearchAlgorithm
 
             Task LocalSearchRun(int index) => Task.Run(() =>
             {
-                SingleRun(settings.NeighborsOption, genRandom, kills[index], reportSolutionGlobally, rnd);
+                SingleRun(settings.NeighborsOption, genRandom, kills[index], ReportSolutionGlobally, rnd);
             });
 
             var tasks = ArrayExtensions.InitArray(settings.AmountInParralel, LocalSearchRun);
 
             killTask.WaitForValue(1);
-            killTask.MinusOne();
             kills.ForEach(d => d.AddOne());
             kills.ForEach(d => d.WaitForValue(0));
+            killTask.MinusOne();
         }
 
 
         private void SingleRun(NeighborhoodOptions neighbors, Func<Random, Solution> genRandom, DistributedInt killTask, Action<Solution> reportSolution, Random rnd)
         {
-            (Solution newBestSolution, bool shouldFinish) Loop(Solution bestSolution)
+            (Solution nextSolution, bool shouldFinish) Loop(Solution currentSolution)
             {
-                foreach (var neighbor in bestSolution.Neighbors(rnd, neighbors))
+                foreach (var neighbor in currentSolution.Neighbors(rnd, neighbors))
                 {
                     if (killTask.Num == 1)
-                        return (bestSolution, true);
-                    if (neighbor.NegativePrice < bestSolution.NegativePrice)
+                        return (currentSolution, true);
+                    if (neighbor.NegativePrice < currentSolution.NegativePrice)
                         return (neighbor, false);
                 }
-                return (bestSolution, true);
+                return (currentSolution, true);
             }
 
-            Solution globalBestSolution = genRandom(rnd);
-            reportSolution(globalBestSolution);
+            Solution initialSolution = genRandom(rnd);
+            reportSolution(initialSolution);
             while (true)
             {
-                (Solution newBestSolution, bool shouldFinish) = Loop(globalBestSolution);
+                (Solution nextSolution, bool shouldFinish) = Loop(initialSolution);
                 if (shouldFinish)
                 {
                     killTask.MinusOne();
                     return;
                 }
 
-                globalBestSolution = newBestSolution;
-                reportSolution(globalBestSolution);
+                initialSolution = nextSolution;
+                reportSolution(initialSolution);
             }
         }
     }

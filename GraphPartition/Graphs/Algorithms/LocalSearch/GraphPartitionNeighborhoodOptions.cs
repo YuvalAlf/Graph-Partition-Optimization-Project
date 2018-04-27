@@ -11,7 +11,7 @@ namespace Graphs.Algorithms.LocalSearch
 
     public static class GraphPartitionNeighborhoodOptionUtils
     {
-        public static GraphPartitionNeighborhoodOption[] All = {
+        public static GraphPartitionNeighborhoodOption[] All { get; } = {
             GraphPartitionNeighborhoodOption.OneSwap,
             GraphPartitionNeighborhoodOption.CircularSwap,
             GraphPartitionNeighborhoodOption.TwoSwaps

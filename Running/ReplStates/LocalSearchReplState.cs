@@ -45,7 +45,7 @@ namespace Running.ReplStates
                 ColorWriter.PrintCyan("Enter amount of runnings of #parallel Local Searches#:");
                 amountInParrallel = Parsing.ParseInt(1, 10000, _ => true, "");
 
-                neighbosOption = Choose("Enter neiborhood option",
+                neighbosOption = Choose("Enter #neiborhood# option",
                     ("one-swap", '1', () => OneSwap),
                     ("two-swap", '2', () => TwoSwaps),
                     ("circular-swap", 'C', () => CircularSwap));

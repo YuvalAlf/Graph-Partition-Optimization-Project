@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Graphs.Algorithms.BranchAndBound;
 using Graphs.GraphProperties;
 using Optimizations.BranchAndBoundAlgorithm;
 using Utils.ExtensionMethods;
 
-namespace Graphs.Algorithms
+namespace Graphs.Algorithms.BranchAndBound
 {
-    public sealed class PartialGraphPartition : IPartialSolution<PartialGraphPartition, UpperBound, GraphPartitionSolution>
+    public sealed class PartialGraphPartition : IPartialSolution<PartialGraphPartition, UpperBoundScheme, GraphPartitionSolution>
     {
         public double MinBound { get; }
         public Graph Graph { get; }
@@ -51,7 +50,7 @@ namespace Graphs.Algorithms
             return new PartialGraphPartition(graph, nodesStack, partitions, neighbors, 0.0);
         }
 
-        public GraphPartitionSolution ConstructSolution(UpperBound upperBoundScheme, Random rnd)
+        public GraphPartitionSolution ConstructSolution(UpperBoundScheme upperBoundScheme, Random rnd)
         {
             var partialSolution = this;
             while (true)

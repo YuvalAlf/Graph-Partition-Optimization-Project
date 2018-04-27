@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Graphs.Algorithms.BranchAndBound
 {
-    public enum UpperBound
+    public enum UpperBoundScheme
     {
     }
 }

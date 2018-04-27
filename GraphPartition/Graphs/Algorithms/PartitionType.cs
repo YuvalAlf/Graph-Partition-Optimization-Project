@@ -12,9 +12,7 @@ namespace Graphs.Algorithms
 
     public static class PartitionTypeUtils
     {
-        public static PartitionType[] All => all;
-
-        private static PartitionType[] all = {
+        public static PartitionType[] All { get; } = {
             PartitionType.BigPartition,
             PartitionType.SmallPartition1,
             PartitionType.SmallPartition2
@@ -39,11 +37,11 @@ namespace Graphs.Algorithms
             switch (@this)
             {
                 case PartitionType.BigPartition:
-                    return "Big Partition N/2";
+                    return "Big_Partition N/2";
                 case PartitionType.SmallPartition1:
-                    return "Small Partition 1, N/4";
+                    return "Small_Partition_1 N/4";
                 case PartitionType.SmallPartition2:
-                    return "Small Partition 2, N/4";
+                    return "Small_Partition_2, N/4";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(@this), @this, null);
             }

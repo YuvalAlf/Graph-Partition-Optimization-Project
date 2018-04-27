@@ -29,6 +29,17 @@ namespace Graphs.Algorithms
             }
         }
 
+        private GraphPartitionSolution GenOneSwap(Random rnd)
+        {
+            var node1 = this.Graph.Nodes.ChooseRandomly(rnd);
+            var node2 = this.Graph.Nodes.ChooseRandomly(rnd);
+            return this.ReplacePartitionTypeOf(node1, node2);
+        }
+
+        private GraphPartitionSolution GenTwoSwap(Random rnd)
+        {
+            return this.GenOneSwap(rnd).GenOneSwap(rnd);
+        }
 
         private GraphPartitionSolution GenCircularSwap(Random rnd)
         {
@@ -37,19 +48,7 @@ namespace Graphs.Algorithms
             var node3 = Partitions[SmallPartition2].ElementAt(rnd.Next(SmallPartition2.Size(Graph)));
             return ReplacePartitionTypeOf(node2, node3).ReplacePartitionTypeOf(node1, node3);
         }
-
-        private GraphPartitionSolution GenTwoSwap(Random rnd)
-        {
-            return this.GenOneSwap(rnd).GenOneSwap(rnd);
-        }
-
-        private GraphPartitionSolution GenOneSwap(Random rnd)
-        {
-            var node1 = this.Graph.Nodes.ChooseRandomly(rnd);
-            var node2 = this.Graph.Nodes.ChooseRandomly(rnd);
-            return this.ReplacePartitionTypeOf(node1, node2);
-        }
-
+        
         private GraphPartitionSolution ReplacePartitionTypeOf(Node node1, Node node2)
         {
             var partitionType1 = PartitionTypeOf(node1);

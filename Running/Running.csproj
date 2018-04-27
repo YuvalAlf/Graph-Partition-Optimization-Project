@@ -63,10 +63,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GraphCreator\GraphCreator.csproj">
-      <Project>{79508D47-3F07-4CBA-B38F-C7AC0B199C98}</Project>
-      <Name>GraphCreator</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GraphPartition\Graphs\Graphs.csproj">
       <Project>{0AF773BF-05ED-4F26-ABDE-EAD7ED9A98C8}</Project>
       <Name>Graphs</Name>

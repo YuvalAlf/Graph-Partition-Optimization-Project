@@ -8,6 +8,7 @@ using Optimizations.GeneticAlgorithm;
 using Utils.DataStructures;
 using Utils.ExtensionMethods;
 using Utils.IO;
+using static Graphs.Algorithms.Genetic.MatingScheme;
 using static Graphs.Algorithms.LocalSearch.GraphPartitionNeighborhoodOption;
 
 namespace Running.ReplStates
@@ -30,24 +31,24 @@ namespace Running.ReplStates
             Graph.WriteToFile(solutionPath.CombinePathWith("Graph.txt"));
 
             var geneticSettings = GetSettings();
-            var genetic = new Genetic<GraphPartitionSolution, Mating, GraphPartitionNeighborhoodOption>();
+            var genetic = new Genetic<GraphPartitionSolution, MatingScheme, GraphPartitionNeighborhoodOption>();
             var killTask = DistributedInt.Init();
             genetic.RunAsync(GraphPartitionSolution.GenerateRandom(Graph), geneticSettings, killTask, ReportSolution(solutionPath), Random);
             return new PendEndingReplState(killTask);
         }
 
-        private GeneticSettings<Mating, GraphPartitionNeighborhoodOption> GetSettings()
+        private GeneticSettings<MatingScheme, GraphPartitionNeighborhoodOption> GetSettings()
         {
             var population = 20;
             var mutationRate = 0.6;
             var elitismRate = 0.35;
             var newGenesRate = 0.1;
-            var mating = default(Mating);
-            var neighborsOption = OneSwap;
+            var matingScheme = default(MatingScheme);
+            var neighborsScheme = OneSwap;
 
             if (!DefaultSettings)
             {
-                ColorWriter.PrintCyan("Enter population:");
+                ColorWriter.PrintCyan("Enter #population#:");
                 population = Parsing.ParseInt(4, 2000, _ => true, "");
                 ColorWriter.PrintCyan("Enter #mutation rate#:");
                 mutationRate = Parsing.ParseDouble(0.0, 1.0);
@@ -57,14 +58,18 @@ namespace Running.ReplStates
                 newGenesRate = Parsing.ParseDouble(0.0, 1.0);
 
 
-                neighborsOption = Choose("Enter neiborhood option",
+                matingScheme = Choose("Enter #mating# scheme",
+                    ("intersection-mating", 'I', () => IntersectionMating),
+                    ("copy-one-partition", 'C', () => CopyOnePartition));
+
+                neighborsScheme = Choose("Enter #mutation# scheme",
                     ("one-swap", '1', () => OneSwap),
                     ("two-swap", '2', () => TwoSwaps),
                     ("circular-swap", 'C', () => CircularSwap));
 
             }
 
-            return new GeneticSettings<Mating, GraphPartitionNeighborhoodOption>(population, mutationRate, elitismRate, newGenesRate, mating, neighborsOption);
+            return new GeneticSettings<MatingScheme, GraphPartitionNeighborhoodOption>(population, mutationRate, elitismRate, newGenesRate, matingScheme, neighborsScheme);
         }
     }
 }

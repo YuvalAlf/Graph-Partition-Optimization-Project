@@ -12,10 +12,8 @@ namespace Optimizations
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int Compare(SolutionType s1, SolutionType s2) => s1.NegativePrice.CompareTo(s2.NegativePrice);
 
-        public void RunAsync(Func<Random, SolutionType> genRandom, Settings settings, DistributedInt killTask, Action<SolutionType> reportSolution, Random rnd)
-        {
-            Task.Run(() => Run(genRandom, settings, killTask, reportSolution, rnd));
-        }
+        public void RunAsync(Func<Random, SolutionType> genRandom, Settings settings, DistributedInt killTask, Action<SolutionType> reportSolution, Random rnd) 
+            => Task.Run(() => Run(genRandom, settings, killTask, reportSolution, rnd));
 
         public abstract void Run(Func<Random, SolutionType> genRandom, Settings settings, DistributedInt killTask, Action<SolutionType> reportSolution, Random rnd);
     }

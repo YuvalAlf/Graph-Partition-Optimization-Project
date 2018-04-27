@@ -9,7 +9,7 @@ namespace Optimizations.BranchAndBoundAlgorithm
         where Solution : INegativePrice
         where PartialSolution : IPartialSolution<PartialSolution, UpperBound, Solution>
     {
-        public PartialSolution EmptyPartialSolution { get; }
+        private PartialSolution EmptyPartialSolution { get; }
 
         public BranchAndBound(PartialSolution emptyPartialSolution) => EmptyPartialSolution = emptyPartialSolution;
 
@@ -19,14 +19,12 @@ namespace Optimizations.BranchAndBoundAlgorithm
             var priorityQueue = HeapFactory.NewArrayHeap<PartialSolution>(2);
             priorityQueue.Add(EmptyPartialSolution);
 
-            var globalMinBound = double.PositiveInfinity;
             var bestSolutionNegativePrice = double.PositiveInfinity;
 
             while (priorityQueue.Count > 0 && killTask.Num == 0)
             {
                 var nextItem = priorityQueue.RemoveMin();
                 var itemMinBound = nextItem.MinBound;
-                globalMinBound = Math.Min(itemMinBound, globalMinBound);
                 if (itemMinBound >= bestSolutionNegativePrice)
                     continue;
                 nextItem.Children().ForEach(priorityQueue.Add);

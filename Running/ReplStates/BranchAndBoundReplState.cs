@@ -5,7 +5,7 @@ using Graphs.Algorithms.BranchAndBound;
 using Graphs.GraphProperties;
 using Optimizations.BranchAndBoundAlgorithm;
 using Utils.DataStructures;
-using Utils.ExtensionMethods;
+using Utils.IO;
 
 namespace Running.ReplStates
 {
@@ -26,8 +26,8 @@ namespace Running.ReplStates
             Directory.CreateDirectory(solutionPath);
             Graph.WriteToFile(solutionPath.CombinePathWith("Graph.txt"));
 
-            var branchAndBoundSettings = BranchAndBoundSettings<UpperBound>.Default;
-            var branchAndBound = new BranchAndBound<PartialGraphPartition, GraphPartitionSolution, UpperBound>(PartialGraphPartition.CreateEmpty(Graph));
+            var branchAndBoundSettings = BranchAndBoundSettings<UpperBoundScheme>.Default;
+            var branchAndBound = new BranchAndBound<PartialGraphPartition, GraphPartitionSolution, UpperBoundScheme>(PartialGraphPartition.CreateEmpty(Graph));
             var killTask = DistributedInt.Init();
             branchAndBound.RunAsync(GraphPartitionSolution.GenerateRandom(Graph), branchAndBoundSettings, killTask, ReportSolution(solutionPath), Random);
             return new PendEndingReplState(killTask);

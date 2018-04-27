@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Graphs.Algorithms.Genetic
 {
-    public enum Mating
+    public enum MatingScheme
     {
+        IntersectionMating,
+        CopyOnePartition
     }
 }

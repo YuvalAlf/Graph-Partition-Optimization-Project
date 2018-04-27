@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows;
-using MathNet.Numerics;
 using Utils;
-using Utils.MathUtils;
 
 namespace Graphs.GraphProperties
 {
@@ -26,9 +23,15 @@ namespace Graphs.GraphProperties
             return new Edge(minNode, maxNode, weight);
         }
 
-        public bool HasNode(Node node) => Node1.Equals(node) || Node2.Equals(node);
+        public IEnumerable<Node> Nodes
+        {
+            get
+            {
+                yield return Node1;
+                yield return Node2;
+            }
+        }
 
-        public Edge WithWeight(double newWeight) => Create(Node1, Node2, newWeight);
 
         public bool Equals(Edge other) => Node1.Equals(other.Node1) && Node2.Equals(other.Node2);
         public override bool Equals(object obj)
@@ -46,28 +49,6 @@ namespace Graphs.GraphProperties
             }
         }
 
-        public override string ToString() => $"({Node1},{Node2})".PadRight(15) + Weight;
-
-        public bool IsClashingWith(Edge edge, Dictionary<Node, Point> embedding)
-        {
-            var edge1Start = embedding[this.Node1];
-            var edge1End = embedding[this.Node2];
-            var edge2Start = embedding[edge.Node1];
-            var edge2End = embedding[edge.Node2];
-            var edge1XRange = Range.Create(edge1Start.X, edge1End.X);
-            var edge2XRange = Range.Create(edge2Start.X, edge2End.X);
-            if (edge1XRange.Max <= edge2XRange.Min)
-                return false;
-            if (!edge1XRange.IsOverlapping(edge2XRange))
-                return false;
-            var overlapRange = edge1XRange.GetOverlap(edge2XRange);
-            var edge1Line = MathLine.Create(edge1Start.X, edge1End.X, edge1Start.Y, edge1End.Y);
-            var edge2Line = MathLine.Create(edge2Start.X, edge2End.X, edge2Start.Y, edge2End.Y);
-
-            var deltaYMin = (edge1Line.Compute(overlapRange.Min) - edge2Line.Compute(overlapRange.Min)).CoerceZero();
-            var deltaYMax = (edge1Line.Compute(overlapRange.Max) - edge2Line.Compute(overlapRange.Max)).CoerceZero();
-            return deltaYMin * deltaYMax < 0;
-        }
 
         public static Edge Parse(string str)
         {
@@ -77,5 +58,7 @@ namespace Graphs.GraphProperties
             var weight = double.Parse(items[2]);
             return Edge.Create(node1, node2, weight);
         }
+
+        public override string ToString() => $"({Node1},{Node2})".PadRight(15) + Weight;
     }
 }
