@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Graphs.Algorithms.Genetic;
 using Graphs.Algorithms.LocalSearch;
 using Graphs.GraphProperties;
@@ -11,7 +12,7 @@ using Utils.ExtensionMethods;
 
 namespace Graphs.Algorithms
 {
-    public sealed partial class GraphPartitionSolution : IGeneticSolver<GraphPartitionSolution, MatingScheme, GraphPartitionNeighborhoodOption>
+    public sealed partial class GraphPartitionSolution : IGeneticSolver<GraphPartitionSolution, MatingScheme, GraphPartitionNeighborhoodOption, SelectionScheme>
     {
         public GraphPartitionSolution Mate(MatingScheme mating, GraphPartitionSolution otherSolution, Random rnd)
         {
@@ -77,6 +78,63 @@ namespace Graphs.Algorithms
         public GraphPartitionSolution Mutate(GraphPartitionNeighborhoodOption mutation, Random rnd)
         {
             return this.Neighbors(rnd, mutation).First();
+        }
+
+        public Func<Random, (GraphPartitionSolution, GraphPartitionSolution)> SelectionMethod(SelectionScheme selection, GraphPartitionSolution[] population)
+        {
+            var mapFunc = FitnessFunc(selection);
+            var proportions = population.Select(s => mapFunc(s.NegativePrice)).ToArray();
+            var average = proportions.Average();
+            var probabilities = proportions.Select(p => p / average).ToArray();
+            Array.Sort(proportions);
+
+            int ChooseSolutionIndex(Random rnd, int exceptIndex)
+            {
+                var sumOfLeft = 1.0;
+                for (int i = 0; i < population.Length - 1; i++)
+                {
+                    if (i == exceptIndex)
+                        continue;
+                    
+                    var probability = probabilities[i] / sumOfLeft;
+                    if (rnd.NextDouble() < probability)
+                        return i;
+                    sumOfLeft -= probabilities[i];
+                }
+
+                return population.Length - 1;
+            }
+
+
+            return rnd =>
+            {
+                var momIndex = ChooseSolutionIndex(rnd, int.MinValue);
+                var dadIndex = ChooseSolutionIndex(rnd, momIndex);
+                return (population[momIndex], population[dadIndex]);
+            };
+        }
+
+        private Func<double, double> FitnessFunc(SelectionScheme selection)
+        {
+            switch (selection)
+            {
+                case SelectionScheme.Equal:
+                    return d => 1.0;
+                case SelectionScheme.Inversed:
+                    return d => 1.0 / Math.Pow(1.0 + d, 1.0);
+                case SelectionScheme.InversedSquarred:
+                    return d => 1.0 / Math.Pow(1.0 + d, 2.0);
+                case SelectionScheme.InversedCubed:
+                    return d => 1.0 / Math.Pow(1.0 + d, 3.0);
+                case SelectionScheme.InversedLog:
+                    return d => 1.0 / Math.Pow(Math.Log(1.0 + d), 1.0);
+                case SelectionScheme.InversedLogSquarred:
+                    return d => 1.0 / Math.Pow(Math.Log(1.0 + d), 2.0);
+                case SelectionScheme.InversedLogCubed:
+                    return d => 1.0 / Math.Pow(Math.Log(1.0 + d), 3.0);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(selection), selection, null);
+            }
         }
     }
 }

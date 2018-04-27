@@ -5,12 +5,12 @@ using Utils.ExtensionMethods;
 
 namespace Optimizations.GeneticAlgorithm
 {
-    public sealed class Genetic<SolutionInstance, Mating, Mutation> : OptimizationSolver<SolutionInstance, GeneticSettings<Mating, Mutation>>
-        where SolutionInstance : IGeneticSolver<SolutionInstance, Mating, Mutation>
+    public sealed class Genetic<SolutionInstance, Mating, Mutation, Selection> : OptimizationSolver<SolutionInstance, GeneticSettings<Mating, Mutation, Selection>>
+        where SolutionInstance : IGeneticSolver<SolutionInstance, Mating, Mutation, Selection>
     {
         public override void Run(
             Func<Random, SolutionInstance> genRandom,
-            GeneticSettings<Mating, Mutation> settings,
+            GeneticSettings<Mating, Mutation, Selection> settings,
             DistributedInt killTask,
             Action<SolutionInstance> reportSolution,
             Random rnd)
@@ -36,10 +36,10 @@ namespace Optimizations.GeneticAlgorithm
                     newPopulation[index] = population[index++];
                 for (int i = 0; i < settings.NewGenesAmount && index < newPopulation.Length; i++)
                     newPopulation[index++] = genRandom(rnd);
+                var selectionMethod = population[0].SelectionMethod(settings.SelectionScheme, population);
                 while (index < newPopulation.Length)
                 {
-                    var mom = population.ChooseRandomly(rnd);
-                    var dad = population.ChooseRandomly(rnd);
+                    var (mom, dad) = selectionMethod(rnd);
                     var son = mom.Mate(settings.MatingScheme, dad, rnd);
                     if (rnd.NextDouble() <= settings.MutationRate)
                         son = son.Mutate(settings.MutatingScheme, rnd);
