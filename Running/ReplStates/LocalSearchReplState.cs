@@ -36,10 +36,11 @@ namespace Running.ReplStates
 
         private LocalSearchSettings<GraphPartitionNeighborhoodOption> GetSettings()
         {
+            var @default = LocalSearchSettings<GraphPartitionNeighborhoodOption>.Default;
             ColorWriter.PrintCyan("Enter amount of runnings of #parallel Local Searches#:");
-            var amountInParrallel = Parsing.ParseInt(1, 10000, _ => true, "");
+            var amountInParrallel = Parsing.ParseInt(1, 10000, _ => true, "", @default.AmountInParralel);
 
-            var neighbosOption = Choose("Enter #neiborhood# option",
+            var neighbosOption = Choose("Enter #neiborhood# option", () => @default.NeighborsOption,
                 ("one-swap", '1', () => OneSwap),
                 ("two-swap", '2', () => TwoSwaps),
                 ("circular-swap", 'C', () => CircularSwap));

@@ -19,7 +19,7 @@ namespace Running.ReplStates
             solution.WriteToFile(solutionPath.CombinePathWith(solution.NegativePrice + ".txt"));
         };
 
-        protected static T Choose<T>(string message, params (string, char, Func<T>)[] optionalInputs)
+        protected static T Choose<T>(string message, Func<T> @default, params (string, char, Func<T>)[] optionalInputs)
         {
             var str = new StringBuilder(message + " :");
             var chToFunc = new Dictionary<char, Func<T>>();
@@ -30,8 +30,9 @@ namespace Running.ReplStates
             }
             str.Remove(str.Length - 1, 1);
             ColorWriter.PrintCyan(str.ToString());
-            var chosenChar = Parsing.ParseChar(chToFunc.Keys);
-            return chToFunc[chosenChar].Invoke();
+            var chosenChar = Parsing.ParseChar(chToFunc.Keys, '\0');
+            
+            return chosenChar == '\0' ? @default.Invoke() : chToFunc[chosenChar].Invoke();
         }
 
     }

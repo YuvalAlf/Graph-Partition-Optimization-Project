@@ -12,10 +12,12 @@ namespace Utils.IO
             return callback();
         }
         
-        public static char ParseChar(IEnumerable<char> optionalChars)
+        public static char ParseChar(IEnumerable<char> optionalChars, char onEnter)
         {
-            Func<char> callback = () => ParseChar(optionalChars);
+            Func<char> callback = () => ParseChar(optionalChars, onEnter);
             var str = Console.ReadLine();
+            if (string.IsNullOrEmpty(str))
+                return onEnter;
             if (str.Length != 1)
                 return Error("You have to type a char", callback);
             if (!optionalChars.Contains(str[0]))
@@ -24,10 +26,12 @@ namespace Utils.IO
             return str[0];
         }
 
-        public static int ParseInt(int min, int max, Predicate<int> predicate, string errorMsg)
+        public static int ParseInt(int min, int max, Predicate<int> predicate, string errorMsg, int onEnter)
         {
-            Func<int> callback = () => ParseInt(min, max, predicate, errorMsg);
+            Func<int> callback = () => ParseInt(min, max, predicate, errorMsg, onEnter);
             var str = Console.ReadLine();
+            if (string.IsNullOrEmpty(str))
+                return onEnter;
             if (int.TryParse(str, out int num))
             {
                 if (num < min)
@@ -41,10 +45,12 @@ namespace Utils.IO
             return Error("Input isn't an integer", callback);
         }
 
-        public static double ParseDouble(double min, double max)
+        public static double ParseDouble(double min, double max, double onEnter)
         {
-            Func<double> callback = () => ParseDouble(min, max);
+            Func<double> callback = () => ParseDouble(min, max, onEnter);
             var str = Console.ReadLine();
+            if (string.IsNullOrEmpty(str))
+                return onEnter;
             if (double.TryParse(str, out double num))
             {
                 if (num < min)

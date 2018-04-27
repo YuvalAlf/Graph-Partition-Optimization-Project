@@ -38,26 +38,27 @@ namespace Running.ReplStates
 
         private static GeneticSettings<MatingScheme, GraphPartitionNeighborhoodOption, SelectionScheme> GetSettings()
         {
+            var @default = GeneticSettings<MatingScheme, GraphPartitionNeighborhoodOption, SelectionScheme>.Default;
             ColorWriter.PrintCyan("Enter #population#:");
-            var population = Parsing.ParseInt(4, 2000, _ => true, "");
+            var population = Parsing.ParseInt(4, 2000, _ => true, "", @default.Population);
             ColorWriter.PrintCyan("Enter #mutation rate#:");
-            var mutationRate = Parsing.ParseDouble(0.0, 1.0);
+            var mutationRate = Parsing.ParseDouble(0.0, 1.0, @default.MutationRate);
             ColorWriter.PrintCyan("Enter #elitism rate#:");
-            var elitismRate = Parsing.ParseDouble(0.0, 1.0);
-            ColorWriter.PrintCyan("Enter #new genes rate#:");
-            var newGenesRate = Parsing.ParseDouble(0.0, 1.0);
+            var elitismRate = Parsing.ParseDouble(0.0, 1.0, @default.ElitismRate);
+            ColorWriter.PrintCyan("Enter #immigrants rate#:");
+            var newGenesRate = Parsing.ParseDouble(0.0, 1.0, @default.NewGenesRate);
 
 
-            var matingScheme = Choose("Choose #mating# scheme",
+            var matingScheme = Choose("Choose #mating# scheme", () => @default.MatingScheme,
                 ("intersection-mating", 'I', () => IntersectionMating),
                 ("copy-one-partition", 'C',  () => CopyOnePartition));
 
-            var neighborsScheme = Choose("Choose #mutation# scheme",
+            var neighborsScheme = Choose("Choose #mutation# scheme", () => @default.MutatingScheme,
                 ("one-swap", '1',      () => OneSwap),
                 ("two-swap", '2',      () => TwoSwaps),
                 ("circular-swap", 'C', () => CircularSwap));
 
-            var selectionScheme = Choose("Choose #selection# scheme",
+            var selectionScheme = Choose("Choose #selection# scheme", () => @default.SelectionScheme,
                 ("equal", '=',                 () => SelectionScheme.Equal),
                 ("inversed", '1',              () => SelectionScheme.Inversed),
                 ("inversed squarred", '2',     () => SelectionScheme.InversedSquarred),
