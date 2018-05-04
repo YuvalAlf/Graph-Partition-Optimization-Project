@@ -26,6 +26,7 @@ namespace Running.ReplStates
             var graph = Choose("Choose graph type", () => GraphBuilder.CreateMinGraph(GetAmountOfNodes()),
                 ("min", 'N',          () => GraphBuilder.CreateMinGraph(GetAmountOfNodes())),
                 ("max", 'X',          () => GraphBuilder.CreateMaxGraph(GetAmountOfNodes())),
+                ("sum", 'S',          () => GraphBuilder.CreateSumGraph(GetAmountOfNodes())),
                 ("randomized", 'R',   () => GraphBuilder.CreateRandomizedGraph(GetAmountOfNodes())),
                 ("four cliques", '4', () => GraphBuilder.Create4CliqueGraph(GetAmountOfNodes())),
                 ("path", 'P',         ParseGraphFromFile));

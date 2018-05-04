@@ -25,12 +25,23 @@ namespace Running.ReplStates
             var solutionPath = ResultsDirPath.CombinePathWith("BranchAndBound_" + DateTime.Now.Ticks);
             Directory.CreateDirectory(solutionPath);
             Graph.WriteToFile(solutionPath.CombinePathWith("Graph.txt"));
-
-            var branchAndBoundSettings = BranchAndBoundSettings<UpperBoundScheme>.Default;
-            var branchAndBound = new BranchAndBound<PartialGraphPartition, GraphPartitionSolution, UpperBoundScheme>(PartialGraphPartition.CreateEmpty(Graph));
+            
+            var branchAndBoundSettings = GetSettings();
+            var branchAndBound = new BranchAndBound<PartialGraphPartition, GraphPartitionSolution, UpperBoundScheme>(PartialGraphPartition.CreateEmpty(Graph, Random));
             var killTask = DistributedInt.Init();
             branchAndBound.RunAsync(GraphPartitionSolution.GenerateRandom(Graph), branchAndBoundSettings, killTask, ReportSolution(solutionPath), Random);
             return new PendEndingReplState(killTask);
+        }
+
+        private BranchAndBoundSettings<UpperBoundScheme> GetSettings()
+        {
+            var @default = BranchAndBoundSettings<UpperBoundScheme>.Default;
+
+            var upperBoundScheme = Choose("Choose #upper bound# scheme", () => @default.UpperBoundScheme,
+                ("Greedy", 'G', () => UpperBoundScheme.GreedySolution),
+                ("R", 'R', () => UpperBoundScheme.RandomizedSolution));
+
+            return new BranchAndBoundSettings<UpperBoundScheme>(upperBoundScheme);
         }
     }
 }

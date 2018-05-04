@@ -13,17 +13,30 @@ namespace Graphs.Algorithms
     {
         public IEnumerable<GraphPartitionSolution> Neighbors(Random rnd, GraphPartitionNeighborhoodOption solution)
         {
+            int count = 0;
+            int size = solution.Amount(Graph.Nodes.Length);
             switch (solution)
             {
                 case GraphPartitionNeighborhoodOption.OneSwap:
-                    while (true)
+                    while (count++ < size)
                         yield return GenOneSwap(rnd);
+                    break;
                 case GraphPartitionNeighborhoodOption.CircularSwap:
-                    while (true)
+                    while (count++ < size)
                         yield return GenCircularSwap(rnd);
+                    break;
                 case GraphPartitionNeighborhoodOption.TwoSwaps:
-                    while (true)
+                    while (count++ < size)
                         yield return GenTwoSwap(rnd);
+                    break;
+                case GraphPartitionNeighborhoodOption.AllTogether:
+                    while (count++ < size)
+                    {
+                        yield return GenOneSwap(rnd);
+                        yield return GenTwoSwap(rnd);
+                        yield return GenCircularSwap(rnd);
+                    }
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(solution), solution, null);
             }

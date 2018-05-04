@@ -4,6 +4,8 @@ namespace Graphs.GraphProperties
 {
     public static class GraphBuilder
     {
+        public static Graph CreateSumGraph(int amountOfNodes) => Graph.Create(amountOfNodes, (i, j) => i + j);
+
         public static Graph CreateMinGraph(int amountOfNodes) => Graph.Create(amountOfNodes, (i, j) => Math.Min(i, j));
 
         public static Graph CreateMaxGraph(int amountOfNodes) => Graph.Create(amountOfNodes, (i, j) => Math.Max(i, j));

@@ -24,12 +24,9 @@ namespace Optimizations.LocalSearchAlgorithm
             }
 
 
-            Task LocalSearchRun(int index) => Task.Run(() =>
-            {
-                SingleRun(settings.NeighborsOption, genRandom, kills[index], ReportSolutionGlobally, rnd);
-            });
+            Func<int, Task> localSearchRun = index => Task.Run(() => SingleRun(settings.NeighborsOption, genRandom, kills[index], ReportSolutionGlobally, rnd));
 
-            var tasks = ArrayExtensions.InitArray(settings.AmountInParralel, LocalSearchRun);
+            var tasks = ArrayExtensions.InitArray(settings.AmountInParralel, localSearchRun);
 
             killTask.WaitForValue(1);
             kills.ForEach(d => d.AddOne());
@@ -38,7 +35,7 @@ namespace Optimizations.LocalSearchAlgorithm
         }
 
 
-        private void SingleRun(NeighborhoodOptions neighbors, Func<Random, Solution> genRandom, DistributedInt killTask, Action<Solution> reportSolution, Random rnd)
+        public void SingleRun(NeighborhoodOptions neighbors, Func<Random, Solution> genRandom, DistributedInt killTask, Action<Solution> reportSolution, Random rnd)
         {
             (Solution nextSolution, bool shouldFinish) Loop(Solution currentSolution)
             {

@@ -63,8 +63,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithms\BranchAndBound\GraphPartitionBranchAndBound.cs" />
-    <Compile Include="Algorithms\BranchAndBound\UpperBound.cs" />
+    <Compile Include="Algorithms\BranchAndBound\UpperBoundScheme.cs" />
     <Compile Include="Algorithms\Genetic\GraphPartitionGenetic.cs" />
     <Compile Include="Algorithms\Genetic\MatingScheme.cs" />
     <Compile Include="Algorithms\Genetic\Selection.cs" />

@@ -10,7 +10,7 @@ namespace Optimizations.BranchAndBoundAlgorithm
         where PartialSolution : IPartialSolution<PartialSolution, UpperBound, Solution>
     {
         private PartialSolution EmptyPartialSolution { get; }
-
+        public int AmountOfSolutions = 0;
         public BranchAndBound(PartialSolution emptyPartialSolution) => EmptyPartialSolution = emptyPartialSolution;
 
 
@@ -25,6 +25,7 @@ namespace Optimizations.BranchAndBoundAlgorithm
             {
                 var nextItem = priorityQueue.RemoveMin();
                 var itemMinBound = nextItem.MinBound;
+                AmountOfSolutions++;
                 if (itemMinBound >= bestSolutionNegativePrice)
                     continue;
                 nextItem.Children().ForEach(priorityQueue.Add);
