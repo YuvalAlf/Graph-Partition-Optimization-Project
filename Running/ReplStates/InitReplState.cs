@@ -29,6 +29,7 @@ namespace Running.ReplStates
                 ("sum", 'S',          () => GraphBuilder.CreateSumGraph(GetAmountOfNodes())),
                 ("randomized", 'R',   () => GraphBuilder.CreateRandomizedGraph(GetAmountOfNodes())),
                 ("four cliques", '4', () => GraphBuilder.Create4CliqueGraph(GetAmountOfNodes())),
+                ("even graph", 'E', () => GraphBuilder.CreateEvenGraph(GetAmountOfNodes())),
                 ("path", 'P',         ParseGraphFromFile));
             
             return Choose("Choose", () => new LocalSearchReplState(graph, GetWhetherDefaultSettings()).TypeCast<ReplState>(),

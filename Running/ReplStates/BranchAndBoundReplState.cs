@@ -26,7 +26,7 @@ namespace Running.ReplStates
             Directory.CreateDirectory(solutionPath);
             Graph.WriteToFile(solutionPath.CombinePathWith("Graph.txt"));
             
-            var branchAndBoundSettings = GetSettings();
+            var branchAndBoundSettings = DefaultSettings ? BranchAndBoundSettings<UpperBoundScheme>.Default : GetSettings();
             var branchAndBound = new BranchAndBound<PartialGraphPartition, GraphPartitionSolution, UpperBoundScheme>(PartialGraphPartition.CreateEmpty(Graph, Random));
             var killTask = DistributedInt.Init();
             branchAndBound.RunAsync(GraphPartitionSolution.GenerateRandom(Graph), branchAndBoundSettings, killTask, ReportSolution(solutionPath), Random);

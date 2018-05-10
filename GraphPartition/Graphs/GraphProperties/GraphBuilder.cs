@@ -13,6 +13,9 @@ namespace Graphs.GraphProperties
         public static Graph Create4CliqueGraph(int amountOfNodes)
             => Graph.Create(amountOfNodes, (i, j) => Convert.ToInt32((i - 1) / (amountOfNodes / 4) != (j - 1) / (amountOfNodes / 4)));
 
+        public static Graph CreateEvenGraph(int amountOfNodes)
+            => Graph.Create(amountOfNodes, (i, j) => Convert.ToInt32(i % 2 == 0 || j % 2 == 0));
+
         public static Graph CreateRandomizedGraph(int amountOfNodes)
         {
             var rnd = new Random();
