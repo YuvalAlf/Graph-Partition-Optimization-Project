@@ -31,11 +31,11 @@ namespace Running.ReplStates
                 ("four cliques", '4', () => GraphBuilder.Create4CliqueGraph(GetAmountOfNodes())),
                 ("even graph", 'E', () => GraphBuilder.CreateEvenGraph(GetAmountOfNodes())),
                 ("path", 'P',         ParseGraphFromFile));
-            
-            return Choose("Choose", () => new LocalSearchReplState(graph, GetWhetherDefaultSettings()).TypeCast<ReplState>(),
-                ("Genetic", 'G',        () => new GeneticReplState(graph, GetWhetherDefaultSettings())),
-                ("Local Search", 'L',   () => new LocalSearchReplState(graph, GetWhetherDefaultSettings())),
-                ("Branch & Bound", 'B', () => new BranchAndBoundReplState(graph, GetWhetherDefaultSettings())));
+
+            return Choose("Choose",() => new LocalSearchReplState(graph, GetWhetherDefaultSettings()).TypeCast<ReplState>(),
+                ("Genetic", 'G', () => new GeneticReplState(graph, GetWhetherDefaultSettings())),
+                ("Local Search", 'L', () => new LocalSearchReplState(graph, GetWhetherDefaultSettings())));
+            //  ("Branch & Bound", 'B', () => new BranchAndBoundReplState(graph, GetWhetherDefaultSettings())));
         }
 
     }
