@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DIBRIS.Hippie;
 using MoreLinq;
 using Utils.DataStructures;
@@ -16,19 +17,20 @@ namespace Optimizations.BranchAndBoundAlgorithm
 
         public override void Run(Func<Random, Solution> genRandom, BranchAndBoundSettings<UpperBound> settings, DistributedInt killTask, Action<Solution> reportSolution, Random rnd)
         {
-            var priorityQueue = HeapFactory.NewArrayHeap<PartialSolution>(2);
-            priorityQueue.Add(EmptyPartialSolution);
+            AmountOfSolutions = 0;
+            var priorityQueue = new Stack<PartialSolution>();
+            priorityQueue.Push(EmptyPartialSolution);
 
             var bestSolutionNegativePrice = double.PositiveInfinity;
 
             while (priorityQueue.Count > 0 && killTask.Num == 0)
             {
-                var nextItem = priorityQueue.RemoveMin();
+                var nextItem = priorityQueue.Pop();
                 var itemMinBound = nextItem.MinBound;
                 AmountOfSolutions++;
                 if (itemMinBound >= bestSolutionNegativePrice)
                     continue;
-                nextItem.Children().ForEach(priorityQueue.Add);
+                nextItem.Children().ForEach(priorityQueue.Push);
                 var solution = nextItem.ConstructSolution(settings.UpperBoundScheme, rnd);
                 var solutionPrice = solution.NegativePrice;
                 if (solutionPrice < bestSolutionNegativePrice)

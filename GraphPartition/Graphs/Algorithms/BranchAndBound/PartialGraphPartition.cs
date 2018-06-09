@@ -5,36 +5,32 @@ using System.Linq;
 using Graphs.GraphProperties;
 using MoreLinq;
 using Optimizations.BranchAndBoundAlgorithm;
+using Utils;
+using Utils.DataStructures;
 using Utils.ExtensionMethods;
 
 namespace Graphs.Algorithms.BranchAndBound
 {
     public sealed class PartialGraphPartition : IPartialSolution<PartialGraphPartition, UpperBoundScheme, GraphPartitionSolution>
     {
+        public double Price => PriceOfPartition.Values.Sum();
+        public double AveragePrice => PriceOfPartition.Keys.Average(part => PriceOfPartition[part] / GeneralUtils.Choose(Partitions[part].Count, 2));
+
         public double MinBound { get; }
-        public double Price { get; }
+
         public Graph Graph { get; }
+
         public ImmutableStack<Node> NodesRemaining { get; }
-        public Dictionary<Node, HashSet<(Node, double)>> Neighbors { get; }
-        public Dictionary<Node, double> MinBoundOfNode { get; }
+        public ImmutableDictionary<PartitionType, double> PriceOfPartition { get; }
         public ImmutableDictionary<PartitionType, ImmutableHashSet<Node>> Partitions { get; }
 
-        public PartialGraphPartition(
-            Graph graph,
-            ImmutableStack<Node> nodesRemaining,
-            ImmutableDictionary<PartitionType, ImmutableHashSet<Node>> partitions,
-            Dictionary<Node, HashSet<(Node, double)>> neighbors,
-            Dictionary<Node, double> minBoundOfNode,
-            double minBound,
-            double price)
+        public PartialGraphPartition(double minBound, Graph graph, ImmutableStack<Node> nodesRemaining, ImmutableDictionary<PartitionType, double> priceOfPartition, ImmutableDictionary<PartitionType, ImmutableHashSet<Node>> partitions)
         {
+            MinBound = minBound;
             Graph = graph;
             NodesRemaining = nodesRemaining;
+            PriceOfPartition = priceOfPartition;
             Partitions = partitions;
-            Neighbors = neighbors;
-            MinBound = minBound;
-            Price = price;
-            MinBoundOfNode = minBoundOfNode;
         }
 
         public int CompareTo(PartialGraphPartition other) => this.MinBound.CompareTo(other.MinBound);
@@ -42,29 +38,20 @@ namespace Graphs.Algorithms.BranchAndBound
         public static PartialGraphPartition CreateEmpty(Graph graph, Random rnd)
         {
             var nodesStack = graph.Nodes.Shuffle(rnd).Aggregate(ImmutableStack<Node>.Empty, (stack, node) => stack.Push(node));
-           
 
+            var partitionsPrices = ImmutableDictionary<PartitionType, double>.Empty;
             var partitions = ImmutableDictionary<PartitionType, ImmutableHashSet<Node>>.Empty;
             foreach (var partitionType in PartitionTypeUtils.All)
-                partitions = partitions.Add(partitionType, ImmutableHashSet<Node>.Empty);
-            
-            var neighbors = new Dictionary<Node, HashSet<(Node, double)>>(graph.Nodes.Length);
-            foreach (var node in graph.Nodes)
-                neighbors[node] = new HashSet<(Node, double)>();
-            foreach (var edge in graph.Edges)
             {
-                neighbors[edge.Node1].Add((edge.Node2, edge.Weight));
-                neighbors[edge.Node2].Add((edge.Node1, edge.Weight));
+                partitionsPrices = partitionsPrices.Add(partitionType, 0.0);
+                partitions = partitions.Add(partitionType, ImmutableHashSet<Node>.Empty);
             }
 
-            var minBoundOfNode = new Dictionary<Node, double>(graph.Nodes.Length);
-            var quarter = graph.Nodes.Length / 4;
-            foreach (var node in graph.Nodes)
-                minBoundOfNode[node] = neighbors[node].Select(tuple => tuple.Item2).OrderBy(x => x).Take(quarter).Sum() / 2.0;
+            var half = graph.Nodes.Length / 2;
+            var minBoundPartition = MinPrice(ImmutableHashSet<Node>.Empty, graph, ImmutableHashSet<Node>.Empty, half);
+            var minBound = minBoundPartition * 2;
 
-            var minBound = minBoundOfNode.Values.Sum();
-
-            return new PartialGraphPartition(graph, nodesStack, partitions, neighbors, minBoundOfNode, minBound, 0.0);
+            return new PartialGraphPartition(minBound, graph, nodesStack, partitionsPrices, partitions);
         }
 
         public GraphPartitionSolution ConstructSolution(UpperBoundScheme upperBoundScheme, Random rnd)
@@ -87,7 +74,7 @@ namespace Graphs.Algorithms.BranchAndBound
             {
                 if (partialSolution.NodesRemaining.IsEmpty)
                     return new GraphPartitionSolution(partialSolution.Partitions, Graph);
-                partialSolution = partialSolution.Children().MinBy(c => c.Price);
+                partialSolution = partialSolution.Children().MinBy(c => c.AveragePrice);
             }
         }
 
@@ -113,16 +100,50 @@ namespace Graphs.Algorithms.BranchAndBound
                     {
                         var newPartitions = Partitions.SetItem(partitionType, Partitions[partitionType].Add(nextNode));
                         
-                        var nodePrice = 0.0;
-                        foreach (var (neighbor, weight) in Neighbors[nextNode])
-                            if (newPartitions[partitionType].Contains(neighbor))
-                                nodePrice += weight;
-
-                        var newPrice = this.Price + nodePrice;
-                        var newMinBound = this.MinBound + nodePrice - MinBoundOfNode[nextNode];
-                        yield return new PartialGraphPartition(Graph, nodesRemaining, newPartitions, Neighbors, MinBoundOfNode, newMinBound, newPrice);
+                        var nodePrice = Partitions[partitionType].Sum(adjacent => Graph.Weights[nextNode][adjacent]);
+                        var newPriceOfPartition = PriceOfPartition.SetItem(partitionType, PriceOfPartition[partitionType] + nodePrice);
+                        var half = Graph.Nodes.Length / 2;
+                        var set1 = MinPrice(newPartitions[PartitionType.Partition1], Graph, newPartitions[PartitionType.Partition2], half);
+                        var set2 = MinPrice(newPartitions[PartitionType.Partition2], Graph, newPartitions[PartitionType.Partition1], half);
+                        var newMinBound = set1 + set2;
+                        yield return new PartialGraphPartition(newMinBound, Graph, nodesRemaining, newPriceOfPartition, newPartitions);
                     }
             }
+        }
+
+        private static double MinPrice(ImmutableHashSet<Node> nodesIn, Graph graph,
+            ImmutableHashSet<Node> prohibitedNodes, int setSize)
+        {
+            ImmutableDictionary<Node, double> priceOfNode = ImmutableDictionary<Node, double>.Empty;
+            var usedNodes = nodesIn.Union(prohibitedNodes);
+            foreach (var node in nodesIn)
+            {
+                var price = 0.0;
+                foreach (var adjacentNode in nodesIn)
+                {
+                    if (!node.Equals(adjacentNode))
+                        price += graph.Weights[node][adjacentNode];
+                }
+
+                price += graph.Weights[node].RemoveKeys(usedNodes).Values.PartialSort(setSize - nodesIn.Count).Sum();
+
+                priceOfNode = priceOfNode.Add(node, price);
+            }
+            foreach (var graphNode in graph.Nodes)
+                if (!usedNodes.Contains(graphNode))
+                {
+                    var price = 0.0;
+                    foreach (var adjacentNode in nodesIn)
+                        price += graph.Weights[graphNode][adjacentNode];
+                    if (setSize > nodesIn.Count)
+                        price += graph.Weights[graphNode].RemoveKeys(usedNodes).Values.PartialSort(setSize - nodesIn.Count - 1).Sum();
+
+                    priceOfNode = priceOfNode.Add(graphNode, price);
+                }
+
+            double inPrice = nodesIn.Sum(n => priceOfNode[n]) / 2.0;
+            double restPrice = priceOfNode.RemoveRange(nodesIn).Values.PartialSort(setSize - nodesIn.Count).Sum() / 2.0;
+            return inPrice + restPrice;
         }
     }
 }

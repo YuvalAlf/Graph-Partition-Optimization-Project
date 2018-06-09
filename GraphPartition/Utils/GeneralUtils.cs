@@ -10,6 +10,14 @@ namespace Utils
 
         public static (double min, double max) MinMax(double a, double b) => (Math.Min(a, b), Math.Max(a, b));
 
+
+        public static double Choose(int n, int k)
+        {
+            if (n <= k || k <= 0)
+                return 1;
+            return ((double)n / k) * Choose(n - 1, k - 1);
+        }
+
         public static void SwapValues<T>(ref T t1, ref T t2)
         {
             T temp = t1;

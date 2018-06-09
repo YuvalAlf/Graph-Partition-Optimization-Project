@@ -9,7 +9,7 @@ namespace Running.ReplStates
         private static int GetAmountOfNodes()
         {
             ColorWriter.PrintCyan("Choose #amount# of nodes");
-            return Parsing.ParseInt(4, 100000, x => x % 4 == 0, "Input has to be divdable by 4", 32);
+            return Parsing.ParseInt(4, 100000, x => x % 2 == 0, "Input has to be divdable by 2", 32);
         }
 
         private static bool GetWhetherDefaultSettings()
@@ -32,10 +32,7 @@ namespace Running.ReplStates
                 ("even graph", 'E', () => GraphBuilder.CreateEvenGraph(GetAmountOfNodes())),
                 ("path", 'P',         ParseGraphFromFile));
 
-            return Choose("Choose",() => new LocalSearchReplState(graph, GetWhetherDefaultSettings()).TypeCast<ReplState>(),
-                ("Genetic", 'G', () => new GeneticReplState(graph, GetWhetherDefaultSettings())),
-                ("Local Search", 'L', () => new LocalSearchReplState(graph, GetWhetherDefaultSettings())));
-            //  ("Branch & Bound", 'B', () => new BranchAndBoundReplState(graph, GetWhetherDefaultSettings())));
+            return new BranchAndBoundReplState(graph, GetWhetherDefaultSettings());
         }
 
     }

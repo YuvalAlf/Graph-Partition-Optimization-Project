@@ -11,14 +11,27 @@ namespace Graphs.GraphProperties
     {
         public Node[] Nodes { get; }
         public Edge[] Edges { get; }
+        public Dictionary<Node, Dictionary<Node, double>> Weights { get; }
 
-        private Graph(Node[] nodes, Edge[] edges)
+        private Graph(Node[] nodes, Edge[] edges, Dictionary<Node, Dictionary<Node, double>> weights)
         {
             Nodes = nodes;
             Edges = edges;
+            Weights = weights;
         }
 
-        public static Graph Create(Node[] nodes, Edge[] edges) => new Graph(nodes, edges);
+        public static Graph Create(Node[] nodes, Edge[] edges)
+        {
+            var weights = new Dictionary<Node, Dictionary<Node, double>>(nodes.Length);
+            foreach (var node in nodes)
+                weights[node] = new Dictionary<Node, double>(nodes.Length);
+            foreach (var edge in edges)
+            {
+                weights[edge.Node1][edge.Node2] = edge.Weight;
+                weights[edge.Node2][edge.Node1] = edge.Weight;
+            }
+            return new Graph(nodes, edges, weights);
+        }
 
         public static Graph Create(int amountOfNodes, Func<int, int, double> weights)
         {
@@ -28,7 +41,7 @@ namespace Graphs.GraphProperties
             for(int i = 0; i < nodes.Length - 1; i++)
                 for(int j = i + 1; j < nodes.Length; j++)
                     edges[index++] = Edge.Create(nodes[i], nodes[j], weights(nodes[i].Value, nodes[j].Value));
-            return new Graph(nodes, edges);
+            return Create(nodes, edges);
         }
 
 

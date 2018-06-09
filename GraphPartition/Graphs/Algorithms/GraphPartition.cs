@@ -4,12 +4,13 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using Graphs.GraphProperties;
+using Optimizations;
 using Utils.DataStructures;
 using Utils.ExtensionMethods;
 
 namespace Graphs.Algorithms
 {
-    public sealed partial class GraphPartitionSolution
+    public sealed class GraphPartitionSolution : INegativePrice
     {
         public double NegativePrice { get; }
         public ImmutableDictionary<PartitionType, ImmutableHashSet<Node>> Partitions { get; }

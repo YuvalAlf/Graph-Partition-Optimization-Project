@@ -64,13 +64,7 @@
     <Compile Include="BranchAndBoundAlgorithm\BranchAndBound.cs" />
     <Compile Include="BranchAndBoundAlgorithm\BranchAndBoundSettings.cs" />
     <Compile Include="BranchAndBoundAlgorithm\IPartialSolution.cs" />
-    <Compile Include="GeneticAlgorithm\Genetic.cs" />
-    <Compile Include="GeneticAlgorithm\GeneticSettings.cs" />
-    <Compile Include="GeneticAlgorithm\IGeneticSolver.cs" />
     <Compile Include="INegativePrice.cs" />
-    <Compile Include="LocalSearchAlgorithm\ILocalSearchSolver.cs" />
-    <Compile Include="LocalSearchAlgorithm\LocalSearch.cs" />
-    <Compile Include="LocalSearchAlgorithm\LocalSearchSettings.cs" />
     <Compile Include="OptimizationSolver.cs" />
     <Compile Include="OptimizationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

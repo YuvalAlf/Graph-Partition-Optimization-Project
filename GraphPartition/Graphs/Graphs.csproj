@@ -64,11 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\BranchAndBound\UpperBoundScheme.cs" />
-    <Compile Include="Algorithms\Genetic\GraphPartitionGenetic.cs" />
-    <Compile Include="Algorithms\Genetic\MatingScheme.cs" />
-    <Compile Include="Algorithms\Genetic\Selection.cs" />
-    <Compile Include="Algorithms\LocalSearch\GraphPartitionLocalSearch.cs" />
-    <Compile Include="Algorithms\LocalSearch\GraphPartitionNeighborhoodOptions.cs" />
     <Compile Include="Algorithms\BranchAndBound\PartialGraphPartition.cs" />
     <Compile Include="GraphProperties\Edge.cs" />
     <Compile Include="GraphProperties\Graph.cs" />

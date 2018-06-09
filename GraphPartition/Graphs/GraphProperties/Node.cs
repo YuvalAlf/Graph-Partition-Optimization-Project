@@ -2,7 +2,7 @@
 
 namespace Graphs.GraphProperties
 {
-    public struct Node : IEquatable<Node>
+    public struct Node : IEquatable<Node>, IComparable<Node>
     {
         public int Value { get; }
         public Node(int value) => Value = value;
@@ -17,7 +17,7 @@ namespace Graphs.GraphProperties
         public bool Equals(Node other) => Value == other.Value;
         public static bool Equals(Node n1, Node n2) => n1.Equals(n2);
         public override int GetHashCode() => Value;
-
+        public int CompareTo(Node other) => this.Value.CompareTo(other.Value);
         public override string ToString() => $"{Value}";
 
     }
