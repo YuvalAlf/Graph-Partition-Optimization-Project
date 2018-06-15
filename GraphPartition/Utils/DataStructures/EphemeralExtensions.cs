@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Text;
+using MoreLinq;
 
 namespace Utils.DataStructures
 {
@@ -23,6 +25,14 @@ namespace Utils.DataStructures
                 newDict.Remove(excludedKey);
 
             return newDict;
+        }
+
+        public static string AsString<T>(this Dictionary<int, T> @this)
+        {
+            StringBuilder str = new StringBuilder();
+            foreach (var key in @this.Keys.OrderBy(x => x, OrderByDirection.Ascending))
+                str.AppendLine($"{key} {@this[key]}");
+            return str.ToString();
         }
     }
 }
